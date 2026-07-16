@@ -14,46 +14,6 @@ const COPY_FADE_MS = 220;
 const STORY_AUTO_MS = 5600;
 const STORY_USER_PAUSE_MS = 12000;
 
-const ChevronLeft = () => (
-  <svg
-    className="carousel-chevron"
-    viewBox="0 0 24 24"
-    width="18"
-    height="18"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <path
-      d="M14.5 5.2 8.2 12l6.3 6.8"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.15"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ChevronRight = () => (
-  <svg
-    className="carousel-chevron"
-    viewBox="0 0 24 24"
-    width="18"
-    height="18"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <path
-      d="M9.5 5.2 15.8 12 9.5 18.8"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.15"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 type Layer = {
   src: string;
   position: string;
@@ -676,48 +636,35 @@ export function StoryPanel() {
           <p className="en">{body}</p>
         </div>
 
-        <div className="story-carousel">
-          <button
-            type="button"
-            className="story-carousel-btn"
-            onClick={() => step(-1)}
-            aria-label="Previous chapter"
-          >
-            <ChevronLeft />
-          </button>
-          <div
-            className="story-dots"
-            role="tablist"
-            aria-label="Story chapters"
-          >
-            {STORY_CHAPTERS.map((ch, i) => (
-              <button
-                key={ch.id}
-                type="button"
-                role="tab"
-                aria-selected={i === index}
-                aria-label={ch.label}
-                className={`story-dot${i === index ? " is-active" : ""}`}
-                onClick={() => {
-                  if (i !== indexRef.current) {
-                    applyChapter(i);
-                    pauseAuto();
-                  }
-                }}
-              >
-                <span className="story-dot-label">{ch.short}</span>
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="story-carousel-btn"
-            onClick={() => step(1)}
-            aria-label="Next chapter"
-          >
-            <ChevronRight />
-          </button>
-        </div>
+        {/*
+          Quiet chapter pips only — swipe / autoplay / ←→ do the motion.
+          Chevrons removed: too much chrome for a craft house.
+        */}
+        <nav
+          className="story-carousel"
+          role="tablist"
+          aria-label="Story chapters"
+        >
+          {STORY_CHAPTERS.map((ch, i) => (
+            <button
+              key={ch.id}
+              type="button"
+              role="tab"
+              aria-selected={i === index}
+              aria-label={ch.label}
+              title={ch.short}
+              className={`story-dot${i === index ? " is-active" : ""}`}
+              onClick={() => {
+                if (i !== indexRef.current) {
+                  applyChapter(i);
+                  pauseAuto();
+                }
+              }}
+            >
+              <span className="story-dot-label">{ch.short}</span>
+            </button>
+          ))}
+        </nav>
       </div>
     </section>
   );
