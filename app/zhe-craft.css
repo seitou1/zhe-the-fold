@@ -1289,9 +1289,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--tone-line);
-  transition: border-color var(--motion), color var(--motion);
+  padding-bottom: 0.45rem;
+  border-bottom: none;
+  transition: color var(--motion);
 }
 
 .story-head-title h2 {
@@ -1618,6 +1618,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   pointer-events: auto;
 }
 
+/* Menu keeps the head rule — separates fixed title from the scrolling list */
 .menu-head {
   flex-shrink: 0;
   display: flex;
@@ -1629,7 +1630,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--tone-line);
   color: var(--tone-fg);
-  /* Stronger lift over busy plate (pairs with top scrim) */
   text-shadow: var(--tone-shadow-soft);
   transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft),
     border-color 0.45s var(--ease-soft);
@@ -3008,8 +3008,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   gap: 0;
   width: 100%;
   margin: 0;
-  padding: 0 0 0.85rem;
-  border-bottom: 1px solid var(--tone-line);
+  padding: 0 0 0.55rem;
+  border-bottom: none;
   text-align: left;
 }
 
@@ -3981,8 +3981,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .visit-head {
     gap: 0;
     flex-shrink: 0;
-    padding-bottom: 0.7rem;
-    border-bottom-color: rgba(242, 235, 224, 0.22);
+    padding-bottom: 0.5rem;
+    border-bottom: none;
   }
 
   .visit-spotlight {
