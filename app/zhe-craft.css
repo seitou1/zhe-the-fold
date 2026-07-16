@@ -4608,6 +4608,21 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-right: 0.2rem;
   }
 
+  /*
+   * Active mark sits under the glyph, not the tall touch box.
+   * min-height: 2.75rem was parking ::after below the bar where it vanished.
+   */
+  .nav-links a::after {
+    top: calc(50% + 0.42em);
+    bottom: auto;
+    height: 1.5px;
+  }
+
+  .nav-links a.is-active {
+    color: var(--wheat);
+    font-weight: 500;
+  }
+
   /* Story pips — keep even optical spacing (don’t inflate hit boxes) */
   .story-dot {
     width: 1.85rem;
