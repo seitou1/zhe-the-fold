@@ -2712,30 +2712,24 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     0 2px 4px rgba(0, 0, 0, 0.78),
     0 4px 14px rgba(0, 0, 0, 0.52),
     0 10px 32px rgba(0, 0, 0, 0.36);
-  --menu-row-mat: linear-gradient(
-    90deg,
-    rgba(6, 4, 3, 0.2) 0%,
-    rgba(6, 4, 3, 0.12) 42%,
-    rgba(6, 4, 3, 0.04) 78%,
-    transparent 100%
-  );
+  /* Rest rows: transparent / whisper only — plate wall stays open */
+  --menu-row-mat: transparent;
   --menu-row-mat-active: linear-gradient(
     90deg,
-    rgba(6, 4, 3, 0.28) 0%,
-    rgba(6, 4, 3, 0.14) 38%,
-    rgba(235, 207, 160, 0.06) 62%,
+    rgba(6, 4, 3, 0.22) 0%,
+    rgba(6, 4, 3, 0.1) 38%,
+    rgba(235, 207, 160, 0.05) 62%,
     transparent 100%
   );
 }
 
-/* Row — name leads, price confirms; leader dots fill the gutter (print menu) */
+/* Row — rest: EN · price (print menu); active expands CN / meta / desc */
 .menu-list-item {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    "en price"
-    "cn price";
+    "en price";
   column-gap: 0.55rem;
   row-gap: 0.06rem;
   align-items: baseline;
@@ -2744,7 +2738,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   border: none;
   border-bottom: 1px solid rgba(242, 235, 224, 0.12);
   border-radius: 0;
-  /* Local letter mat — row height only, not a plate curtain */
+  /* Rest: no mat; active holds soft whisper */
   background: var(--menu-row-mat);
   cursor: pointer;
   color: var(--menu-ink);
@@ -2756,11 +2750,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   touch-action: manipulation;
 }
 
+/* Meta only surfaces when the row is open */
 .menu-list-item.has-meta {
   grid-template-areas:
-    "en price"
-    "cn price"
-    "meta meta";
+    "en price";
 }
 
 .menu-list-item.is-hidden {
@@ -2821,6 +2814,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-item .list-cn {
+  display: none;
   grid-area: cn;
   font-size: var(--type-list-cn);
   line-height: var(--type-lh-ui);
@@ -2831,6 +2825,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-item .list-meta {
+  display: none;
   grid-area: meta;
   font-family: var(--font-ui);
   font-size: var(--type-ui-sm);
@@ -2858,12 +2853,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Active = open pleat: short imperfect crease + slightly stronger mat.
+ * Active = open pleat: short imperfect crease + soft hold mat.
  */
 .menu-list-item.is-active {
   grid-template-areas:
     "en price"
-    "cn price"
+    "cn cn"
     "desc desc";
   padding-top: 0.65rem;
   padding-bottom: 0.7rem;
@@ -2898,7 +2893,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .menu-list-item.is-active.has-meta {
   grid-template-areas:
     "en price"
-    "cn price"
+    "cn cn"
     "meta meta"
     "desc desc";
 }
@@ -2923,21 +2918,23 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-item.is-active .list-cn {
+  display: block;
   opacity: 0.92;
 }
 
 .menu-list-item.is-active .list-meta {
+  display: block;
   opacity: 0.92;
 }
 
 .menu-list-item:hover:not(.is-active),
 .menu-list-item:focus-visible:not(.is-active) {
   border-bottom-color: rgba(242, 235, 224, 0.3);
+  /* Whisper only — no heavy rest mat */
   background: linear-gradient(
     90deg,
-    rgba(6, 4, 3, 0.24) 0%,
-    rgba(6, 4, 3, 0.14) 45%,
-    rgba(6, 4, 3, 0.05) 78%,
+    rgba(6, 4, 3, 0.1) 0%,
+    rgba(6, 4, 3, 0.04) 50%,
     transparent 100%
   );
 }
@@ -3130,18 +3127,17 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .menu-list-item {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "en price"
-      "cn price";
+      "en price";
     column-gap: 0.45rem;
     row-gap: 0.08rem;
     padding: 0.55rem 0.1rem 0.55rem 0.6rem;
-    /* Halo + row mat already from type-first block */
+    /* Halo + progressive disclosure from type-first block */
   }
 
   .menu-list-item.is-active {
     grid-template-areas:
       "en price"
-      "cn price"
+      "cn cn"
       "desc desc";
     padding-top: 0.65rem;
     padding-bottom: 0.7rem;
@@ -3150,7 +3146,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .menu-list-item.is-active.has-meta {
     grid-template-areas:
       "en price"
-      "cn price"
+      "cn cn"
       "meta meta"
       "desc desc";
   }
@@ -3160,19 +3156,29 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-list-item .list-en::after {
-    /* Slightly stronger on phone — plate is busier */
-    border-bottom-color: rgba(242, 235, 224, 0.32);
-    opacity: 0.6;
+    /* Quiet leaders — plate wall carries contrast */
+    border-bottom-color: rgba(242, 235, 224, 0.28);
+    opacity: 0.55;
+  }
+
+  .menu-list-item .list-cn,
+  .menu-list-item .list-meta,
+  .menu-list-item .list-desc {
+    display: none;
   }
 
   .menu-list-item .list-desc {
-    display: none;
     -webkit-line-clamp: unset;
     max-width: none;
   }
 
+  .menu-list-item.is-active .list-cn,
+  .menu-list-item.is-active .list-meta,
   .menu-list-item.is-active .list-desc {
     display: block;
+  }
+
+  .menu-list-item.is-active .list-desc {
     -webkit-line-clamp: unset;
   }
 
@@ -4241,7 +4247,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-list-item .list-cn {
-    display: block;
     letter-spacing: var(--type-cn-track);
   }
 
@@ -4562,5 +4567,175 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.85),
       0 2px 12px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Phone polish: rest = en · price; active expands */
+  .menu-list-item {
+    grid-template-areas:
+      "en price";
+  }
+
+  .menu-list-item.is-active {
+    grid-template-areas:
+      "en price"
+      "cn cn"
+      "desc desc";
+  }
+
+  .menu-list-item.is-active.has-meta {
+    grid-template-areas:
+      "en price"
+      "cn cn"
+      "meta meta"
+      "desc desc";
+  }
+
+  .menu-list-item .list-cn,
+  .menu-list-item .list-meta,
+  .menu-list-item .list-desc {
+    display: none;
+  }
+
+  .menu-list-item.is-active .list-cn,
+  .menu-list-item.is-active .list-meta,
+  .menu-list-item.is-active .list-desc {
+    display: block;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Calm hybrid menu — progressive disclosure
+   ═══════════════════════════════════════════
+   Rest row: EN · price only (print menu).
+   Active: EN · price → CN → optional meta → desc.
+   Soft mat only on open row; plate wall stays open.
+*/
+.menu {
+  --menu-row-mat: transparent;
+  --menu-row-mat-active: linear-gradient(
+    90deg,
+    rgba(6, 4, 3, 0.22) 0%,
+    rgba(6, 4, 3, 0.1) 38%,
+    rgba(235, 207, 160, 0.05) 62%,
+    transparent 100%
+  );
+}
+
+.menu-list-item {
+  grid-template-areas:
+    "en price";
+  background: transparent;
+}
+
+.menu-list-item.has-meta {
+  grid-template-areas:
+    "en price";
+}
+
+.menu-list-item .list-cn,
+.menu-list-item .list-meta,
+.menu-list-item .list-desc {
+  display: none;
+}
+
+.menu-list-item.is-active {
+  grid-template-areas:
+    "en price"
+    "cn cn"
+    "desc desc";
+  background: var(--menu-row-mat-active);
+}
+
+.menu-list-item.is-active.has-meta {
+  grid-template-areas:
+    "en price"
+    "cn cn"
+    "meta meta"
+    "desc desc";
+}
+
+.menu-list-item.is-active .list-cn,
+.menu-list-item.is-active .list-meta,
+.menu-list-item.is-active .list-desc {
+  display: block;
+}
+
+/* Quiet leaders at rest */
+.menu-list-item .list-en::after {
+  opacity: 0.55;
+  border-bottom-color: rgba(250, 248, 244, 0.32);
+}
+
+.menu-list-item.is-active .list-en::after,
+.menu-list-item:hover:not(.is-active) .list-en::after,
+.menu-list-item:focus-visible:not(.is-active) .list-en::after {
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .menu-list-item {
+    grid-template-areas:
+      "en price";
+  }
+
+  .menu-list-item.is-active {
+    grid-template-areas:
+      "en price"
+      "cn cn"
+      "desc desc";
+  }
+
+  .menu-list-item.is-active.has-meta {
+    grid-template-areas:
+      "en price"
+      "cn cn"
+      "meta meta"
+      "desc desc";
+  }
+
+  .menu-list-item .list-cn,
+  .menu-list-item .list-meta,
+  .menu-list-item .list-desc {
+    display: none;
+  }
+
+  .menu-list-item.is-active .list-cn,
+  .menu-list-item.is-active .list-meta,
+  .menu-list-item.is-active .list-desc {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-list-item {
+    grid-template-areas:
+      "en price";
+  }
+
+  .menu-list-item.is-active {
+    grid-template-areas:
+      "en price"
+      "cn cn"
+      "desc desc";
+  }
+
+  .menu-list-item.is-active.has-meta {
+    grid-template-areas:
+      "en price"
+      "cn cn"
+      "meta meta"
+      "desc desc";
+  }
+
+  .menu-list-item .list-cn,
+  .menu-list-item .list-meta,
+  .menu-list-item .list-desc {
+    display: none;
+  }
+
+  .menu-list-item.is-active .list-cn,
+  .menu-list-item.is-active .list-meta,
+  .menu-list-item.is-active .list-desc {
+    display: block;
   }
 }

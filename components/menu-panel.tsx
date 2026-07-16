@@ -1,11 +1,11 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   filterMenuItems,
-  groupMenuItems,
   listMeta,
   listTitle,
+  MENU_CATEGORY_ORDER,
   MENU_FILTERS,
   MENU_ITEMS,
   type MenuCategory,
@@ -15,28 +15,27 @@ import {
 type FilterId = "all" | MenuCategory;
 
 /**
- * Menu panel — full-bleed dish plate + hybrid ledger (static site craft).
+ * Menu panel — full-bleed dish plate + calm hybrid ledger.
+ * Rest rows: English name + price. Active row reveals CN, meta, description.
+ * Chapter filters only — never group headers in the list.
  */
 export function MenuPanel() {
-  const [filter, setFilter] = useState<FilterId>("all");
+  const [filter, setFilter] = useState<FilterId>("classic");
   const [activeId, setActiveId] = useState(MENU_ITEMS[0]?.id ?? "pork");
 
-  const visible = useMemo(() => filterMenuItems(filter), [filter]);
+  const visible = useMemo(() => {
+    const items = filterMenuItems(filter);
+    if (filter !== "all") return items;
+    // Flat list ordered Classic → Seasonal → Plant, no group labels
+    return [...items].sort(
+      (a, b) =>
+        MENU_CATEGORY_ORDER.indexOf(a.category) -
+        MENU_CATEGORY_ORDER.indexOf(b.category)
+    );
+  }, [filter]);
+
   const active =
     visible.find((i) => i.id === activeId) || visible[0] || MENU_ITEMS[0];
-
-  const groups = useMemo(() => {
-    if (filter !== "all") {
-      return [
-        {
-          category: filter,
-          label: visible[0]?.catLabel || filter,
-          items: visible,
-        },
-      ];
-    }
-    return groupMenuItems(visible);
-  }, [filter, visible]);
 
   const pos = active?.position || "center center";
 
@@ -92,26 +91,13 @@ export function MenuPanel() {
 
         <div className="menu-ledger">
           <ul className="menu-list-view" role="listbox" aria-label="Dishes">
-            {groups.map((group) => (
-              <Fragment key={group.category}>
-                {filter === "all" ? (
-                  <li
-                    className="menu-list-group"
-                    role="presentation"
-                    data-group={group.category}
-                  >
-                    <span className="menu-list-group-label">{group.label}</span>
-                  </li>
-                ) : null}
-                {group.items.map((item) => (
-                  <MenuRow
-                    key={item.id}
-                    item={item}
-                    active={item.id === active?.id}
-                    onSelect={() => setActiveId(item.id)}
-                  />
-                ))}
-              </Fragment>
+            {visible.map((item) => (
+              <MenuRow
+                key={item.id}
+                item={item}
+                active={item.id === active?.id}
+                onSelect={() => setActiveId(item.id)}
+              />
             ))}
           </ul>
           <p className="menu-note">
@@ -136,13 +122,14 @@ function MenuRow({
 }) {
   const title = listTitle(item);
   const meta = listMeta(item);
+  const showMeta = active && Boolean(meta);
 
   return (
     <li
       role="option"
       tabIndex={active ? 0 : -1}
       aria-selected={active}
-      className={`menu-list-item${active ? " is-active" : ""}${meta ? " has-meta" : ""}`}
+      className={`menu-list-item${active ? " is-active" : ""}${showMeta ? " has-meta" : ""}`}
       onClick={onSelect}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -153,11 +140,15 @@ function MenuRow({
     >
       <span className="list-en">{title}</span>
       <span className="list-price">{item.price}</span>
-      <span className="list-cn" lang="zh-Hans">
-        {item.cn}
-      </span>
-      {meta ? <span className="list-meta">{meta}</span> : null}
-      <span className="list-desc">{item.desc}</span>
+      {active ? (
+        <>
+          <span className="list-cn" lang="zh-Hans">
+            {item.cn}
+          </span>
+          {meta ? <span className="list-meta">{meta}</span> : null}
+          <span className="list-desc">{item.desc}</span>
+        </>
+      ) : null}
     </li>
   );
 }

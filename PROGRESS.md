@@ -40,6 +40,21 @@
 - [x] Menu type halo on rows  
 - Phone QA: **human** on live URL after deploy  
 
+## Calm hybrid menu (2026-07-16)
+
+Synthesis of research options (1+2+3+5+6; soft 4 via active row):
+
+| Rule | Implementation |
+|------|----------------|
+| Rest row | EN · price only |
+| Active row | + CN, House/Shellfish, desc |
+| Categories | Filters only; **no** list group headers |
+| Default | **Classic** chapter |
+| Photo | Wall only (print ledger) |
+| Subagents | menu-panel.tsx ∥ zhe-craft.css (non-overlapping) |
+
+Human: hard-refresh live Menu — should feel quieter.
+
 ## Blockers
 
 None for demo.
