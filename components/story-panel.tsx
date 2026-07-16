@@ -8,6 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import { STORY_CHAPTERS } from "@/lib/story";
+import { site } from "@/lib/site";
 
 const SWEEP_MS = 650;
 const COPY_FADE_MS = 220;
@@ -21,8 +22,8 @@ type Layer = {
 };
 
 /**
- * Origins — original craft carousel:
- * dual-layer horizontal wall sweep, copy soft-fade, swipe / chevrons / dots,
+ * The house — place-first carousel (House → Hands → Night):
+ * dual-layer wall sweep, copy soft-fade, pips / swipe / ←→,
  * autoplay while in view (pauses after user input).
  */
 export function StoryPanel() {
@@ -298,7 +299,7 @@ export function StoryPanel() {
     stepRef.current = step;
   }, [step]);
 
-  /* Autoplay while Origins is on screen */
+  /* Autoplay while The house is on screen */
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -613,9 +614,9 @@ export function StoryPanel() {
         <header className="story-head">
           <div className="story-head-title">
             <h2>
-              <span className="en">Origins</span>
+              <span className="en">{site.sections.story.en}</span>
               <span className="cn" lang="zh-Hans">
-                由来
+                {site.sections.story.cn}
               </span>
             </h2>
           </div>

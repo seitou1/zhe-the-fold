@@ -3,7 +3,7 @@ import { STORY_CHAPTERS } from "@/lib/story";
 import { site } from "@/lib/site";
 
 /**
- * Origins — all three chapters visible (no client JS / tabs).
+ * The house — all chapters visible (no client JS / tabs).
  * Always tappable/readable on mobile even if React never hydrates.
  */
 export function StorySection() {
@@ -33,7 +33,7 @@ export function StorySection() {
                 alt=""
                 className="h-full w-full object-cover"
                 style={{ objectPosition: chapter.position }}
-                loading={chapter.id === "village" ? "eager" : "lazy"}
+                loading={chapter.id === "house" ? "eager" : "lazy"}
                 decoding="async"
               />
               <div

@@ -93,8 +93,9 @@ export const site = {
   /** Panel titles only — story prose lives in lib/story, ops in menu-note. */
   sections: {
     story: {
-      en: "Origins",
-      cn: "起源",
+      /** Place-first (not genealogy) — room, hands, night */
+      en: "The house",
+      cn: "小店",
     },
     menu: {
       en: "The Menu",
