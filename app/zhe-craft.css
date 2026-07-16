@@ -101,7 +101,10 @@
     rgba(245, 236, 220, 0.55) 55%,
     transparent 100%
   );
-  /* Menu spotlight: bottom + left column */
+  /*
+   * Menu copy band: hold left (names) + a little right (prices).
+   * Was left-only → price column sat on open plate.
+   */
   --read-scrim-menu-copy: linear-gradient(
       to top,
       rgba(6, 4, 3, 0.8) 0%,
@@ -115,6 +118,12 @@
       rgba(10, 7, 5, 0.32) 26%,
       rgba(12, 8, 6, 0.08) 48%,
       transparent 68%
+    ),
+    linear-gradient(
+      to left,
+      rgba(6, 4, 3, 0.45) 0%,
+      rgba(10, 7, 5, 0.18) 18%,
+      transparent 42%
     );
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -2664,9 +2673,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Type-first legibility (no wall dimming):
- * ink halo + hairline stroke hold glyphs; soft row mat is local only.
- * Source Serif italic ships 400 only — contrast comes from halo/stroke, not fake bold.
+ * Type-first legibility:
+ * Names + prices share full cream ink (price is decision data, not accent chrome).
+ * Local price pad stabilizes contrast when the wall plate is bright.
+ * Source Serif italic ships 400 only — halo/stroke, not fake bold.
  */
 .menu {
   --menu-ink: #faf8f4;
@@ -2682,14 +2692,20 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     0 2px 4px rgba(0, 0, 0, 0.78),
     0 4px 14px rgba(0, 0, 0, 0.52),
     0 10px 32px rgba(0, 0, 0, 0.36);
+  /* Quiet dark under the $ only — plate stays open under the name */
+  --menu-price-pad: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(6, 4, 3, 0.42) 35%,
+    rgba(6, 4, 3, 0.58) 100%
+  );
   /* Rest rows: transparent / whisper only — plate wall stays open */
   --menu-row-mat: transparent;
   --menu-row-mat-active: linear-gradient(
     90deg,
-    rgba(6, 4, 3, 0.22) 0%,
-    rgba(6, 4, 3, 0.1) 38%,
-    rgba(235, 207, 160, 0.05) 62%,
-    transparent 100%
+    rgba(6, 4, 3, 0.28) 0%,
+    rgba(6, 4, 3, 0.14) 42%,
+    rgba(6, 4, 3, 0.32) 100%
   );
 }
 
@@ -2748,38 +2764,48 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   text-shadow: var(--menu-type-halo-strong);
 }
 
-/* Dotted leader toward price — quiet at rest, a bit clearer on hover/active */
+/* Dotted leader toward price — whisper only; must not out-compete $ */
 .menu-list-item .list-en::after {
   content: "";
   flex: 1 1 auto;
   min-width: 0.65rem;
   height: 0;
   margin-right: 0.05rem;
-  border-bottom: 1px dotted rgba(250, 248, 244, 0.42);
+  border-bottom: 1px dotted rgba(250, 248, 244, 0.28);
   transform: translateY(-0.38em);
-  opacity: 0.7;
+  opacity: 0.5;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.55));
   transition: opacity 0.2s var(--ease-soft), border-color 0.2s var(--ease-soft);
 }
 
-/* Price — full opacity, medium weight (roman 500 is loaded) */
+/*
+ * Price — decision data, not accent chrome.
+ * Same cream ink + scale as the dish name; local pad holds contrast
+ * over bright steam/plate (WCAG-stable vs wall crossfade).
+ */
 .menu-list-item .list-price {
   grid-area: price;
+  position: relative;
+  z-index: 1;
   font-family: var(--font-display);
   font-style: normal;
-  font-size: calc(var(--type-list-price) * 0.92);
+  font-size: var(--type-list-price);
   font-weight: 500;
-  color: var(--tone-accent);
+  color: var(--menu-ink);
   justify-self: end;
   align-self: start;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  padding-top: 0.14rem;
+  line-height: var(--type-lh-ui);
+  margin: -0.08rem -0.05rem -0.08rem 0;
+  padding: 0.2rem 0.28rem 0.2rem 0.55rem;
   opacity: 1;
-  -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.35);
+  -webkit-text-stroke: 0.28px rgba(0, 0, 0, 0.5);
   paint-order: stroke fill;
   text-shadow: var(--menu-type-halo-strong);
+  background: var(--menu-price-pad);
+  border-radius: 0;
 }
 
 /*
@@ -2896,13 +2922,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-item.is-active .list-en::after {
-  border-bottom-color: rgba(235, 207, 160, 0.55);
-  opacity: 0.9;
+  border-bottom-color: rgba(250, 248, 244, 0.38);
+  opacity: 0.65;
 }
 
 .menu-list-item.is-active .list-price {
-  opacity: 1;
+  color: var(--menu-ink);
   font-weight: 500;
+  background: var(--menu-price-pad);
 }
 
 .menu-list-item.is-active .list-cn {
@@ -2916,19 +2943,19 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .menu-list-item:hover:not(.is-active),
 .menu-list-item:focus-visible:not(.is-active) {
   border: none;
-  /* Whisper only — no heavy rest mat */
+  /* Soft mat across the full row — including price column */
   background: linear-gradient(
     90deg,
-    rgba(6, 4, 3, 0.1) 0%,
-    rgba(6, 4, 3, 0.04) 50%,
-    transparent 100%
+    rgba(6, 4, 3, 0.16) 0%,
+    rgba(6, 4, 3, 0.08) 48%,
+    rgba(6, 4, 3, 0.22) 100%
   );
 }
 
 .menu-list-item:hover:not(.is-active) .list-en::after,
 .menu-list-item:focus-visible:not(.is-active) .list-en::after {
-  opacity: 0.85;
-  border-bottom-color: rgba(250, 248, 244, 0.5);
+  opacity: 0.65;
+  border-bottom-color: rgba(250, 248, 244, 0.4);
 }
 
 .menu-list-item:focus-visible {
@@ -4561,13 +4588,20 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   }
 
-  /* Type halo on menu rows over bright plates */
+  /* Type halo on menu rows over bright plates — price gets the denser hold */
   .menu-list-item .list-en,
-  .menu-list-item .list-cn,
-  .menu-list-item .list-price {
+  .menu-list-item .list-cn {
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.85),
       0 2px 12px rgba(0, 0, 0, 0.55);
+  }
+
+  .menu-list-item .list-price {
+    text-shadow:
+      0 0 1px rgba(0, 0, 0, 1),
+      0 1px 2px rgba(0, 0, 0, 0.95),
+      0 2px 10px rgba(0, 0, 0, 0.7),
+      0 4px 18px rgba(0, 0, 0, 0.45);
   }
 
   /* Phone polish: same detail fold as desktop */
@@ -4588,10 +4622,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   --menu-row-mat: transparent;
   --menu-row-mat-active: linear-gradient(
     90deg,
-    rgba(6, 4, 3, 0.22) 0%,
-    rgba(6, 4, 3, 0.1) 38%,
-    rgba(235, 207, 160, 0.05) 62%,
-    transparent 100%
+    rgba(6, 4, 3, 0.28) 0%,
+    rgba(6, 4, 3, 0.14) 42%,
+    rgba(6, 4, 3, 0.32) 100%
   );
 }
 
@@ -4612,16 +4645,16 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background: var(--menu-row-mat-active);
 }
 
-/* Quiet leaders at rest */
+/* Quiet leaders at rest — price stays the denser mark */
 .menu-list-item .list-en::after {
-  opacity: 0.55;
-  border-bottom-color: rgba(250, 248, 244, 0.32);
+  opacity: 0.45;
+  border-bottom-color: rgba(250, 248, 244, 0.28);
 }
 
 .menu-list-item.is-active .list-en::after,
 .menu-list-item:hover:not(.is-active) .list-en::after,
 .menu-list-item:focus-visible:not(.is-active) .list-en::after {
-  opacity: 0.85;
+  opacity: 0.6;
 }
 
 /* ═══════════════════════════════════════════
