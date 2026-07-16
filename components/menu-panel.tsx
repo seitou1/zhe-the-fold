@@ -31,25 +31,22 @@ export function MenuPanel() {
   /** null = all rows closed (default on first visit); re-tap collapses open row */
   const [activeId, setActiveId] = useState<string | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
+  /** Last open dish — keeps the plate when the list is fully collapsed */
+  const [lastOpenId, setLastOpenId] = useState<string>(
+    MENU_ITEMS[0]?.id ?? "pork"
+  );
 
   const listRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Map<string, HTMLLIElement>>(new Map());
   const finePointer = useRef(false);
   const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeIdRef = useRef<string | null>(activeId);
-  /** Last open dish — keeps the plate when the list is fully collapsed */
-  const lastOpenIdRef = useRef<string>(MENU_ITEMS[0]?.id ?? "pork");
 
   useEffect(() => {
     activeIdRef.current = activeId;
-    if (activeId) lastOpenIdRef.current = activeId;
   }, [activeId]);
 
-  const active = activeId
-    ? allItems.find((i) => i.id === activeId) || null
-    : null;
-
-  const wallId = previewId ?? activeId ?? lastOpenIdRef.current;
+  const wallId = previewId ?? activeId ?? lastOpenId;
   const wallItem =
     allItems.find((i) => i.id === wallId) ||
     allItems[0] ||
@@ -135,7 +132,7 @@ export function MenuPanel() {
       }
 
       activeIdRef.current = id;
-      lastOpenIdRef.current = id;
+      setLastOpenId(id);
       setActiveId(id);
       setPreviewId(null);
 
@@ -354,7 +351,6 @@ function MenuRow({
       role="option"
       tabIndex={0}
       aria-selected={active}
-      aria-expanded={active}
       className={[
         "menu-list-item",
         active ? "is-active" : "",

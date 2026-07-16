@@ -30,15 +30,15 @@
 | Phone QA full scorecard D | **human required** on live URL |
 | Sample NAP | **fiction** — noindex held |
 | `check-launch.mjs` | **N/A** (static kit script; Next gate adapted ad hoc this audit) |
-| ESLint | **2 errors** (menu-panel refs, use-panel-video setState) — not blocking build |
+| ESLint | **0 errors** (1 known warning: manual fonts.css link) |
+| Phone QA (human) | **good** (owner-confirmed 2026-07-16) |
 | Legacy CSS (spotlight/rail) | **still in zhe-craft.css**, no component usage |
 
 ## Blockers for *live index*
 
 1. Real NAP + booking  
-2. Human phone QA (story swipe both ways, menu fold, visit actions)  
-3. Optional: strip dead menu spotlight/rail CSS; fix lint errors  
+2. Optional: strip dead menu spotlight/rail CSS  
 
 ## Blockers for *craft demo*
 
-None critical if honesty rows stay visible. ESLint debt + dead CSS are polish, not demo blockers.
+None.

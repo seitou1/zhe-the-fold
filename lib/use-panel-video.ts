@@ -36,8 +36,8 @@ export function usePanelVideo(
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    /* Initial ready is false — leave poster; no sync setState in effect */
     if (reduced) {
-      setReady(false);
       return;
     }
 
