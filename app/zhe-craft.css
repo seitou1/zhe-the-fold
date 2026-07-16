@@ -3319,18 +3319,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Visit — research hierarchy, one left reading column:
- * 1) Title + quiet lead
- * 2) Find us | Hours (grouped facts)
- * 3) Directions · Call · Reserve (equal body links)
- * 4) Instagram (tertiary)
- * Band sits bottom-left over the storefront (caption grammar).
+ * Visit — same panel grammar as Menu / Story:
+ * Head top-left (title + lead). Logistics bottom-left over storefront.
+ * Shared --content-col for the reading band.
  */
 .visit-stage {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 0;
   height: 100%;
@@ -3345,10 +3342,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* Major blocks: head · body (spotlight) */
-  gap: 1.25rem;
+  flex: 1 1 auto;
+  width: min(var(--content-col), 100%);
+  max-width: min(var(--content-col), 100%);
+  height: 100%;
   max-height: 100%;
   min-height: 0;
+  gap: 0;
   /* No extra X pad — same band as Menu / Story */
   padding: 0.1rem 0 0.75rem;
   overflow-x: hidden;
@@ -3419,7 +3419,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   opacity: 0.78;
 }
 
-/* ── 2–4. Body stack under head ── */
+/*
+ * Logistics sit at the bottom of the band (storefront caption),
+ * while .visit-head stays pinned to the top like Menu / Story.
+ */
 .visit-spotlight {
   flex: 0 0 auto;
   display: flex;
@@ -3428,7 +3431,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   gap: 1.35rem;
   width: 100%;
   min-width: 0;
-  margin: 0;
+  margin: auto 0 0;
   padding: 0;
   color: var(--tone-fg);
 }
@@ -4371,7 +4374,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: stretch;
     gap: 0;
   }
@@ -4389,9 +4392,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-band {
+    flex: 1 1 auto;
+    height: 100%;
     max-height: 100%;
     min-height: 0;
-    gap: 1rem;
+    gap: 0;
     padding: 0.05rem 0 0.75rem;
     overflow-x: hidden;
     overflow-y: auto;
@@ -4417,6 +4422,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .visit-spotlight {
     width: 100%;
     gap: 1.15rem;
+    margin-top: auto;
   }
 
   .visit-facts {
