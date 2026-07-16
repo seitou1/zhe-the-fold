@@ -2764,25 +2764,29 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Price — type only (no pad/scrim). Full cream ink + name scale so $
- * reads with the dish; wheat accent stays for meta/kickers.
+ * Price — type only (no pad/scrim). Same type step + baseline as .list-en
+ * (roman vs italic still differ optically; size/weight/line-height match).
+ * Wheat accent stays for meta/kickers, not $ .
  */
 .menu-list-item .list-price {
   grid-area: price;
   font-family: var(--font-display);
   font-style: normal;
-  font-size: var(--type-list-price);
-  font-weight: 500;
+  /* Lock to name token — not a parallel alias that can drift */
+  font-size: var(--type-list-en);
+  font-weight: 400;
   color: var(--menu-ink);
   justify-self: end;
-  align-self: start;
-  letter-spacing: 0.03em;
+  /* Row is baseline-aligned; start + padding-top was floating $ above/below */
+  align-self: baseline;
+  letter-spacing: var(--type-title-track);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   line-height: var(--type-lh-ui);
-  padding-top: 0.14rem;
+  padding-top: 0;
+  margin: 0;
   opacity: 1;
-  -webkit-text-stroke: 0.28px rgba(0, 0, 0, 0.5);
+  -webkit-text-stroke: 0.28px rgba(0, 0, 0, 0.45);
   paint-order: stroke fill;
   text-shadow: var(--menu-type-halo-strong);
 }
@@ -2908,7 +2912,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .menu-list-item.is-active .list-price {
   color: var(--menu-ink);
   opacity: 1;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .menu-list-item.is-active .list-cn {
@@ -3130,7 +3134,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-bottom: 0.7rem;
   }
 
-  .menu-list-item .list-en {
+  /* Name + price share one clamp — was name-only, so $ looked smaller */
+  .menu-list-item .list-en,
+  .menu-list-item .list-price {
     font-size: clamp(1.05rem, 4.2vw, 1.18rem);
   }
 
