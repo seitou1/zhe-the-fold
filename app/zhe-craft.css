@@ -250,6 +250,11 @@
   /* Top always clears fixed nav; bottom clears dock (0 on desktop) */
   --stage-pad-y: calc(var(--nav-h) + var(--chrome-gap));
   --stage-pad-b: calc(var(--dock-h) + clamp(1.15rem, 2.4vh, 1.65rem));
+  /*
+   * Shared left reading column — Hero / Story / Menu / Visit
+   * sit in the same horizontal band under --stage-pad-x.
+   */
+  --content-col: 30rem;
 }
 
 /* ── Reset & base ── */
@@ -311,6 +316,24 @@ html.js-snap-off {
   min-height: 0;
   gap: clamp(0.75rem, 2vh, 1.25rem);
   overflow: hidden; /* panels are static frames — page snap owns vertical scroll */
+}
+
+/*
+ * Shared content column — same max width + left edge for every panel’s copy.
+ * Walls stay full-bleed; type lives in this band.
+ */
+.hero-content,
+.story-head,
+.story-spotlight,
+.menu-head,
+.menu-ledger,
+.menu-spotlight-copy,
+.visit-band {
+  width: min(var(--content-col), 100%);
+  max-width: min(var(--content-col), 100%);
+  margin-left: 0;
+  margin-right: auto;
+  box-sizing: border-box;
 }
 
 /*
@@ -1190,8 +1213,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .hero-content {
   position: relative;
   z-index: 2;
-  width: min(26rem, 100%);
-  max-width: min(26rem, 100%);
   color: var(--tone-fg);
   display: flex;
   flex-direction: column;
@@ -1456,10 +1477,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .story-head {
   flex-shrink: 0;
   display: grid;
-  grid-template-columns: minmax(8rem, 0.75fr) minmax(0, 1.4fr);
-  gap: 0.75rem 1.5rem;
+  grid-template-columns: minmax(7rem, 0.85fr) minmax(0, 1.2fr);
+  gap: 0.65rem 1.25rem;
   align-items: end;
-  width: 100%;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--tone-line);
   transition: border-color var(--motion), color var(--motion);
@@ -1488,7 +1508,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  max-width: 32rem;
+  max-width: none;
+  width: 100%;
+  min-width: 0;
   margin: 0;
 }
 
@@ -1503,7 +1525,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   text-shadow: var(--tone-shadow-soft);
 }
 
-/* One chapter at a time — Menu spotlight grammar */
+/* One chapter at a time — shared content column */
 .story-spotlight {
   flex: 1;
   min-height: 0;
@@ -1511,7 +1533,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   flex-direction: column;
   justify-content: flex-end;
   gap: 0.45rem;
-  max-width: min(36rem, 100%);
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
@@ -1547,7 +1568,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   opacity: 1;
   color: var(--tone-fg-soft);
   margin: 0;
-  max-width: 34rem;
+  max-width: none;
 }
 
 /*
@@ -2162,7 +2183,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   gap: 0.28rem;
-  max-width: min(32rem, 100%);
   color: var(--tone-fg);
   /* Dual-layer shadow: crisp edge + soft lift off the photo */
   text-shadow: var(--tone-shadow-soft);
@@ -2205,7 +2225,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   letter-spacing: var(--type-body-track);
   color: var(--tone-fg);
   opacity: 1;
-  max-width: 30rem;
+  max-width: none;
   margin-top: 0.4rem;
   font-weight: 400;
 }
@@ -2492,7 +2512,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: min(36rem, 100%);
+  max-width: none;
   /* Seamless — no box, border, or cast shadow */
   background: transparent;
   border: none;
@@ -2639,19 +2659,16 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   text-shadow: none;
 }
 
-/* Ledger column — left edge (scan path); plate opens to the right */
+/* Ledger column — shared content width; plate opens to the right */
 .menu-ledger {
   /* flex-basis 0 so overflow child gets a real height (not content-sized) */
   flex: 1 1 0%;
   min-height: 0;
-  width: min(26.5rem, 100%);
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: auto;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  padding: 0.35rem 1rem 0.25rem 0.15rem;
+  /* No extra X pad — stage + --content-col own the horizontal band */
+  padding: 0.35rem 0 0.25rem;
   overflow: hidden;
   /* No side band — type-shadow holds the list over open plate */
   background: transparent;
@@ -3125,7 +3142,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-ledger {
-    width: 100%;
+    width: min(var(--content-col), 100%);
+    max-width: min(var(--content-col), 100%);
     margin-left: 0;
     margin-top: 0;
     flex: 1 1 0%;
@@ -3133,7 +3151,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     max-height: none;
     min-height: 0;
     overflow: hidden;
-    padding: 0.35rem 0.2rem 0.2rem;
+    padding: 0.35rem 0 0.2rem;
     background: transparent;
   }
 
@@ -3331,14 +3349,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   align-items: stretch;
   /* Major blocks: head · body (spotlight) */
   gap: 1.25rem;
-  width: min(30rem, 100%);
-  max-width: 100%;
   max-height: 100%;
   min-height: 0;
-  margin: 0;
-  margin-right: auto;
-  padding: 0.1rem 0.5rem 0.75rem 0.05rem;
-  box-sizing: border-box;
+  /* No extra X pad — same band as Menu / Story */
+  padding: 0.1rem 0 0.75rem;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -3775,14 +3789,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     gap: 0.15rem;
   }
 
-  /* Tablet: left logistics band stays compact */
-  .visit-band {
-    width: min(30rem, 100%);
-  }
-
-  .menu-spotlight-copy {
-    max-width: min(36rem, 100%);
-  }
+  /* Content columns stay on --content-col (shared rule) */
 }
 
 /* Phone + small tablet: stacked layouts + same section snap as desktop */
@@ -4081,8 +4088,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .hero-content {
-    width: 100%;
-    max-width: min(22rem, 100%);
+    width: min(var(--content-col), 100%);
+    max-width: min(var(--content-col), 100%);
   }
 
   .hero-eyebrow {
@@ -4361,12 +4368,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-band {
-    width: 100%;
-    max-width: none;
+    width: min(var(--content-col), 100%);
+    max-width: min(var(--content-col), 100%);
     max-height: 100%;
     min-height: 0;
     gap: 1rem;
-    padding: 0.1rem 0.1rem 0.65rem;
+    padding: 0.1rem 0 0.65rem;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -4879,10 +4886,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   justify-content: flex-start;
   padding-bottom: 0.45rem;
   margin: 0;
-  margin-right: auto;
-  /* Sit over the left ledger column — not full stage / not right edge */
-  width: min(28rem, 42vw);
-  max-width: 100%;
   text-align: left;
 }
 
@@ -4908,8 +4911,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   overflow: hidden;
   padding-top: 0.15rem;
   padding-bottom: 0;
-  margin-left: 0;
-  margin-right: auto;
 }
 
 .menu .menu-list-view {
@@ -5003,8 +5004,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 @media (min-width: 901px) {
   .menu .menu-ledger {
-    /* Taller column — still left-anchored, slightly wider if space */
-    width: min(28rem, 42vw);
     max-height: none;
   }
 
