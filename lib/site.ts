@@ -38,8 +38,8 @@ export const site = {
    */
   service: {
     format: "hybrid" as const,
-    /** Visit kicker for the service fact */
-    kicker: "Here",
+    /** Visit kicker for the service fact (pair with Find us / Hours) */
+    kicker: "Join us",
     modes: [
       {
         id: "table",
