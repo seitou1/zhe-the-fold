@@ -675,7 +675,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav::before {
   text-align: left;
 }
 
-/* Same type recipe as .nav-links a — Open/Closed was ui-sm and looked tiny */
+/* Same type step as nav links; open/closed differ by color + dim, not size */
 .nav-hours-state,
 .nav-hours-meta {
   font-family: var(--font-ui);
@@ -709,13 +709,33 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav::before {
   opacity: 0.5;
 }
 
-.nav-hours.is-open .nav-hours-state {
-  color: var(--wheat);
+/* Open: wheat state + lit ember (full strength) */
+.nav-hours.is-open {
+  opacity: 1;
 }
 
-.nav-hours.is-closed .nav-hours-state {
+.nav-hours.is-open .nav-hours-state {
+  color: var(--wheat);
+  opacity: 1;
+}
+
+/*
+ * Closed: whole chip quiets (mark + “opens …” copy).
+ * Was only opacity 0.92 on text — next to nav links it read as full strength,
+ * especially on phone where meta is hidden and only state shows.
+ */
+.nav-hours.is-closed {
+  opacity: 0.52;
+}
+
+.nav-hours.is-closed .nav-hours-state,
+.nav-hours.is-closed .nav-hours-meta {
   color: inherit;
-  opacity: 0.92;
+  opacity: 1;
+}
+
+.nav-hours.is-closed .nav-hours-mark {
+  opacity: 0.65;
 }
 
 /* Reserve sits with Story/Menu/Visit — same rest/hover/active grammar */
@@ -743,6 +763,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours.is-closed .nav-ho
 
 body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours.is-open .nav-hours-state {
   color: var(--clay-deep, var(--clay));
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours.is-closed {
+  opacity: 0.58;
 }
 
 body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours-state,
