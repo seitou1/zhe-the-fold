@@ -16,6 +16,28 @@ export const viewport: Viewport = {
   themeColor: site.seo.themeColor,
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  const ops = await getSiteOps();
+  const title = opsSiteTitle(ops);
+  return {
+    title: {
+      default: title,
+      template: `%s · ${ops.shortName}`,
+    },
+    description: ops.description,
+    robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description: ops.description,
+      type: "website",
+      locale: site.seo.locale,
+    },
+    icons: {
+      icon: `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${encodeURIComponent(ops.nameCn)}</text></svg>`,
+    },
+  };
+}
+
 /**
  * Craft shell — structure mirrors static index.html chrome.
  * Content from Supabase site_settings + menu/story tables (static fallback).
@@ -26,23 +48,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const ops = await getSiteOps();
-  const title = opsSiteTitle(ops);
 
   return (
     <html lang="en">
       <head>
-        <title>{title}</title>
-        <meta name="description" content={ops.description} />
-        <meta name="robots" content="noindex, nofollow" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={ops.description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:locale" content={site.seo.locale} />
         <link rel="stylesheet" href="/assets/fonts/fonts.css" />
-        <link
-          rel="icon"
-          href={`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${encodeURIComponent(ops.nameCn)}</text></svg>`}
-        />
         <link
           rel="preload"
           as="image"
@@ -64,6 +74,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
-// Keep type export for tooling that expects Metadata
-export type { Metadata };

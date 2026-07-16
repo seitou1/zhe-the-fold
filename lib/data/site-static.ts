@@ -3,7 +3,7 @@
  */
 
 import { site } from "@/lib/site";
-import type { HoursConfig, KitchenCopy, SiteOps } from "@/lib/data/site-types";
+import type { SiteOps } from "@/lib/data/site-types";
 
 export type { HoursConfig, KitchenCopy, SiteOps } from "@/lib/data/site-types";
 
@@ -76,14 +76,24 @@ export function siteOpsFromStaticFallback(): SiteOps {
 
     hours: {
       timeZone: site.hours.timeZone,
-      closedWeekdays: [...site.hours.closedWeekdays],
+      closedWeekdays: site.hours.closedWeekdays.map(String),
       note: site.hours.note,
       periods: site.hours.periods.map((p) => ({
-        days: [...p.days],
+        days: p.days.map(String),
         open: p.open,
         close: p.close,
       })),
-    } satisfies HoursConfig,
-    kitchen: { ...site.kitchen } satisfies KitchenCopy,
+    },
+    kitchen: {
+      open: site.kitchen.open,
+      until: site.kitchen.until,
+      opens: site.kitchen.opens,
+      seeVisit: site.kitchen.seeVisit,
+      closedPrefix: site.kitchen.closedPrefix,
+      daily: site.kitchen.daily,
+      easternTime: site.kitchen.easternTime,
+      titleOpenPrefix: site.kitchen.titleOpenPrefix,
+      titleClosedPrefix: site.kitchen.titleClosedPrefix,
+    },
   };
 }

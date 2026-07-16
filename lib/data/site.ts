@@ -3,12 +3,12 @@
  */
 
 import { cache } from "react";
-import {
-  siteOpsFromStaticFallback,
-  type HoursConfig,
-  type HoursPeriod,
-  type SiteOps,
-} from "@/lib/data/site-static";
+import { siteOpsFromStaticFallback } from "@/lib/data/site-static";
+import type {
+  HoursConfig,
+  HoursPeriod,
+  SiteOps,
+} from "@/lib/data/site-types";
 import { tryCreateServerClient } from "@/lib/supabase/server";
 
 export type {
@@ -20,15 +20,6 @@ export type {
 export type SiteSource = "supabase" | "static";
 
 export { siteOpsFromStaticFallback };
-export {
-  opsAddressLines,
-  opsHomeAriaLabel,
-  opsMapsUrl,
-  opsNavItems,
-  opsReserveMailto,
-  opsSiteTitle,
-  opsTelHref,
-} from "@/lib/data/site-helpers";
 
 type Row = Record<string, unknown>;
 

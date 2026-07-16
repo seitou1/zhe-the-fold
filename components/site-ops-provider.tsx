@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import type { SiteOps } from "@/lib/data/site";
 import { siteOpsFromStaticFallback } from "@/lib/data/site-static";
+import type { SiteOps } from "@/lib/data/site-types";
 
 const SiteOpsContext = createContext<SiteOps | null>(null);
 

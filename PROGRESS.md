@@ -23,6 +23,7 @@
 | Menu CMS | **live** |
 | Story CMS | **live** (after 002+seed) |
 | Site settings CMS | **live** + full chrome cols via **005** (run SQL) |
+| Deploy fix | client must not import `lib/data/site` (server) — use `site-types` / `site-static` |
 | Visit Call/Reserve | CMS `action_call` / `action_reserve` |
 | Sample NAP | **fiction** — noindex held |
 | Admin write UI | **not built** — Table Editor only |
