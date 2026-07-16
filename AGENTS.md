@@ -15,10 +15,16 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 4. Ship: `git push origin main` → Vercel auto-deploy  
 5. Phone QA after gesture/shell changes  
 
+## Backend scaffold (keep — next work)
+
+- `lib/supabase/{client,server}.ts` + `@supabase/supabase-js`  
+- `.env.local.example` (`NEXT_PUBLIC_SUPABASE_*`, `SUPABASE_SERVICE_ROLE_KEY`)  
+- Do **not** delete these as “unused”; wire CMS/ops when backend starts  
+
 ## Non-negotiables
 
 - Do not overwrite static `Zhe-The-Fold-Website`  
-- Ops content only in `lib/*` SSOT  
+- Ops content only in `lib/*` SSOT (until Supabase is the live SSOT)  
 - Honesty: partial / untested called out  
 - Mobile: no non-passive touch on scroll ancestors; wall-only gestures if added  
 - Keep `robots: noindex` until real NAP  

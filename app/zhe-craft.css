@@ -205,8 +205,7 @@ html.js-snap-off {
 .story-spotlight,
 .menu-head,
 .menu-ledger,
-.menu-spotlight-copy,
-.visit-band {
+.visit-band{
   width: min(var(--content-col), 100%);
   max-width: min(var(--content-col), 100%);
   margin-left: 0;
@@ -319,20 +318,14 @@ button {
   outline-color: var(--wheat);
 }
 
-.filter-btn:focus-visible,
-.menu-rail-item:focus-visible,
 .menu-list-item:focus-visible,
-.menu-view-btn:focus-visible,
-.visit-action:focus-visible {
+.visit-action:focus-visible{
   outline: 2px solid var(--clay);
   outline-offset: 3px;
 }
 
-.menu .filter-btn:focus-visible,
-.menu .menu-rail-item:focus-visible,
 .menu .menu-list-item:focus-visible,
-.menu .menu-view-btn:focus-visible,
-.visit .visit-action:focus-visible {
+.visit .visit-action:focus-visible{
   outline-color: var(--wheat);
 }
 
@@ -349,16 +342,6 @@ button {
 }
 
 /* ── Typography helpers (roles) ── */
-/*
- * Chinese marks (sitewide):
- *   ✓ Brand 褶 (hero + logo)
- *   ✓ One ceremonial mark under each panel EN title (由来 / 菜单 / 造访)
- *   ✓ Dish Chinese names (spotlight, list, rail)
- *   ✗ No dual-language echoes on eyebrows, leads, or body copy
- *
- * EN/CN share tone tokens + text-shadow from the panel; CN is never
- * forced through italic Latin display.
- */
 
 /* Chinese — serif mark / dish (never italic) */
 .cn {
@@ -379,7 +362,6 @@ button {
 }
 
 /* Readable prose + chrome — Outfit (UI role) */
-.menu-spotlight-desc,
 .story-spotlight .en,
 .hero-eyebrow .en,
 .hero-line .en,
@@ -394,8 +376,7 @@ button {
 .menu-list-item .list-desc,
 .menu-note .en,
 .footer-tag .en,
-.footer-copy,
-.toast {
+.footer-copy{
   font-family: var(--font-ui);
   font-style: normal;
   font-weight: 400;
@@ -418,8 +399,7 @@ button {
 }
 
 /* Dish CN under dish EN — same full ink as dish EN */
-.menu-spotlight-cn,
-.menu-list-item .list-cn {
+.menu-list-item .list-cn{
   font-family: var(--font-cn);
   font-style: normal;
   font-weight: 400;
@@ -430,17 +410,6 @@ button {
 }
 
 /* Crawlable story chapters — available to bots, not painted in the UI */
-.seo-story-chapters {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
 
 /* ── Navigation — one optical midline for logo · hours · links ── */
 .nav {
@@ -1349,54 +1318,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   padding: 0.75rem 0 0.35rem;
 }
 
-.menu-carousel-btn {
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  min-width: 2.6rem;
-  height: 2.6rem;
-  min-height: 2.6rem;
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: var(--tone-fg);
-  opacity: 0.4;
-  cursor: pointer;
-  box-shadow: none;
-  transition:
-    opacity 0.35s var(--ease-soft),
-    color 0.35s var(--ease-soft),
-    transform 0.2s var(--ease-out);
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.menu-carousel-btn .carousel-chevron {
-  display: block;
-  width: 1.05rem;
-  height: 1.05rem;
-  overflow: visible;
-}
-
-.menu-carousel-btn:hover,
-.menu-carousel-btn:focus-visible {
-  background: transparent;
-  opacity: 0.95;
-  color: var(--tone-fg);
-}
-
-.menu-carousel-btn:focus-visible {
-  outline: 2px solid var(--clay);
-  outline-offset: 3px;
-}
-
-.menu-carousel-btn:active {
-  transform: translateY(0.5px);
-  opacity: 0.75;
-}
-
 .story-dot {
   position: relative;
   flex: 0 0 auto;
@@ -1552,14 +1473,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   -webkit-user-select: text;
 }
 
-.menu-stage .menu-head,
-.menu-stage .menu-carousel,
-.menu-stage .menu-list-view,
-.menu-stage .menu-note,
-.menu-stage .menu-spotlight-copy {
-  pointer-events: auto;
-}
-
 /* Menu keeps the head rule — separates fixed title from the scrolling list */
 .menu-head {
   flex-shrink: 0;
@@ -1601,554 +1514,30 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 /* .menu-head-title .cn — shared panel CN mark rule */
 
 /* Filters + List on one right block, same baseline (no orphan List under) */
-.menu-actions {
-  grid-area: actions;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.15rem 1.25rem;
-  min-width: 0;
-}
-
-.menu-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.15rem 1rem;
-  justify-content: flex-end;
-  text-shadow: none;
-}
-
-.filter-btn {
-  position: relative;
-  /* Expand hit area ≥ ~44×44 without looking like a fat button */
-  padding: 0.65rem 0.55rem 0.55rem;
-  margin: 0;
-  min-height: 2.75rem;
-  min-width: 2.75rem;
-  border: none;
-  border-radius: 0;
-  /* No border-bottom underline — ::after only on .is-active (avoids sticky touch :hover dual lines) */
-  border-bottom: none;
-  /* Chrome — Outfit for legibility over photo (not display italic) */
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-weight: 400;
-  font-size: var(--type-ui);
-  letter-spacing: var(--type-ui-track);
-  color: var(--tone-filter);
-  background: transparent;
-  backdrop-filter: none;
-  box-shadow: none;
-  transition: color var(--motion), opacity var(--motion);
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
 
 /* Hairline only when selected — never on :hover / :focus */
-.filter-btn::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0.05rem;
-  width: 100%;
-  max-width: 1.65rem;
-  height: 1px;
-  background: var(--tone-filter-line-active);
-  opacity: 0;
-  transform: translateX(-50%);
-  transition: opacity 0.28s var(--ease-out);
-  pointer-events: none;
-}
-
-.filter-btn.is-active {
-  background: transparent;
-  color: var(--tone-filter-active);
-  box-shadow: none;
-  text-shadow: var(--tone-filter-glow);
-}
-
-.filter-btn.is-active::after {
-  opacity: 0.95;
-  background: var(--tone-filter-line-active);
-  box-shadow: 0 0 8px rgba(208, 192, 160, 0.45);
-}
 
 /* Color lift only — underline stays exclusive to .is-active */
-@media (hover: hover) and (pointer: fine) {
-  .filter-btn:hover:not(.is-active) {
-    color: var(--tone-filter-active);
-    opacity: 0.9;
-    background: transparent;
-  }
-}
 
 /* Touch / coarse pointers: kill any sticky :hover paint entirely */
-@media (hover: none), (pointer: coarse) {
-  .filter-btn:hover:not(.is-active),
-  .filter-btn:focus:not(.is-active),
-  .filter-btn:active:not(.is-active) {
-    color: var(--tone-filter);
-    background: transparent;
-  }
-
-  .filter-btn:hover:not(.is-active)::after,
-  .filter-btn:focus:not(.is-active)::after,
-  .filter-btn:active:not(.is-active)::after {
-    opacity: 0;
-  }
-}
 
 /*
  * Menu display — icon pair (photo | list), no box, no text.
  * Words live in aria-label / title; active = full ink + hairline.
  */
-.menu-tools {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
-  text-shadow: none;
-  flex-shrink: 0;
-}
-
-.menu-view {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-}
-
-.menu-view-sep {
-  width: 1px;
-  height: 0.9rem;
-  margin: 0 0.05rem;
-  background: var(--tone-line);
-  opacity: 0.9;
-  flex-shrink: 0;
-  align-self: center;
-  pointer-events: none;
-}
-
-.menu-view-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0.45rem 0.35rem 0.5rem;
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: var(--tone-filter);
-  opacity: 0.78;
-  box-shadow: none;
-  transition: color var(--motion), opacity var(--motion);
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.menu-view-btn::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0.2rem;
-  width: 1.2rem;
-  height: 1px;
-  background: var(--tone-filter-line-active);
-  opacity: 0;
-  transform: translateX(-50%);
-  transition: opacity 0.28s var(--ease-out);
-  pointer-events: none;
-}
-
-.menu-view-icon {
-  display: block;
-  width: 1.2rem;
-  height: 1.2rem;
-  opacity: 1;
-  /* Keep strokes crisp when scaled */
-  overflow: visible;
-}
-
-.menu-view-btn.is-active,
-.menu-view-btn[aria-pressed="true"] {
-  color: var(--tone-filter-active);
-  opacity: 1;
-  filter: drop-shadow(0 0 6px rgba(208, 192, 160, 0.4));
-}
-
-.menu-view-btn.is-active::after,
-.menu-view-btn[aria-pressed="true"]::after {
-  opacity: 0.95;
-  background: var(--tone-filter-line-active);
-  box-shadow: 0 0 8px rgba(208, 192, 160, 0.45);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .menu-view-btn:hover:not(.is-active) {
-    color: var(--tone-filter-active);
-    opacity: 0.9;
-    background: transparent;
-  }
-}
-
-@media (hover: none), (pointer: coarse) {
-  .menu-view-btn:hover:not(.is-active),
-  .menu-view-btn:focus:not(.is-active) {
-    color: var(--tone-filter);
-    opacity: 0.78;
-    background: transparent;
-  }
-
-  .menu-view-btn:hover:not(.is-active)::after,
-  .menu-view-btn:focus:not(.is-active)::after {
-    opacity: 0;
-  }
-}
 
 /* Light plates — clay amber, not wheat wash */
-.menu[data-tone="light"] .filter-btn.is-active {
-  text-shadow: var(--tone-filter-glow);
-}
-
-.menu[data-tone="light"] .filter-btn.is-active::after,
-.menu[data-tone="light"] .menu-view-btn.is-active::after,
-.menu[data-tone="light"] .menu-view-btn[aria-pressed="true"]::after {
-  box-shadow: 0 0 6px rgba(138, 99, 64, 0.35);
-}
-
-.menu[data-tone="light"] .menu-view-btn.is-active,
-.menu[data-tone="light"] .menu-view-btn[aria-pressed="true"] {
-  filter: drop-shadow(0 0 4px rgba(138, 99, 64, 0.3));
-}
-
-/* Spotlight: one dish at a time — spans full stage width */
-.menu-spotlight {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  align-items: flex-end;
-  width: 100%;
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: grab;
-}
-
-.menu-spotlight-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
-  color: var(--tone-fg);
-  /* Dual-layer shadow: crisp edge + soft lift off the photo */
-  text-shadow: var(--tone-shadow-soft);
-  transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft);
-}
-
-.menu-spotlight-cat {
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-weight: 400;
-  font-size: var(--type-kicker);
-  color: var(--tone-accent);
-  letter-spacing: var(--type-kicker-track);
-  text-transform: uppercase;
-  margin-bottom: 0.15rem;
-}
-
-.menu-spotlight-en {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--type-dish-en);
-  font-weight: 400;
-  letter-spacing: var(--type-title-track);
-  line-height: var(--type-lh-tight);
-  color: var(--tone-fg);
-  margin: 0;
-}
-
-.menu-spotlight-cn {
-  font-size: var(--type-dish-cn);
-  line-height: var(--type-lh-ui);
-  /* family/color from shared dish CN rule */
-}
-
-.menu-spotlight-desc {
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-size: var(--type-body);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-track);
-  color: var(--tone-fg);
-  opacity: 1;
-  max-width: none;
-  margin-top: 0.4rem;
-  font-weight: 400;
-}
-
-/* Spotlight is hidden in list view — no expand rules needed here */
-
-.menu-spotlight-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem 1rem;
-  margin-top: 0.85rem;
-  flex-wrap: wrap;
-}
-
-.menu-spotlight-price {
-  font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 400;
-  font-size: var(--type-title-sm);
-  color: var(--tone-fg);
-  letter-spacing: var(--type-title-track);
-  line-height: var(--type-lh-ui);
-  text-shadow: var(--tone-shadow-soft);
-}
-
-.menu-spotlight-marks {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.5rem;
-}
-
-.dish-mark {
-  display: inline-block;
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-weight: 400;
-  font-size: var(--type-micro);
-  letter-spacing: var(--type-kicker-track);
-  text-transform: uppercase;
-  color: var(--tone-fg);
-  border: 1px solid rgba(242, 235, 224, 0.4);
-  border-radius: 999px;
-  padding: 0.2rem 0.5rem 0.18rem;
-  line-height: var(--type-lh-ui);
-  opacity: 1;
-}
-
-.dish-mark--house {
-  color: var(--tone-accent-soft, var(--wheat));
-  border-color: rgba(212, 184, 150, 0.45);
-  letter-spacing: var(--type-kicker-track);
-}
-
-.menu[data-tone="light"] .dish-mark {
-  color: var(--tone-fg);
-  border-color: rgba(28, 24, 20, 0.28);
-}
-
-.menu[data-tone="light"] .dish-mark--house {
-  color: var(--clay-deep, var(--clay));
-  border-color: rgba(154, 86, 68, 0.35);
-}
-
-.menu-list-item .list-marks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  grid-column: 1 / -1;
-  margin-top: 0.15rem;
-}
-
-.menu-list-item .list-marks .dish-mark {
-  font-size: var(--type-micro);
-  padding: 0.15rem 0.42rem;
-}
-
-/* Dish carousel — thumbs only + chevrons (labels live in spotlight) */
-.menu-carousel {
-  --menu-thumb-w: 6.5rem;
-  --menu-thumb-h: 4.25rem;
-  --menu-rail-pad-y: 0.2rem;
-  --menu-rail-gap: 0.5rem;
-  --menu-chev-size: 2.35rem;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  column-gap: 0.2rem;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  margin-inline: auto;
-  margin-top: 0.15rem;
-}
-
-.menu-carousel-btn {
-  /* Shared quiet chevron chrome with .story-carousel-btn */
-  z-index: 2;
-  width: var(--menu-chev-size);
-  min-width: var(--menu-chev-size);
-  height: var(--menu-chev-size);
-  min-height: var(--menu-chev-size);
-  margin-top: 0; /* thumbs-only rail — center with align-items on carousel */
-}
-
-.menu-carousel-btn[hidden] {
-  display: none !important;
-}
 
 /* Few items: hug content, no empty stretch, no side fade */
-.menu-carousel.is-compact .menu-rail-wrap {
-  flex: 0 0 auto;
-  width: auto;
-  max-width: none;
-  mask-image: none;
-}
-
-.menu-carousel.is-compact .menu-rail {
-  width: max-content;
-  max-width: none;
-  overflow-x: hidden;
-  scroll-snap-type: none;
-  scroll-padding-inline: 0;
-  cursor: default;
-}
 
 /* Many items: fill remaining width and scroll */
-.menu-carousel.is-overflowing .menu-rail-wrap {
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.menu-carousel.is-overflowing .menu-rail {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: calc(50% - (var(--menu-thumb-w) / 2));
-  cursor: grab;
-}
-
-.menu-rail-wrap {
-  flex: 1 1 auto;
-  min-width: 0;
-  width: auto;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  /* Soft edge fade only when overflowing (see .is-overflowing) */
-  mask-image: none;
-}
-
-.menu-carousel.is-overflowing .menu-rail-wrap {
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 1.5%,
-    #000 98.5%,
-    transparent 100%
-  );
-}
-
-.menu-rail {
-  display: flex;
-  gap: var(--menu-rail-gap);
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: calc(50% - (var(--menu-thumb-w) / 2));
-  padding: var(--menu-rail-pad-y) 0.25rem calc(var(--menu-rail-pad-y) + 0.35rem);
-  width: max-content;
-  max-width: 100%;
-  box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  touch-action: pan-x;
-  scrollbar-width: none;
-  cursor: grab;
-}
-
-.menu-rail:active {
-  cursor: grabbing;
-}
-
-.menu-rail::-webkit-scrollbar {
-  display: none;
-  height: 0;
-}
-
-.menu-rail-item {
-  flex: 0 0 auto;
-  width: var(--menu-thumb-w);
-  scroll-snap-align: center;
-  border: none;
-  border-radius: 0;
-  overflow: visible;
-  background: transparent;
-  cursor: pointer;
-  /* Photo view: thumb only — no name/price stack under the plate */
-  padding: 0 0 0.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
-  transition: opacity var(--motion), transform 0.3s var(--ease-out);
-  opacity: 0.52;
-  touch-action: manipulation;
-  box-shadow: none;
-  text-shadow: none;
-}
-
-.menu-rail-item.is-hidden {
-  display: none;
-}
-
-.menu-rail-item img {
-  width: 100%;
-  height: 4.5rem;
-  object-fit: cover;
-  display: block;
-  filter: saturate(1.02);
-  border-radius: 0;
-  /* Quiet photo plate — no card chrome */
-  box-shadow: none;
-}
 
 /* Short hairline under active dish — same grammar as filters */
-.menu-rail-item::after {
-  content: "";
-  display: block;
-  width: 1.35rem;
-  height: 1px;
-  margin: 0.3rem auto 0;
-  background: currentColor;
-  opacity: 0;
-  transition: opacity var(--motion), width var(--motion), background var(--motion);
-}
 
-.menu-rail-item:hover,
-.menu-rail-item:focus-visible {
-  opacity: 0.88;
-  transform: none;
-  outline: none;
-}
-
-.menu-rail-item:focus-visible {
-  outline: 2px solid var(--clay);
-  outline-offset: 3px;
-}
-
-/* Legacy list shell — display/layout owned by ledger hybrid block below */
 .menu-list-view {
   /* kept for cascade safety; hybrid rules supersede */
 }
 
-/*
- * List mode = same room, calmer light.
- * Same paper-on-dark language as spotlight / Visit — no floating paper card.
- * Legibility comes from a deeper veil + steady type, not a new surface.
- */
 .menu.is-list-view {
   /* Same full ink as photo mode — no softer “list language” */
   --tone-fg: #faf8f4;
@@ -2184,12 +1573,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   scrollbar-color: rgba(242, 235, 224, 0.22) transparent;
 }
 
-/* List mode: the list is the menu — free vertical space from spotlight + rail */
-.menu.is-list-view .menu-spotlight,
-.menu.is-list-view .menu-carousel {
-  display: none;
-}
-
 /* Legacy list-mode note — hybrid ledger owns .menu-note colophon */
 
 /*
@@ -2214,26 +1597,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 /* Legacy list-row rules removed — see Menu ledger hybrid block */
 
-.menu-rail-item.is-active {
-  opacity: 1;
-  transform: none;
-  box-shadow: none;
-}
-
-.menu-rail-item.is-active::after {
-  opacity: 0.85;
-  width: 1.65rem;
-  height: 1.5px;
-  background: var(--tone-accent);
-}
-
 /* .menu-note — colophon styles live in the ledger hybrid block below */
-
-
-/* ═══════════════════════════════════════════
-   Menu ledger hybrid — plate behind, list as instrument
-   (Phase 1: no photo/list modes, no bottom rail)
-   ═══════════════════════════════════════════ */
 
 .menu-stage {
   z-index: 1;
@@ -2300,14 +1664,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   color: var(--tone-fg);
 }
 
-.menu-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.15rem 1rem;
-  justify-content: flex-end;
-  text-shadow: none;
-}
-
 /* Ledger column — shared content width; plate opens to the right */
 .menu-ledger {
   /* flex-basis 0 so overflow child gets a real height (not content-sized) */
@@ -2353,11 +1709,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-list-group:first-child {
   margin-top: 0.2rem;
-}
-
-.menu-list-group.is-hidden,
-.menu-list-group[hidden] {
-  display: none !important;
 }
 
 .menu-list-group-label {
@@ -2429,10 +1780,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   grid-template-areas:
     "en price"
     "detail detail";
-}
-
-.menu-list-item.is-hidden {
-  display: none !important;
 }
 
 /* Name + price: one type step, one ink, one halo — only italic differs */
@@ -2550,11 +1897,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   text-shadow: var(--tone-shadow-soft);
 }
 
-/*
- * Active = open pleat: soft mat + rail.
- * Outer row pad stays stable; extra air after desc lives in detail-inner
- * so “quiet soy” doesn’t sit on the next dish name.
- */
 .menu-list-item.is-active {
   border: none;
   background: var(--menu-row-mat-active);
@@ -2573,10 +1915,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   padding-bottom: 0.85rem;
 }
 
-/*
- * Active rail — same hairline as nav-link underline:
- * 1px solid clay, no glow/gradient; scaleY mirrors nav scaleX.
- */
 .menu-list-item::before {
   content: "";
   position: absolute;
@@ -2638,10 +1976,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-group-label {
-  text-shadow: var(--tone-shadow-soft);
-}
-
-.menu-head .filter-btn {
   text-shadow: var(--tone-shadow-soft);
 }
 
@@ -2720,19 +2054,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-bottom: 0.4rem;
   }
 
-  .menu-filters {
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 0.1rem 0.85rem;
-    width: 100%;
-  }
+  
 
-  .menu-filters::-webkit-scrollbar {
-    display: none;
-  }
+  
 
   .menu-ledger {
     margin-left: 0;
@@ -2799,9 +2123,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     opacity: 0.7;
   }
 }
-
-
-
 
 /* ── Visit — storefront is the dish (same stage grammar as Story / Menu) ── */
 .visit {
@@ -3182,10 +2503,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   outline-offset: 3px;
 }
 
-
-
-
-
 /* ── Footer (full-bleed bar; lives after Visit inside main) ── */
 .footer {
   width: var(--panel-w);
@@ -3267,57 +2584,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   white-space: nowrap;
 }
 
-/* ── Toast ── */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(1rem);
-  z-index: 10001;
-  padding: 0.9rem 1.5rem;
-  background: var(--charcoal);
-  color: var(--cream);
-  font-family: var(--font-cn);
-  font-size: var(--type-body);
-  letter-spacing: var(--type-ui-track);
-  border-radius: 2px 10px 2px 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.35s, transform 0.35s var(--ease-out), visibility 0.35s;
-}
-
-.toast.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-.toast[hidden] {
-  display: block;
-}
-
-/* ── Reveal animations ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.9s var(--ease-out),
-    transform 0.9s var(--ease-out);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal[data-delay="1"] {
-  transition-delay: 0.12s;
-}
-.reveal[data-delay="2"] {
-  transition-delay: 0.24s;
-}
-
 /* ── Responsive ── */
 
 /* Tablet */
@@ -3329,11 +2595,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     gap: 0.35rem;
   }
 
-  .menu-actions {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.15rem;
-  }
+  
 
   /* Content columns stay on --content-col (shared rule) */
 }
@@ -3386,11 +2648,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
    * horizontal space (overrides older per-panel max-widths).
    */
   .story-head,
-  .story-spotlight,
-  .menu-head,
-  .menu-ledger,
-  .menu-spotlight-copy,
-  .visit-band {
+.story-spotlight,
+.menu-head,
+.menu-ledger,
+.visit-band{
     width: 100% !important;
     max-width: 100% !important;
     margin-left: 0 !important;
@@ -3495,7 +2756,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-left: max(1rem, calc(env(safe-area-inset-left, 0px) + 0.75rem));
     padding-right: max(1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
   }
-
 
   /*
    * Phone nav — same 3-column grammar as desktop so hours is
@@ -3648,10 +2908,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     object-position: center 40%;
   }
 
-  .menu-rail-item img {
-    object-fit: cover;
-    object-position: center 40%;
-  }
+  
 
   /* ── Hero: caption block, photo first ── */
   .hero-stage {
@@ -3695,7 +2952,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     height: 40%;
   }
 
-  /* ── Story carousel (one chapter) ── */
+  
   .story-stage {
     height: 100%;
     min-height: 0;
@@ -3745,17 +3002,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     width: 1.2rem;
   }
 
-  .menu-carousel-btn {
-    width: 2.5rem;
-    min-width: 2.5rem;
-    height: 2.5rem;
-    min-height: 2.5rem;
-  }
+  
 
-  .menu-carousel-btn .carousel-chevron {
-    width: 0.95rem;
-    height: 0.95rem;
-  }
+  
 
   .story-label {
     margin-bottom: 0.1rem;
@@ -3779,84 +3028,33 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     flex-shrink: 0;
   }
 
-  .menu-filters {
-    flex: 0 0 auto;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 0.15rem 0.75rem;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    min-width: 0;
-  }
+  
 
-  .menu-filters::-webkit-scrollbar {
-    display: none;
-  }
+  
 
   .nav::before {
     height: calc(var(--nav-h) + 2.1rem);
   }
 
-  .menu-view-btn {
-    width: 2.65rem;
-    min-width: 2.65rem;
-    min-height: 2.65rem;
-    padding: 0.4rem 0.3rem 0.45rem;
-  }
+  
 
-  .menu-view-icon {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
+  
 
-  .menu-view-btn::after {
-    bottom: 0.18rem;
-    width: 1.15rem;
-  }
+  
 
-  .filter-btn {
-    padding: 0.45rem 0.2rem 0.45rem;
-    flex-shrink: 0;
-    min-height: 2.75rem;
-  }
+  
 
-  .menu-spotlight {
-    flex: 1 1 auto;
-    min-height: 0;
-    align-items: flex-end;
-    width: 100%;
-  }
+  
 
-  .menu-spotlight-copy {
-    gap: 0.18rem;
-  }
+  
 
-  .menu-spotlight-cat {
-    margin-bottom: 0.05rem;
-  }
+  
 
-  .menu-spotlight-desc {
-    width: 100%;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-top: 0.15rem;
-  }
+  
 
-  .menu-spotlight-copy.is-expanded .menu-spotlight-desc {
-    -webkit-line-clamp: unset;
-    display: block;
-    overflow: visible;
-  }
+  
 
-  .menu-spotlight-meta {
-    margin-top: 0.45rem;
-  }
-
-
+  
 
   .menu-list-view,
   .menu-list-item {
@@ -4005,21 +3203,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     --type-title-sm: 1.1rem;
   }
 
-  .menu-rail-item {
-    width: 5rem;
-  }
+  
 
   .story-spotlight .en {
     -webkit-line-clamp: 4;
   }
 
-  .filter-btn {
-    padding: 0.25rem 0.02rem 0.32rem;
-  }
+  
 
-  .menu-spotlight-desc {
-    -webkit-line-clamp: 2;
-  }
+  
 
   .visit-facts {
     row-gap: 0.9rem;
@@ -4031,11 +3223,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     scroll-behavior: auto;
   }
 
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+  
 
   .hero-glow,
   .hero-steam span,
@@ -4052,15 +3240,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-wall-img,
-  .story-wall-img,
-  .story-spotlight,
-  .story-carousel-btn,
-  .story-dot,
-  .menu-rail-item,
-  .menu-list-item,
-  .menu-view-btn,
-  .visit-action,
-  .visit-social-link {
+.story-wall-img,
+.story-spotlight,
+.story-dot,
+.menu-list-item,
+.visit-action,
+.visit-social-link{
     transition: none;
   }
 
@@ -4350,13 +3535,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   z-index: 1;
 }
 
-.menu.is-list-view .menu-wall-img.is-leaving {
-  opacity: 0;
-  z-index: 0;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Desktop hover preview — soft mat only (no second rail competing with active) */
 @media (hover: hover) and (pointer: fine) {
   .menu-list-item.is-preview:not(.is-active) {
     background: linear-gradient(
@@ -4369,13 +3547,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu-list-item,
-  .menu-list-item .list-detail,
-  .menu.is-list-view .menu-wall-img,
-  .menu.is-list-view .menu-wall-img.is-leaving {
-    transition: none !important;
-    animation: none !important;
-  }
+  
 
   .menu-list-item::before,
   .menu-list-item.is-active::before {

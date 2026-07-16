@@ -32,12 +32,13 @@
 | `check-launch.mjs` | **N/A** (static kit script; Next gate adapted ad hoc this audit) |
 | ESLint | **0 errors** (1 known warning: manual fonts.css link) |
 | Phone QA (human) | **good** (owner-confirmed 2026-07-16) |
-| Legacy CSS (spotlight/rail) | **still in zhe-craft.css**, no component usage |
+| Dead menu spotlight/rail/carousel CSS | **removed** |
+| Supabase scaffold | **kept** for backend next (`lib/supabase/*`, env example) |
 
 ## Blockers for *live index*
 
 1. Real NAP + booking  
-2. Optional: strip dead menu spotlight/rail CSS  
+2. Backend / CMS (Supabase) when ready  
 
 ## Blockers for *craft demo*
 
