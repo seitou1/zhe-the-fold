@@ -2,32 +2,34 @@
 
 | Field | Value |
 |-------|--------|
-| **Phase** | Craft parity port (panel system) |
+| **Phase** | Craft port v1 stable after swipe revert |
 | **Live** | https://zhe-the-fold.vercel.app |
 | **GitHub** | https://github.com/seitou1/zhe-the-fold |
 | **Updated** | 2026-07-16 |
+| **Kit** | `AGENTS.md` + static `BUILD_PLAYBOOK` §15/§16 |
 
 ## Done
 
-- [x] Ship/learn shell, menu data, visit facts, story chapters  
-- [x] Progressive HTML fixes for mobile taps  
+- [x] Four-panel craft port (`zhe-craft.css` + assets)  
 - [x] Vercel + GitHub auto-deploy  
-- [x] **Craft port v1:** `zhe-craft.css` + assets; four panels (Hero video, Story wall, Menu plate+ledger, Visit video); original nav/footer chrome  
+- [x] **Reverted** dual-buffer + wall-swipe experiments (wrong UX on mobile)  
 
-## Partial / known gaps vs static
+## Honesty
 
-- Story wall: single image swap (not dual-layer sweep animation)  
-- Menu wall: single layer crossfade (not dual-buffer swap animation)  
-- Adaptive luminance tone for nav light/dark plates not fully ported  
-- Wall swipe gestures not re-added yet (filters/rows use click — safer on mobile)  
-- Scroll-progress + snap depend on craft CSS mobile shell  
+| Item | Status |
+|------|--------|
+| Four panels + original CSS | **done** (live) |
+| Story chapter change | **buttons/dots** (chevrons) — works |
+| Menu dish change | **tap rows / filters** — works |
+| Wall / panel swipe | **removed** — wall-only never received touches under ledger; panel swipe on list was incorrect |
+| Dual-buffer animation | **removed** with swipe commits |
+| Adaptive nav tone | deferred |
+| Phone swipe | do **not** re-add without human design call |
 
-## Next
+## Next (only after human says so)
 
-- Phone QA on live URL  
-- Gesture parity if needed (wall-only swipe)  
-- Dual-buffer wall animation if gap is obvious  
-- Real NAP only at launch  
+- Prefer reliable controls (already present) over reintroducing swipe  
+- If swipe returns: design first (where does finger land on mobile menu?) then §15  
 
 ## Blockers
 
