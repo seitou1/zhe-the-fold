@@ -3,9 +3,9 @@
 import { useEffect, useState, type RefObject } from "react";
 
 type Options = {
-  /** Full-quality source (desktop) */
+  /** Full-quality source (desktop) — min 720p */
   src: string;
-  /** Smaller encode for narrow viewports */
+  /** Lighter 720p encode for narrow viewports (still ≥720p, never 540) */
   srcMobile?: string;
   /** Switch to mobile src below this width (default 900) */
   mobileMaxWidth?: number;
