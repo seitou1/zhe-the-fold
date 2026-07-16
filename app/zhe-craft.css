@@ -88,48 +88,47 @@
     0 2px 14px rgba(0, 0, 0, 0.5),
     0 6px 24px rgba(0, 0, 0, 0.35);
 
-  /* Reading scrims — darken only where type lives */
+  /*
+   * Reading scrims — whisper only. Type holds with text-shadow;
+   * avoid mudding the full-bleed plate.
+   */
   --read-scrim-top: linear-gradient(
     to bottom,
-    rgba(6, 4, 3, 0.78) 0%,
-    rgba(10, 7, 5, 0.55) 38%,
-    rgba(12, 8, 6, 0.22) 68%,
+    rgba(6, 4, 3, 0.38) 0%,
+    rgba(10, 7, 5, 0.16) 42%,
     transparent 100%
   );
   --read-scrim-top-light: linear-gradient(
     to bottom,
-    rgba(245, 236, 220, 0.88) 0%,
-    rgba(242, 230, 210, 0.58) 40%,
-    rgba(250, 242, 228, 0.18) 72%,
+    rgba(245, 236, 220, 0.42) 0%,
+    rgba(242, 230, 210, 0.16) 48%,
     transparent 100%
   );
   --read-scrim-nav: linear-gradient(
     to bottom,
-    rgba(6, 4, 3, 0.82) 0%,
-    rgba(8, 6, 5, 0.55) 52%,
-    rgba(10, 7, 5, 0.18) 82%,
+    rgba(6, 4, 3, 0.55) 0%,
+    rgba(8, 6, 5, 0.28) 48%,
+    rgba(10, 7, 5, 0.08) 78%,
     transparent 100%
   );
   --read-scrim-nav-light: linear-gradient(
     to bottom,
-    rgba(250, 244, 232, 0.9) 0%,
-    rgba(245, 236, 220, 0.55) 55%,
+    rgba(250, 244, 232, 0.55) 0%,
+    rgba(245, 236, 220, 0.22) 55%,
     transparent 100%
   );
-  /* Menu spotlight: bottom + left column */
+  /* Menu list band — light left/bottom hold only */
   --read-scrim-menu-copy: linear-gradient(
       to top,
-      rgba(6, 4, 3, 0.8) 0%,
-      rgba(10, 7, 5, 0.48) 32%,
-      rgba(12, 8, 6, 0.14) 58%,
-      transparent 78%
+      rgba(6, 4, 3, 0.32) 0%,
+      rgba(10, 7, 5, 0.12) 28%,
+      transparent 58%
     ),
     linear-gradient(
       to right,
-      rgba(6, 4, 3, 0.62) 0%,
-      rgba(10, 7, 5, 0.32) 26%,
-      rgba(12, 8, 6, 0.08) 48%,
-      transparent 68%
+      rgba(6, 4, 3, 0.28) 0%,
+      rgba(10, 7, 5, 0.1) 22%,
+      transparent 52%
     );
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -138,118 +137,87 @@
   --motion: 0.42s var(--ease-out);
   --motion-slow: 0.55s var(--ease-out);
   /*
-   * Shared photo-panel veils — layered atmosphere, not flat slabs.
-   * Warm clay + cool ash in the darks; paper, wheat, and clay in the lights.
-   * Radial opens the plate; linear holds type; bottom grounds the frame.
+   * Panel veils — open plate first. Edge whisper only, not a full dim.
    */
-  /* Open plate like Hero — hold type at edges only, don’t mute the photo */
   --panel-veil:
     radial-gradient(
-      ellipse 92% 84% at 70% 42%,
+      ellipse 95% 88% at 68% 42%,
       transparent 0%,
-      transparent 42%,
-      rgba(22, 14, 10, 0.06) 68%,
-      rgba(12, 8, 6, 0.28) 100%
+      transparent 55%,
+      rgba(12, 8, 6, 0.1) 100%
     ),
     linear-gradient(
       108deg,
-      rgba(10, 7, 5, 0.58) 0%,
-      rgba(28, 18, 12, 0.32) 16%,
-      rgba(18, 12, 9, 0.14) 38%,
-      rgba(14, 10, 8, 0.04) 62%,
-      transparent 100%
+      rgba(10, 7, 5, 0.22) 0%,
+      rgba(18, 12, 9, 0.08) 28%,
+      transparent 58%
     ),
     linear-gradient(
       to top,
-      rgba(22, 12, 6, 0.36) 0%,
-      rgba(14, 9, 6, 0.14) 20%,
-      transparent 52%
+      rgba(14, 9, 6, 0.16) 0%,
+      transparent 28%
     ),
     linear-gradient(
       to bottom,
-      rgba(8, 6, 5, 0.16) 0%,
-      transparent 18%
+      rgba(8, 6, 5, 0.08) 0%,
+      transparent 14%
     );
   --panel-veil-light:
-    /* Open plate — photo texture stays alive mid-frame */
     radial-gradient(
       ellipse 95% 88% at 68% 44%,
       transparent 0%,
-      transparent 38%,
-      rgba(228, 200, 165, 0.12) 62%,
-      rgba(186, 150, 112, 0.36) 100%
+      transparent 52%,
+      rgba(186, 150, 112, 0.14) 100%
     ),
-    /* Type column: warm clay→wheat falloff, not a cream slab */
     linear-gradient(
       108deg,
-      rgba(228, 204, 172, 0.82) 0%,
-      rgba(236, 214, 184, 0.48) 14%,
-      rgba(214, 176, 132, 0.2) 34%,
-      rgba(250, 240, 220, 0.05) 56%,
-      transparent 78%
+      rgba(236, 214, 184, 0.28) 0%,
+      rgba(228, 200, 165, 0.1) 30%,
+      transparent 62%
     ),
-    /* Floor: clay dust rising into paper */
     linear-gradient(
       to top,
-      rgba(150, 112, 74, 0.28) 0%,
-      rgba(196, 158, 118, 0.26) 14%,
-      rgba(232, 208, 172, 0.14) 34%,
-      transparent 58%
-    ),
-    /* Soft sky haze */
-    linear-gradient(
-      to bottom,
-      rgba(250, 242, 228, 0.36) 0%,
-      rgba(236, 214, 184, 0.1) 14%,
+      rgba(196, 158, 118, 0.12) 0%,
       transparent 32%
     ),
-    /* Corner warmth (asymmetric, less “printed”) */
-    radial-gradient(
-      ellipse 55% 50% at 8% 88%,
-      rgba(176, 130, 88, 0.22) 0%,
-      transparent 70%
+    linear-gradient(
+      to bottom,
+      rgba(250, 242, 228, 0.14) 0%,
+      transparent 16%
     );
   --panel-veil-mobile:
     radial-gradient(
-      ellipse 130% 80% at 50% 30%,
+      ellipse 130% 85% at 50% 35%,
       transparent 0%,
-      transparent 38%,
-      rgba(18, 12, 8, 0.05) 62%,
-      rgba(12, 8, 6, 0.22) 100%
+      transparent 55%,
+      rgba(12, 8, 6, 0.1) 100%
     ),
     linear-gradient(
       to top,
-      rgba(22, 12, 6, 0.48) 0%,
-      rgba(16, 10, 7, 0.28) 24%,
-      rgba(14, 10, 8, 0.1) 48%,
-      transparent 72%
+      rgba(16, 10, 7, 0.2) 0%,
+      transparent 36%
     ),
     linear-gradient(
       to bottom,
-      rgba(8, 6, 5, 0.12) 0%,
-      transparent 18%
+      rgba(8, 6, 5, 0.08) 0%,
+      transparent 14%
     );
   --panel-veil-mobile-light:
     radial-gradient(
-      ellipse 130% 85% at 50% 30%,
+      ellipse 130% 85% at 50% 35%,
       transparent 0%,
-      transparent 30%,
-      rgba(228, 200, 165, 0.12) 58%,
-      rgba(186, 150, 112, 0.3) 100%
+      transparent 50%,
+      rgba(186, 150, 112, 0.12) 100%
     ),
     linear-gradient(
       to top,
-      rgba(150, 112, 74, 0.32) 0%,
-      rgba(196, 158, 118, 0.34) 16%,
-      rgba(228, 200, 165, 0.22) 36%,
-      rgba(244, 228, 200, 0.1) 58%,
-      transparent 82%
+      rgba(196, 158, 118, 0.14) 0%,
+      transparent 40%
     ),
     linear-gradient(
       to bottom,
-      rgba(250, 242, 228, 0.32) 0%,
-      rgba(236, 214, 184, 0.1) 16%,
-      transparent 32%
+      rgba(250, 242, 228, 0.12) 0%,
+      transparent 16%
     );
   /* Soft paper grain over veils (noise SVG) */
   --panel-veil-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -1186,15 +1154,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  /* Soft local hold under the stack only (plate stays open to the right) */
-  padding: 0.15rem 1.35rem 0.35rem 0;
-  background: radial-gradient(
-    ellipse 115% 90% at 10% 65%,
-    rgba(6, 4, 3, 0.42) 0%,
-    rgba(8, 5, 4, 0.16) 40%,
-    rgba(8, 5, 4, 0.04) 64%,
-    transparent 80%
-  );
+  /* No dim pad — plate open; halo holds the type */
+  padding: 0;
+  background: none;
   text-shadow: var(--type-halo-strong);
   transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft);
 }
@@ -1364,7 +1326,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   transition: background var(--motion-slow);
 }
 
-/* Top reading scrim under section heads */
+/* Top reading scrim under section heads — short whisper */
 .story-wall-veil::before,
 .visit-wall-veil::before {
   content: "";
@@ -1372,7 +1334,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   left: 0;
   right: 0;
   top: 0;
-  height: min(38%, 13.5rem);
+  height: min(26%, 9rem);
   pointer-events: none;
   z-index: 1;
   background: var(--read-scrim-top);
@@ -1388,7 +1350,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.14;
+  opacity: 0.06;
   mix-blend-mode: soft-light;
   background-image: var(--panel-veil-grain);
   background-size: 160px;
@@ -1400,7 +1362,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .story[data-tone="light"] .story-wall-veil::after {
-  opacity: 0.14;
+  opacity: 0.06;
   mix-blend-mode: soft-light;
 }
 
@@ -1725,21 +1687,21 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   position: absolute;
   inset: 0;
   z-index: 2;
-  /* Base atmosphere + extra bottom/left for dish copy */
+  /* Open plate + light copy hold */
   background:
     var(--read-scrim-menu-copy),
     var(--panel-veil);
   transition: background var(--motion-slow);
 }
 
-/* Top scrim — head + filters + tools reading band */
+/* Top scrim — short whisper under head */
 .menu-wall-veil::before {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  height: min(42%, 15rem);
+  height: min(24%, 8.5rem);
   pointer-events: none;
   z-index: 1;
   background: var(--read-scrim-top);
@@ -1750,15 +1712,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background:
     linear-gradient(
       to top,
-      rgba(245, 232, 210, 0.78) 0%,
-      rgba(240, 224, 198, 0.4) 30%,
-      transparent 58%
+      rgba(245, 232, 210, 0.28) 0%,
+      rgba(240, 224, 198, 0.1) 28%,
+      transparent 55%
     ),
     linear-gradient(
       to right,
-      rgba(245, 232, 210, 0.65) 0%,
-      rgba(240, 224, 198, 0.28) 30%,
-      transparent 58%
+      rgba(245, 232, 210, 0.22) 0%,
+      rgba(240, 224, 198, 0.08) 26%,
+      transparent 52%
     ),
     var(--panel-veil-light);
 }
@@ -1779,14 +1741,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.14;
+  opacity: 0.05;
   mix-blend-mode: soft-light;
   background-image: var(--panel-veil-grain);
   background-size: 160px;
 }
 
 .menu[data-tone="light"] .menu-wall-veil::after {
-  opacity: 0.22;
+  opacity: 0.08;
   mix-blend-mode: multiply;
 }
 
@@ -1794,14 +1756,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   position: absolute;
   inset: 0;
   z-index: 3;
-  opacity: 0.045;
+  opacity: 0.025;
   mix-blend-mode: soft-light;
   background-image: url("/assets/paper-texture.webp?v=1784192000");
   background-size: cover;
 }
 
 .menu[data-tone="light"] .menu-wall-grain {
-  opacity: 0.07;
+  opacity: 0.04;
   mix-blend-mode: multiply;
 }
 
@@ -2967,41 +2929,19 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Menu plate: open photo, not a mud field.
- * Type lives on text-shadow; only a whisper at head + floor.
+ * Menu plate: open photo. Type holds on text-shadow.
+ * Keep scrims at the light root tokens (no second dense stack).
  */
-.menu-wall-veil {
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(6, 4, 3, 0.22) 0%,
-      rgba(8, 5, 4, 0.06) 12%,
-      transparent 28%
-    ),
-    linear-gradient(
-      to top,
-      rgba(8, 5, 4, 0.14) 0%,
-      transparent 16%
-    );
-}
-
 .menu-wall-veil::before {
-  /* Kill the dense shared top scrim — head uses stage text-shadow */
-  height: min(22%, 7.5rem);
-  background: linear-gradient(
-    to bottom,
-    rgba(5, 3, 2, 0.28) 0%,
-    rgba(8, 5, 4, 0.1) 55%,
-    transparent 100%
-  );
+  height: min(20%, 7rem);
 }
 
 .menu-wall-veil::after {
-  opacity: 0.08;
+  opacity: 0.05;
 }
 
 .menu-wall-grain {
-  opacity: 0.03;
+  opacity: 0.02;
 }
 
 /* Wide: nudge plate into the open right half beside the list */
@@ -3073,20 +3013,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-right: 0.15rem;
   }
 
-  /* Phone: same open-plate idea — no shared mobile mud stack */
+  /* Phone: open plate — use light root scrims, no denser stack */
   .menu-wall-veil {
     background:
-      linear-gradient(
-        to bottom,
-        rgba(6, 4, 3, 0.28) 0%,
-        rgba(8, 5, 4, 0.08) 14%,
-        transparent 32%
-      ),
-      linear-gradient(
-        to top,
-        rgba(8, 5, 4, 0.16) 0%,
-        transparent 18%
-      );
+      var(--read-scrim-menu-copy),
+      var(--panel-veil-mobile);
   }
 
   .menu-list-item {
@@ -3976,19 +3907,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-bottom: max(1.35rem, env(safe-area-inset-bottom, 0px) + 0.95rem);
   }
 
-  /* Caption, not full-bleed band — beat the shared 100% content override */
+  /* Caption, not full-bleed band — no dim pad under 褶 */
   .hero-content {
     width: min(20.5rem, 100%) !important;
     max-width: min(20.5rem, 100%) !important;
     align-items: flex-start;
-    padding: 0.25rem 1.1rem 0.55rem 0;
-    background: radial-gradient(
-      ellipse 130% 100% at 8% 75%,
-      rgba(6, 4, 3, 0.52) 0%,
-      rgba(8, 5, 4, 0.22) 40%,
-      rgba(8, 5, 4, 0.06) 64%,
-      transparent 80%
-    );
+    padding: 0;
+    background: none;
   }
 
   .hero-eyebrow {
@@ -4117,18 +4042,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .story-wall-veil::before,
   .visit-wall-veil::before {
-    height: min(44%, 12.5rem);
+    height: min(22%, 7.5rem);
   }
 
   /* Menu head — whisper only; list type-shadow does the rest */
   .menu-wall-veil::before {
-    height: min(26%, 8rem);
-    background: linear-gradient(
-      to bottom,
-      rgba(5, 3, 2, 0.32) 0%,
-      rgba(8, 5, 4, 0.1) 50%,
-      transparent 100%
-    );
+    height: min(18%, 6rem);
+    background: var(--read-scrim-top);
   }
 
   .nav::before {
