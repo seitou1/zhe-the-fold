@@ -13,7 +13,8 @@ import {
 
 /**
  * Visit — logistics first.
- * Title → quiet lead → address | hours → map → Directions → Call · Reserve → social.
+ * Title → quiet lead → address | hours → map + Get directions → Call · Reserve → social.
+ * One maps path (map plate); Call/Reserve are different intents.
  */
 export function VisitPanel() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -96,18 +97,13 @@ export function VisitPanel() {
                 <p className="visit-kicker">
                   <span className="en">Find us</span>
                 </p>
-                <a
-                  className="visit-address"
-                  href={mapsUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <p className="visit-address">
                   {addressLines.map((line) => (
                     <span key={line} className="visit-address-line">
                       {line}
                     </span>
                   ))}
-                </a>
+                </p>
                 {site.access ? (
                   <p className="visit-access">{site.access}</p>
                 ) : null}
@@ -137,33 +133,27 @@ export function VisitPanel() {
             </div>
 
             <div className="visit-map">
-              <iframe
-                className="visit-map-frame"
-                title={`Map — ${site.name}`}
-                src={mapsEmbedUrl()}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
+              <div className="visit-map-plate">
+                <iframe
+                  className="visit-map-frame"
+                  title={`Map — ${site.name}`}
+                  src={mapsEmbedUrl()}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
               <a
-                className="visit-map-open"
+                className="visit-map-directions"
                 href={mapsUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Open in Google Maps
+                <span className="en">Get directions</span>
               </a>
             </div>
 
             <div className="visit-cta-block">
-              <a
-                className="visit-action visit-action--primary"
-                href={mapsUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="en">Directions</span>
-              </a>
               <div className="visit-actions-secondary">
                 <a className="visit-action visit-action--secondary" href={telHref()}>
                   <span className="en">Call</span>
