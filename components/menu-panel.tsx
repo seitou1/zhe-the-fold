@@ -20,31 +20,40 @@ import {
  * Menu panel — full-bleed dish plate + calm hybrid ledger.
  * Full menu with quiet in-list chapter heads only (no filter / jump pills).
  * Rest: EN · price. Active expands CN / meta / desc (fold motion).
- * Desktop hover previews the plate; keyboard ↑↓ channels through dishes.
+ * Re-tap / Enter / Esc collapses the open row. Hover previews the plate.
  */
 export function MenuPanel() {
   const groups = useMemo(() => groupMenuItems(MENU_ITEMS), []);
   const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
 
-  const [activeId, setActiveId] = useState(MENU_ITEMS[0]?.id ?? "pork");
+  /** null = all rows closed; re-tap open row collapses it */
+  const [activeId, setActiveId] = useState<string | null>(
+    MENU_ITEMS[0]?.id ?? "pork"
+  );
   const [previewId, setPreviewId] = useState<string | null>(null);
 
   const listRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Map<string, HTMLLIElement>>(new Map());
   const finePointer = useRef(false);
   const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const activeIdRef = useRef(activeId);
+  const activeIdRef = useRef<string | null>(activeId);
+  /** Last open dish — keeps the plate when the list is fully collapsed */
+  const lastOpenIdRef = useRef<string>(MENU_ITEMS[0]?.id ?? "pork");
 
   useEffect(() => {
     activeIdRef.current = activeId;
+    if (activeId) lastOpenIdRef.current = activeId;
   }, [activeId]);
 
-  const active =
-    allItems.find((i) => i.id === activeId) || allItems[0] || MENU_ITEMS[0];
+  const active = activeId
+    ? allItems.find((i) => i.id === activeId) || null
+    : null;
 
-  const wallId = previewId ?? activeId;
+  const wallId = previewId ?? activeId ?? lastOpenIdRef.current;
   const wallItem =
-    allItems.find((i) => i.id === wallId) || active || MENU_ITEMS[0];
+    allItems.find((i) => i.id === wallId) ||
+    allItems[0] ||
+    MENU_ITEMS[0];
 
   /*
    * Plate crossfade — dual permanent layers; only is-active toggles
@@ -113,7 +122,20 @@ export function MenuPanel() {
         settleTimerRef.current = null;
       }
 
+      /* Second tap / Enter on the open row collapses it */
+      if (activeIdRef.current === id) {
+        activeIdRef.current = null;
+        setActiveId(null);
+        setPreviewId(null);
+        requestAnimationFrame(() => {
+          const el = rowRefs.current.get(id);
+          if (opts?.focus && el) el.focus({ preventScroll: true });
+        });
+        return;
+      }
+
       activeIdRef.current = id;
+      lastOpenIdRef.current = id;
       setActiveId(id);
       setPreviewId(null);
 
@@ -141,7 +163,13 @@ export function MenuPanel() {
   const moveActive = useCallback(
     (delta: number) => {
       const idx = allItems.findIndex((i) => i.id === activeIdRef.current);
-      if (idx < 0) return;
+      if (idx < 0) {
+        /* Nothing open — open first/last from keyboard direction */
+        const pick =
+          delta > 0 ? allItems[0] : allItems[allItems.length - 1];
+        if (pick) selectDish(pick.id, { focus: true });
+        return;
+      }
       const next =
         allItems[Math.max(0, Math.min(allItems.length - 1, idx + delta))];
       if (next && next.id !== activeIdRef.current) {
@@ -152,7 +180,7 @@ export function MenuPanel() {
   );
 
   const onDishKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
+    (e: KeyboardEvent<HTMLElement>, dishId: string) => {
       if (e.key === "ArrowDown" || e.key === "j") {
         e.preventDefault();
         e.stopPropagation();
@@ -173,7 +201,14 @@ export function MenuPanel() {
         if (last) selectDish(last.id, { focus: true });
       } else if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        /* already active on focus via select — no-op */
+        e.stopPropagation();
+        selectDish(dishId, { focus: true });
+      } else if (e.key === "Escape") {
+        if (activeIdRef.current) {
+          e.preventDefault();
+          e.stopPropagation();
+          selectDish(activeIdRef.current, { focus: true });
+        }
       }
     },
     [allItems, moveActive, selectDish]
@@ -245,7 +280,7 @@ export function MenuPanel() {
                     role="listbox"
                     aria-labelledby={labelId}
                     aria-activedescendant={
-                      group.items.some((i) => i.id === activeId)
+                      activeId && group.items.some((i) => i.id === activeId)
                         ? `menu-dish-${activeId}`
                         : undefined
                     }
@@ -255,7 +290,9 @@ export function MenuPanel() {
                         key={item.id}
                         item={item}
                         active={item.id === activeId}
-                        preview={item.id === previewId && item.id !== activeId}
+                        preview={
+                          item.id === previewId && item.id !== activeId
+                        }
                         onSelect={() =>
                           selectDish(item.id, { focus: true })
                         }
@@ -265,7 +302,7 @@ export function MenuPanel() {
                         onPreviewEnd={() => {
                           if (finePointer.current) setPreviewId(null);
                         }}
-                        onKeyDown={onDishKeyDown}
+                        onKeyDown={(e) => onDishKeyDown(e, item.id)}
                         rowRef={(el) => {
                           if (el) rowRefs.current.set(item.id, el);
                           else rowRefs.current.delete(item.id);
@@ -315,8 +352,9 @@ function MenuRow({
       id={`menu-dish-${item.id}`}
       ref={rowRef}
       role="option"
-      tabIndex={active ? 0 : -1}
+      tabIndex={0}
       aria-selected={active}
+      aria-expanded={active}
       className={[
         "menu-list-item",
         active ? "is-active" : "",
