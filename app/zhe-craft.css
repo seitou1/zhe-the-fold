@@ -4486,11 +4486,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-facts {
-    gap: 0.7rem;
-  }
-
-  .visit-spotlight {
-    gap: 0.7rem;
+    row-gap: 0.9rem;
   }
 }
 
