@@ -1,61 +1,69 @@
-import Link from "next/link";
+import { HashLink } from "@/components/hash-link";
 import { OpenChip } from "@/components/open-chip";
 import { reserveMailto, site } from "@/lib/site";
 
 /**
- * Matches original nav grammar:
- *   [褶 Zhe]  ·  [Open / opens …]  ·  [Story Menu Visit Reserve]
- * Not a generic marketing bar.
+ * Fixed nav — pointer-events only on real controls so the bar never
+ * steals taps from content underneath (common mobile bug).
  */
 export function SiteHeader() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-gradient-to-b from-void/90 via-void/55 to-transparent">
-      <div className="mx-auto grid max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-3 px-[var(--stage-x)] py-3.5 sm:gap-4 sm:py-4">
-        <Link
-          href="/#hero"
-          className="flex min-w-0 items-baseline gap-2 text-cream no-underline"
-          aria-label={`${site.name} home`}
-        >
-          <span
-            className="font-display text-xl leading-none tracking-wide sm:text-[1.35rem]"
-            lang="zh-Hans"
-            aria-hidden
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      {/* Solid-ish bar so links stay readable; gradient only as fade below bar */}
+      <div className="border-b border-cream/10 bg-void/95 backdrop-blur-md supports-[backdrop-filter]:bg-void/85">
+        <div className="pointer-events-auto mx-auto flex max-w-6xl items-center justify-between gap-2 px-[var(--stage-x)] py-2.5 sm:gap-4 sm:py-3.5">
+          <HashLink
+            href="#hero"
+            className="flex min-h-11 min-w-0 shrink-0 items-center gap-2 text-cream no-underline"
+            aria-label={`${site.name} home`}
           >
-            {site.nameCn}
-          </span>
-          <span className="font-display text-base italic tracking-wide text-cream/95 sm:text-lg">
-            {site.shortName}
-          </span>
-        </Link>
+            <span
+              className="font-display text-xl leading-none tracking-wide sm:text-[1.35rem]"
+              lang="zh-Hans"
+              aria-hidden
+            >
+              {site.nameCn}
+            </span>
+            <span className="font-display text-base italic tracking-wide text-cream/95 sm:text-lg">
+              {site.shortName}
+            </span>
+          </HashLink>
 
-        {/* Center: kitchen status (original open/close chip) */}
-        <div className="flex justify-center">
-          <OpenChip />
-        </div>
+          {/* Desktop: open chip in the middle */}
+          <div className="hidden min-w-0 flex-1 justify-center sm:flex">
+            <OpenChip />
+          </div>
 
-        <nav aria-label="Primary" className="justify-self-end">
-          <ul className="flex max-w-[58vw] items-center gap-3 overflow-x-auto font-ui text-[0.78rem] tracking-[0.06em] text-cream/90 sm:max-w-none sm:gap-5 sm:text-[0.88rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {site.nav.map((item) => (
-              <li key={item.href} className="shrink-0">
+          <nav aria-label="Primary" className="min-w-0">
+            <ul className="flex items-center gap-0.5 font-ui text-[0.8rem] tracking-[0.05em] text-cream/90 sm:gap-1 sm:text-[0.88rem]">
+              {site.nav.map((item) => (
+                <li key={item.href} className="shrink-0">
+                  <HashLink
+                    href={item.href}
+                    className="inline-flex min-h-11 items-center px-2.5 py-2 transition-colors hover:text-cream active:text-wheat sm:px-3"
+                  >
+                    {item.label}
+                  </HashLink>
+                </li>
+              ))}
+              <li className="shrink-0">
                 <a
-                  href={item.href}
-                  className="border-b border-transparent py-1 transition-colors hover:border-wheat/50 hover:text-cream"
+                  href={reserveMailto()}
+                  className="inline-flex min-h-11 items-center px-2.5 py-2 text-wheat transition-colors hover:text-cream active:opacity-80 sm:px-3"
                 >
-                  {item.label}
+                  Reserve
                 </a>
               </li>
-            ))}
-            <li className="shrink-0">
-              <a
-                href={reserveMailto()}
-                className="border-b border-wheat/40 py-1 text-wheat transition-colors hover:border-wheat hover:text-cream"
-              >
-                Reserve
-              </a>
-            </li>
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        </div>
       </div>
+
+      {/* Fade under bar — must not capture taps */}
+      <div
+        className="pointer-events-none h-6 bg-gradient-to-b from-void/80 to-transparent"
+        aria-hidden
+      />
     </header>
   );
 }

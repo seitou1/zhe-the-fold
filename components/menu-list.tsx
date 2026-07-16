@@ -56,10 +56,10 @@ export function MenuList() {
                 const next = filterMenuItems(f.id);
                 setActiveId(next[0]?.id ?? null);
               }}
-              className={`shrink-0 px-2.5 py-2 font-ui text-[0.8rem] tracking-[0.08em] transition-colors sm:text-[0.88rem] ${
+              className={`relative z-10 min-h-11 shrink-0 touch-manipulation px-3 py-2.5 font-ui text-[0.85rem] tracking-[0.08em] transition-colors sm:text-[0.88rem] ${
                 on
                   ? "text-wheat"
-                  : "text-cream/55 hover:text-cream/85"
+                  : "text-cream/55 hover:text-cream/85 active:text-cream"
               }`}
             >
               <span
@@ -123,10 +123,10 @@ function MenuRow({
       <button
         type="button"
         onClick={onSelect}
-        className={`group grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 border-b border-cream/10 py-3.5 text-left transition-colors ${
+        className={`group relative z-10 grid w-full touch-manipulation grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 border-b border-cream/10 py-3.5 text-left transition-colors ${
           active
             ? "border-wheat/35 bg-gradient-to-r from-wheat/[0.06] to-transparent"
-            : "hover:border-cream/20"
+            : "hover:border-cream/20 active:bg-cream/[0.03]"
         }`}
       >
         <span className="flex min-w-0 items-baseline gap-2 font-display text-[1.05rem] italic leading-snug text-cream sm:text-[1.15rem]">

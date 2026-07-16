@@ -73,24 +73,24 @@ export function VisitSection() {
       </div>
 
       {/* Actions — Directions · Reserve · Call */}
-      <div className="mt-10 flex flex-wrap gap-3 sm:gap-4">
+      <div className="relative z-10 mt-10 flex flex-wrap gap-3 sm:gap-4">
         <a
           href={mapsUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-[2.75rem] items-center justify-center rounded-sm border border-cream/25 px-5 py-2.5 font-ui text-sm tracking-[0.06em] text-cream transition-colors hover:border-wheat/50 hover:text-wheat"
+          className="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-sm border border-cream/25 px-5 py-3 font-ui text-sm tracking-[0.06em] text-cream transition-colors hover:border-wheat/50 hover:text-wheat active:bg-cream/5"
         >
           Directions
         </a>
         <a
           href={reserveMailto()}
-          className="inline-flex min-h-[2.75rem] items-center justify-center rounded-sm bg-wheat px-5 py-2.5 font-ui text-sm tracking-[0.06em] text-void transition-opacity hover:opacity-90"
+          className="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-sm bg-wheat px-5 py-3 font-ui text-sm tracking-[0.06em] text-void transition-opacity hover:opacity-90 active:opacity-80"
         >
           Reserve
         </a>
         <a
           href={telHref()}
-          className="inline-flex min-h-[2.75rem] items-center justify-center rounded-sm border border-cream/25 px-5 py-2.5 font-ui text-sm tracking-[0.06em] text-cream transition-colors hover:border-wheat/50 hover:text-wheat"
+          className="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-sm border border-cream/25 px-5 py-3 font-ui text-sm tracking-[0.06em] text-cream transition-colors hover:border-wheat/50 hover:text-wheat active:bg-cream/5"
         >
           Call
         </a>

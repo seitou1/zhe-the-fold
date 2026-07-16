@@ -42,10 +42,10 @@ export function StorySection() {
               role="tab"
               aria-selected={on}
               onClick={() => setIndex(i)}
-              className={`rounded-sm px-3 py-1.5 font-ui text-[0.78rem] tracking-[0.08em] transition-colors sm:text-[0.85rem] ${
+              className={`relative z-10 min-h-11 touch-manipulation rounded-sm px-3.5 py-2 font-ui text-[0.82rem] tracking-[0.08em] transition-colors sm:text-[0.85rem] ${
                 on
                   ? "bg-wheat/15 text-wheat"
-                  : "text-cream/55 hover:text-cream/85"
+                  : "text-cream/55 hover:text-cream/85 active:text-cream"
               }`}
             >
               {ch.short}
@@ -81,11 +81,11 @@ export function StorySection() {
             {chapter.body}
           </p>
 
-          <div className="mt-6 flex items-center gap-4">
+          <div className="mt-6 flex items-center gap-2">
             <button
               type="button"
               onClick={() => go(-1)}
-              className="font-ui text-sm tracking-wide text-cream/60 transition-colors hover:text-wheat"
+              className="relative z-10 min-h-11 touch-manipulation px-3 font-ui text-sm tracking-wide text-cream/60 transition-colors hover:text-wheat active:text-wheat"
               aria-label="Previous chapter"
             >
               ← Prev
@@ -96,7 +96,7 @@ export function StorySection() {
             <button
               type="button"
               onClick={() => go(1)}
-              className="font-ui text-sm tracking-wide text-cream/60 transition-colors hover:text-wheat"
+              className="relative z-10 min-h-11 touch-manipulation px-3 font-ui text-sm tracking-wide text-cream/60 transition-colors hover:text-wheat active:text-wheat"
               aria-label="Next chapter"
             >
               Next →

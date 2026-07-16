@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <Hero />
 
-      <div className="mx-auto w-full max-w-6xl space-y-20 px-[var(--stage-x)] pb-24 pt-6 sm:space-y-28 sm:pb-32">
+      <div className="relative z-0 mx-auto w-full max-w-6xl space-y-20 px-[var(--stage-x)] pb-24 pt-8 sm:space-y-28 sm:pb-32 sm:pt-10">
         <StorySection />
 
         <section
