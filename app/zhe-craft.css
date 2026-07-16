@@ -3142,8 +3142,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-ledger {
-    width: min(var(--content-col), 100%);
-    max-width: min(var(--content-col), 100%);
     margin-left: 0;
     margin-top: 0;
     flex: 1 1 0%;
@@ -3151,7 +3149,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     max-height: none;
     min-height: 0;
     overflow: hidden;
-    padding: 0.35rem 0 0.2rem;
+    padding: 0.25rem 0 0.15rem;
     background: transparent;
   }
 
@@ -3803,14 +3801,20 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
      */
     --nav-h: calc(3.2rem + env(safe-area-inset-top, 0px));
     --dock-h: env(safe-area-inset-bottom, 0px);
-    --chrome-gap: 0.4rem;
+    --chrome-gap: 0.45rem;
     --stage-pad-y: calc(var(--nav-h) + var(--chrome-gap));
-    --stage-pad-x: max(0.9rem, calc(env(safe-area-inset-left, 0px) + 0.85rem));
-    --stage-pad-b: calc(var(--dock-h) + 0.75rem);
+    /* Same inset L/R for every panel — safe-area + readable gutter */
+    --stage-pad-x: max(1rem, calc(env(safe-area-inset-left, 0px) + 0.75rem));
+    --stage-pad-b: calc(var(--dock-h) + 0.85rem);
     --panel-h: 100%;
     /* Prefer large viewport so panels don’t leave amber bands under iOS chrome */
     --shell-h: 100dvh;
     --shell-h: 100lvh;
+    /*
+     * Content column = full stage content box (stage-pad owns the gutters).
+     * Every section uses 100% of this band on phone.
+     */
+    --content-col: 100%;
 
     /* Phone ladder — same steps; aliases (lead/prose/list-*) follow */
     --type-hero-cn: clamp(3.1rem, 18vw, 4.5rem);
@@ -3828,6 +3832,24 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     --type-logo-cn: 1.2rem;
     --type-logo-en: 0.92rem;
     --type-brand-cn: 1.45rem;
+  }
+
+  /*
+   * Shared mobile content band — force every section into the same
+   * horizontal space (overrides older per-panel max-widths).
+   */
+  .hero-content,
+  .story-head,
+  .story-spotlight,
+  .menu-head,
+  .menu-ledger,
+  .menu-spotlight-copy,
+  .visit-band {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
   }
 
   html {
@@ -3903,14 +3925,17 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     scroll-snap-stop: normal;
   }
 
-  /* Static panel content — page snap only; no nested vertical scroll */
+  /* Static panel content — page snap only; nested scroll only where needed */
   .stage {
     height: 100%;
     max-height: 100%;
     min-height: 0;
-    gap: 0.65rem;
+    gap: 0.55rem;
     overflow: hidden;
     overscroll-behavior: none;
+    /* Match L/R: stage-pad-x already includes safe-area left; mirror right */
+    padding-left: max(1rem, calc(env(safe-area-inset-left, 0px) + 0.75rem));
+    padding-right: max(1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
   }
 
 
@@ -4081,15 +4106,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   /* ── Hero: caption block, photo first ── */
   .hero-stage {
     justify-content: flex-end;
-    align-items: flex-start;
+    align-items: stretch;
     height: 100%;
     min-height: 0;
     padding-bottom: max(1.15rem, env(safe-area-inset-bottom, 0px) + 0.75rem);
   }
 
   .hero-content {
-    width: min(var(--content-col), 100%);
-    max-width: min(var(--content-col), 100%);
+    align-items: flex-start;
   }
 
   .hero-eyebrow {
@@ -4110,7 +4134,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .hero-tagline {
-    max-width: 18rem;
+    max-width: 100%;
   }
 
   .hero-scroll {
@@ -4131,9 +4155,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
-    justify-content: flex-end;
-    /* pad via --stage-pad-b (clears dock) — do not override */
+    gap: 0.5rem;
+    justify-content: flex-start;
+    align-items: stretch;
   }
 
   .story-wall-veil,
@@ -4143,10 +4167,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .story-head {
     grid-template-columns: 1fr;
-    gap: 0.25rem;
+    gap: 0.35rem;
     align-items: start;
     flex-shrink: 0;
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.55rem;
   }
 
   .story-head-lead {
@@ -4156,7 +4180,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .story-head-lead .en {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -4165,20 +4189,20 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     flex: 1 1 auto;
     min-height: 0;
     justify-content: flex-end;
-    gap: 0.3rem;
+    gap: 0.4rem;
   }
 
   .story-spotlight .en {
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
   .story-carousel {
-    padding: 0.15rem 0 0.1rem;
-    max-width: 13.5rem;
-    gap: 0.45rem 0.75rem;
+    padding: 0.2rem 0 0.15rem;
+    max-width: 100%;
+    gap: 0.5rem 0.85rem;
   }
 
   .story-carousel-btn,
@@ -4203,18 +4227,18 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .menu-stage {
     height: 100%;
     min-height: 0;
-    gap: 0.35rem;
+    gap: 0.4rem;
     overflow: hidden;
+    align-items: stretch;
   }
 
   .menu-head {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.15rem;
-    padding-bottom: 0.35rem;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding-bottom: 0.45rem;
     flex-shrink: 0;
-    width: 100%;
   }
 
   .menu-filters {
@@ -4284,8 +4308,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-spotlight-copy {
-    max-width: none;
-    width: 100%;
     gap: 0.18rem;
   }
 
@@ -4294,7 +4316,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-spotlight-desc {
-    max-width: none;
     width: 100%;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -4338,7 +4359,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     background: var(--panel-veil-mobile-light);
   }
 
-  /* ── Visit mobile — same hierarchy, stacked facts ── */
+  /* ── Visit mobile — same hierarchy, stacked facts, full content band ── */
   .visit {
     overflow: hidden;
   }
@@ -4368,12 +4389,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-band {
-    width: min(var(--content-col), 100%);
-    max-width: min(var(--content-col), 100%);
     max-height: 100%;
     min-height: 0;
     gap: 1rem;
-    padding: 0.1rem 0 0.65rem;
+    padding: 0.05rem 0 0.75rem;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -4403,7 +4422,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .visit-facts {
     grid-template-columns: 1fr;
     column-gap: 0;
-    row-gap: 1rem;
+    row-gap: 1.05rem;
   }
 
   .visit-kicker {
@@ -4415,27 +4434,29 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-actions {
-    gap: 0.55rem 1.4rem;
+    gap: 0.35rem 1.25rem;
     width: 100%;
-    padding-top: 0.05rem;
+    padding-top: 0.1rem;
+    /* Comfortable wrap on narrow phones */
+    row-gap: 0.15rem;
   }
 
   .visit-action {
-    min-height: 2.55rem;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
+    min-height: 2.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     align-items: center;
   }
 
   .visit-social {
     gap: 0.35rem 1rem;
-    padding-bottom: 0.15rem;
+    padding-bottom: 0.2rem;
   }
 
   .visit-social-link {
-    min-height: 2.4rem;
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
+    min-height: 2.5rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
     align-items: center;
   }
 
@@ -4445,10 +4466,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     text-align: center;
     justify-items: center;
     gap: 0.55rem;
+    /* Match section content gutters */
     padding:
       1.15rem
-      max(1rem, env(safe-area-inset-left, 0px))
-      calc(var(--dock-h) + 0.75rem);
+      max(1rem, calc(env(safe-area-inset-left, 0px) + 0.75rem))
+      calc(var(--dock-h) + 0.85rem)
+      max(1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
   }
 
   .footer-copy {
@@ -4965,25 +4988,22 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 @media (max-width: 900px) {
   .menu.panel > .stage.menu-stage,
   .menu .stage.menu-stage {
-    gap: 0.28rem;
+    gap: 0.4rem;
     padding-bottom: max(
-      0.35rem,
-      calc(var(--dock-h, 0px) + 0.35rem)
+      0.5rem,
+      calc(var(--dock-h, 0px) + 0.5rem)
     );
   }
 
   .menu .menu-head {
-    width: 100%;
-    max-width: 100%;
-    padding-bottom: 0.3rem;
+    padding-bottom: 0.4rem;
     align-items: flex-start;
   }
 
   .menu .menu-ledger {
-    width: 100%;
-    padding-left: 0.1rem;
-    padding-right: 0.1rem;
-    gap: 0.15rem;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0.2rem;
   }
 
   .menu .menu-list-view {
