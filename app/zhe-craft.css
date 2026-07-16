@@ -3303,15 +3303,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Visit — logistics hierarchy (research):
- * title → quiet lead → address | hours → Directions → Call · Reserve → social
- * One left reading band; storefront keeps the open right.
+ * Visit — logistics hierarchy:
+ * title → quiet lead → address | hours → Directions · Call · Reserve → social
+ * Top-left band (same grammar as Menu) — not caption-docked to the floor.
  */
 .visit-stage {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 0;
   height: 100%;
@@ -3322,10 +3322,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   text-shadow: var(--tone-shadow-soft);
 }
 
-/*
- * Band must scroll when title + facts + map exceed the panel
- * (mobile was clipping / “broken” with overflow:hidden ancestors).
- */
 .visit-band {
   display: flex;
   flex-direction: column;
@@ -3337,7 +3333,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   min-height: 0;
   margin: 0;
   margin-right: auto;
-  padding: 0.15rem 0.35rem 0.35rem 0;
+  padding: 0.15rem 0.35rem 0.5rem 0;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
@@ -4357,7 +4353,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: stretch;
     gap: 0;
   }
