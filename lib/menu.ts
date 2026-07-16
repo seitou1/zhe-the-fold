@@ -18,7 +18,8 @@ export type MenuItem = {
   price: string;
   popular?: boolean;
   tags: string[];
-  image?: string;
+  /** Path under /public */
+  image: string;
 };
 
 export const MENU_CATEGORY_ORDER: MenuCategory[] = [
@@ -46,6 +47,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$14",
     popular: true,
     tags: ["pork"],
+    image: "/media/dishes/pork.webp",
   },
   {
     id: "beef",
@@ -57,6 +59,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Northern heartiness in a thin skin—bright scallion, quiet soy.",
     price: "$16",
     tags: ["beef"],
+    image: "/media/dishes/beef.webp",
   },
   {
     id: "shrimp",
@@ -69,6 +72,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$18",
     popular: true,
     tags: ["shellfish"],
+    image: "/media/dishes/shrimp.webp",
   },
   {
     id: "bamboo",
@@ -80,6 +84,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Crisp spring bamboo meeting slow-cooked pork.",
     price: "$17",
     tags: ["pork", "seasonal"],
+    image: "/media/dishes/bamboo.webp",
   },
   {
     id: "crab",
@@ -91,6 +96,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Delicate crab roe and broth that warms the palm first.",
     price: "$22",
     tags: ["shellfish", "seasonal"],
+    image: "/media/dishes/crab.webp",
   },
   {
     id: "chestnut",
@@ -102,6 +108,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Autumn chestnuts and tender chicken—earth and steam.",
     price: "$16",
     tags: ["poultry", "seasonal"],
+    image: "/media/dishes/chestnut.webp",
   },
   {
     id: "mushroom",
@@ -114,6 +121,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$13",
     popular: true,
     tags: ["plant"],
+    image: "/media/dishes/mushroom.webp",
   },
   {
     id: "tofu",
@@ -125,6 +133,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Silken tofu and mild daikon—clean and quiet.",
     price: "$12",
     tags: ["plant"],
+    image: "/media/dishes/tofu.webp",
   },
 ];
 

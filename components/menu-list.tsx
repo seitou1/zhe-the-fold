@@ -6,6 +6,7 @@ import {
   listTitle,
   MENU_FILTERS,
   type MenuCategory,
+  type MenuItem,
 } from "@/lib/menu";
 
 type FilterId = "all" | MenuCategory;
@@ -21,9 +22,8 @@ function normalizeFilter(raw?: string): FilterId {
 }
 
 /**
- * Menu ledger — progressive enhancement.
- * Filters = real links (?cat=). Rows = <details>/<summary> (native expand).
- * No useState / no client bundle required for taps to work on mobile.
+ * Menu ledger — progressive enhancement + dish thumbs.
+ * Filters = ?cat= links. Rows = <details> with photo + copy.
  */
 export function MenuList({ filter: filterProp }: MenuListProps) {
   const filter = normalizeFilter(filterProp);
@@ -81,41 +81,9 @@ export function MenuList({ filter: filterProp }: MenuListProps) {
             ) : null}
 
             <ul className="m-0 list-none p-0">
-              {group.items.map((item) => {
-                const title = listTitle(item);
-                const meta = listMeta(item);
-                return (
-                  <li
-                    key={item.id}
-                    className="m-0 border-b border-cream/10 p-0"
-                  >
-                    <details className="group">
-                      <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 py-4 marker:content-none [&::-webkit-details-marker]:hidden">
-                        <span className="font-display text-[1.08rem] italic leading-snug text-cream sm:text-[1.15rem]">
-                          {title}
-                        </span>
-                        <span className="font-display text-[1rem] tabular-nums tracking-wide text-wheat">
-                          {item.price}
-                        </span>
-                        <span
-                          className="col-span-2 font-display text-[0.88rem] leading-snug text-cream/70"
-                          lang="zh-Hans"
-                        >
-                          {item.cn}
-                        </span>
-                        {meta ? (
-                          <span className="col-span-2 mt-0.5 font-ui text-[0.68rem] uppercase tracking-[0.1em] text-wheat/80">
-                            {meta}
-                          </span>
-                        ) : null}
-                      </summary>
-                      <p className="max-w-md pb-4 font-ui text-sm leading-relaxed text-cream/85">
-                        {item.desc}
-                      </p>
-                    </details>
-                  </li>
-                );
-              })}
+              {group.items.map((item) => (
+                <MenuRow key={item.id} item={item} />
+              ))}
             </ul>
           </div>
         ))}
@@ -125,5 +93,70 @@ export function MenuList({ filter: filterProp }: MenuListProps) {
         Steamed or pan-seared · Share allergies · About eight per order
       </p>
     </div>
+  );
+}
+
+function MenuRow({ item }: { item: MenuItem }) {
+  const title = listTitle(item);
+  const meta = listMeta(item);
+
+  return (
+    <li className="m-0 border-b border-cream/10 p-0">
+      <details className="group">
+        <summary className="grid cursor-pointer list-none grid-cols-[4.25rem_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1 py-3.5 marker:content-none sm:grid-cols-[5rem_minmax(0,1fr)_auto] sm:gap-x-4 [&::-webkit-details-marker]:hidden">
+          {/* Thumb — always visible */}
+          <span className="relative row-span-2 block aspect-square w-full overflow-hidden rounded-sm bg-void ring-1 ring-cream/10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.image}
+              alt=""
+              width={80}
+              height={80}
+              className="h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+
+          <span className="min-w-0 font-display text-[1.05rem] italic leading-snug text-cream sm:text-[1.15rem]">
+            {title}
+          </span>
+          <span className="font-display text-[0.95rem] tabular-nums tracking-wide text-wheat sm:text-[1.05rem]">
+            {item.price}
+          </span>
+
+          <span
+            className="col-start-2 min-w-0 font-display text-[0.85rem] leading-snug text-cream/70 sm:text-[0.9rem]"
+            lang="zh-Hans"
+          >
+            {item.cn}
+          </span>
+          <span className="col-start-3" aria-hidden />
+
+          {meta ? (
+            <span className="col-span-2 col-start-2 font-ui text-[0.68rem] uppercase tracking-[0.1em] text-wheat/80">
+              {meta}
+            </span>
+          ) : null}
+        </summary>
+
+        {/* Expanded: larger plate + description */}
+        <div className="grid gap-3 pb-4 pl-0 sm:grid-cols-[minmax(0,11rem)_minmax(0,1fr)] sm:gap-5 sm:pl-0">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-void ring-1 ring-cream/10 sm:aspect-square">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.image}
+              alt=""
+              className="h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p className="max-w-md font-ui text-sm leading-relaxed text-cream/85 sm:pt-1">
+            {item.desc}
+          </p>
+        </div>
+      </details>
+    </li>
   );
 }
