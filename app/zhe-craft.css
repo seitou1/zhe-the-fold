@@ -2865,44 +2865,30 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Active rail — stitched fold edge (not a solid UI bar).
- * Soft wheat ticks, ends fade: one classy vertical mark.
+ * Active rail — continuous soft fold edge.
+ * Solid wheat (full height, ends dissolve). No dash pattern,
+ * no twin mark: restraint reads classier on a craft menu.
  */
 .menu-list-item.is-active::before {
   content: "";
   position: absolute;
-  left: 0.12rem;
-  top: 0.4rem;
-  bottom: 0.4rem;
-  width: 2px;
+  left: 0.14rem;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  width: 1.5px;
   border-radius: 1px;
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--tone-accent) 0,
-    var(--tone-accent) 3px,
-    transparent 3px,
-    transparent 6.5px
-  );
-  -webkit-mask-image: linear-gradient(
+  background: linear-gradient(
     to bottom,
     transparent 0%,
-    #000 16%,
-    #000 84%,
+    color-mix(in srgb, var(--tone-accent) 55%, transparent) 10%,
+    var(--tone-accent) 28%,
+    var(--tone-accent) 72%,
+    color-mix(in srgb, var(--tone-accent) 55%, transparent) 90%,
     transparent 100%
   );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
-  box-shadow: 0 0 10px rgba(208, 192, 160, 0.28);
+  /* Quiet hold — not a neon edge */
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tone-accent) 28%, transparent);
   pointer-events: none;
-}
-
-.menu[data-tone="light"] .menu-list-item.is-active::before {
-  box-shadow: 0 0 8px rgba(138, 99, 64, 0.22);
 }
 
 .menu-list-item.is-active.has-meta {
