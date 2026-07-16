@@ -2880,14 +2880,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    color-mix(in srgb, var(--tone-accent) 55%, transparent) 10%,
-    var(--tone-accent) 28%,
-    var(--tone-accent) 72%,
-    color-mix(in srgb, var(--tone-accent) 55%, transparent) 90%,
+    color-mix(in srgb, var(--tone-accent) 38%, transparent) 12%,
+    color-mix(in srgb, var(--tone-accent) 62%, transparent) 32%,
+    color-mix(in srgb, var(--tone-accent) 62%, transparent) 68%,
+    color-mix(in srgb, var(--tone-accent) 38%, transparent) 88%,
     transparent 100%
   );
-  /* Quiet hold — not a neon edge */
-  box-shadow: 0 0 12px color-mix(in srgb, var(--tone-accent) 28%, transparent);
+  /* Quiet hold — softer than full-accent mid */
+  box-shadow: 0 0 10px color-mix(in srgb, var(--tone-accent) 18%, transparent);
   pointer-events: none;
 }
 
