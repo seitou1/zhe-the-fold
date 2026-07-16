@@ -27,6 +27,11 @@ export const site = {
   },
   mapsQuery: "200 Sample Street New York NY 10013",
   access: "Walk-ins welcome · near Canal St",
+  social: {
+    instagram: "https://instagram.com/zhe.thefold",
+  },
+  /** Demo honesty — sample NAP until launch */
+  demoMode: true,
   /**
    * Open badge + Visit hours.
    * Days: Sun Mon Tue Wed Thu Fri Sat (en-US short from Intl).
@@ -66,8 +71,8 @@ export const site = {
     },
     visit: {
       en: "Visit",
-      cn: "到店",
-      body: "Walk-ins welcome. Sample hours until real NAP is wired. Reserve by email for now.",
+      cn: "造访",
+      body: "A quiet table and a warm fold.",
     },
   },
 } as const;
@@ -75,4 +80,22 @@ export const site = {
 export function reserveMailto() {
   const subject = encodeURIComponent(site.reserveSubject);
   return `mailto:${site.email}?subject=${subject}`;
+}
+
+export function mapsUrl() {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    site.mapsQuery
+  )}`;
+}
+
+export function telHref() {
+  return `tel:${site.telephone}`;
+}
+
+export function formatAddressLines(): string[] {
+  const a = site.address;
+  return [
+    a.streetAddress,
+    `${a.addressLocality}, ${a.addressRegion} ${a.postalCode}`,
+  ];
 }

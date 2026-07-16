@@ -1,10 +1,11 @@
 import { Hero } from "@/components/hero";
 import { MenuList } from "@/components/menu-list";
 import { SectionHeading } from "@/components/section-heading";
+import { VisitSection } from "@/components/visit-section";
 import { site } from "@/lib/site";
 
 export default function Home() {
-  const { story, menu, visit } = site.sections;
+  const { story, menu } = site.sections;
 
   return (
     <>
@@ -34,33 +35,7 @@ export default function Home() {
           <MenuList />
         </section>
 
-        <section
-          id="visit"
-          aria-labelledby="visit-heading"
-          className="scroll-mt-24"
-        >
-          <SectionHeading id="visit-heading" en={visit.en} cn={visit.cn} />
-          <p className="max-w-xl font-ui text-base leading-relaxed text-cream-soft sm:text-lg">
-            {visit.body}
-          </p>
-          <dl className="mt-6 grid max-w-md gap-3 font-ui text-sm text-cream/80">
-            <div className="flex justify-between gap-4 border-b border-line pb-2">
-              <dt className="text-cream/50">City</dt>
-              <dd>{site.city}</dd>
-            </div>
-            <div className="flex justify-between gap-4 border-b border-line pb-2">
-              <dt className="text-cream/50">Email</dt>
-              <dd>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="text-wheat transition-colors hover:text-cream"
-                >
-                  {site.email}
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </section>
+        <VisitSection />
       </div>
     </>
   );

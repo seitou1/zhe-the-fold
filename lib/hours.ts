@@ -100,6 +100,47 @@ function getNextService(weekday: string, minutes: number) {
   return { state: note || "see Visit", meta: "" };
 }
 
+function formatTimeDisplay(hm: string, compact = false): string {
+  const mins = parseHM(hm);
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  const clock =
+    m === 0 ? `${h12}:00` : `${h12}:${String(m).padStart(2, "0")}`;
+  return compact ? clock : `${clock} ${period}`;
+}
+
+/** Static Visit panel lines (not live open/closed — chip handles that). */
+export function getHoursDisplayLines(): {
+  days: string;
+  times: string;
+  note: string;
+} {
+  const { periods, note, closedWeekdays } = getHoursConfig();
+  if (!periods.length) {
+    return { days: "", times: "", note: note || "" };
+  }
+  const daysList = [...(periods[0].days || [])];
+  const dayCount = daysList.length;
+  const days =
+    dayCount === 7
+      ? "Daily"
+      : dayCount > 0
+        ? `${daysList[0]}–${daysList[dayCount - 1]}`
+        : "";
+  const times = periods
+    .map(
+      (p) =>
+        `${formatTimeDisplay(p.open, true)}–${formatTimeDisplay(p.close, true)}`
+    )
+    .join(" · ");
+  const closedNote =
+    note ||
+    (closedWeekdays?.length ? `Closed ${closedWeekdays.join(", ")}` : "");
+  return { days, times, note: closedNote };
+}
+
 /** Pure: compute open/closed chip copy from hours SSOT + “now”. */
 export function getKitchenStatus(date = new Date()): KitchenStatus {
   const parts = getKitchenParts(date);
