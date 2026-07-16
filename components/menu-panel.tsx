@@ -12,15 +12,13 @@ import {
   groupMenuItems,
   listMeta,
   listTitle,
-  MENU_CHAPTERS,
   MENU_ITEMS,
-  type MenuCategory,
   type MenuItem,
 } from "@/lib/menu";
 
 /**
  * Menu panel — full-bleed dish plate + calm hybrid ledger.
- * Full menu with chapter heads + sticky jump / scroll-spy.
+ * Full menu with quiet in-list chapter heads only (no filter / jump pills).
  * Rest: EN · price. Active expands CN / meta / desc (fold motion).
  * Desktop hover previews the plate; keyboard ↑↓ channels through dishes.
  */
@@ -30,9 +28,6 @@ export function MenuPanel() {
 
   const [activeId, setActiveId] = useState(MENU_ITEMS[0]?.id ?? "pork");
   const [previewId, setPreviewId] = useState<string | null>(null);
-  const [spyChapter, setSpyChapter] = useState<MenuCategory>(
-    groups[0]?.category ?? "classic"
-  );
 
   const listRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Map<string, HTMLLIElement>>(new Map());
@@ -81,39 +76,6 @@ export function MenuPanel() {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  /* ── Scroll-spy on chapters inside list scroller ── */
-  useEffect(() => {
-    const root = listRef.current;
-    if (!root) return;
-
-    const sections = Array.from(
-      root.querySelectorAll<HTMLElement>(".menu-list-group[data-chapter]")
-    );
-    if (!sections.length) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) =>
-              (a.boundingClientRect.top ?? 0) - (b.boundingClientRect.top ?? 0)
-          );
-        const top = visible[0]?.target as HTMLElement | undefined;
-        const ch = top?.dataset.chapter as MenuCategory | undefined;
-        if (ch) setSpyChapter(ch);
-      },
-      {
-        root,
-        rootMargin: "-8% 0px -55% 0px",
-        threshold: [0, 0.1, 0.25, 0.5],
-      }
-    );
-
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
-  }, [groups]);
-
   const selectDish = useCallback(
     (id: string, opts?: { scroll?: boolean; focus?: boolean }) => {
       setActiveId(id);
@@ -130,28 +92,6 @@ export function MenuPanel() {
       }
     },
     []
-  );
-
-  const jumpChapter = useCallback(
-    (category: MenuCategory) => {
-      const root = listRef.current;
-      const section = root?.querySelector<HTMLElement>(`#menu-${category}`);
-      if (section && root) {
-        const sticky =
-          root.querySelector<HTMLElement>(".menu-chapters")?.offsetHeight ?? 0;
-        const next =
-          root.scrollTop +
-          section.getBoundingClientRect().top -
-          root.getBoundingClientRect().top -
-          sticky -
-          2;
-        root.scrollTo({ top: Math.max(0, next), behavior: "smooth" });
-      }
-      setSpyChapter(category);
-      const first = groups.find((g) => g.category === category)?.items[0];
-      if (first) selectDish(first.id, { focus: false });
-    },
-    [groups, selectDish]
   );
 
   const moveActive = useCallback(
@@ -237,26 +177,6 @@ export function MenuPanel() {
             tabIndex={-1}
             onKeyDown={onListKeyDown}
           >
-            <nav
-              className="menu-chapters"
-              aria-label="Menu chapters"
-            >
-              {MENU_CHAPTERS.map((ch) => {
-                const on = spyChapter === ch.id;
-                return (
-                  <button
-                    key={ch.id}
-                    type="button"
-                    className={`menu-chapter-btn${on ? " is-active" : ""}`}
-                    aria-current={on ? "true" : undefined}
-                    onClick={() => jumpChapter(ch.id)}
-                  >
-                    {ch.label}
-                  </button>
-                );
-              })}
-            </nav>
-
             {groups.map((group) => {
               const labelId = `menu-chapter-${group.category}`;
               return (
@@ -264,7 +184,6 @@ export function MenuPanel() {
                   key={group.category}
                   className="menu-list-group"
                   id={`menu-${group.category}`}
-                  data-chapter={group.category}
                   aria-labelledby={labelId}
                 >
                   <h3 className="menu-list-group-label" id={labelId}>
@@ -286,9 +205,7 @@ export function MenuPanel() {
                         item={item}
                         active={item.id === activeId}
                         preview={item.id === previewId && item.id !== activeId}
-                        onSelect={() =>
-                          selectDish(item.id, { focus: true })
-                        }
+                        onSelect={() => selectDish(item.id, { focus: true })}
                         onPreview={() => {
                           if (finePointer.current) setPreviewId(item.id);
                         }}

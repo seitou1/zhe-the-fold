@@ -4697,107 +4697,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /* ═══════════════════════════════════════════
-   Menu dynamism — chapters, plate fade, fold
+   Menu dynamism — plate fade, fold, hover
+   (No sticky chapter pills — structure lives in list heads only.)
    ═══════════════════════════════════════════ */
-
-/* Sticky chapter jumps inside the list scroller */
-.menu-chapters {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 0.1rem 0.85rem;
-  align-items: center;
-  margin: 0 0 0.35rem;
-  padding: 0.15rem 0.1rem 0.45rem;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  /* Soft hold so list doesn’t show through while sticky */
-  background: linear-gradient(
-    to bottom,
-    rgba(8, 5, 4, 0.55) 0%,
-    rgba(8, 5, 4, 0.28) 70%,
-    transparent 100%
-  );
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.menu-chapters::-webkit-scrollbar {
-  display: none;
-}
-
-.menu-chapter-btn {
-  position: relative;
-  flex: 0 0 auto;
-  margin: 0;
-  padding: 0.55rem 0.2rem 0.45rem;
-  min-height: 2.5rem;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  font-family: var(--font-ui);
-  font-size: var(--type-ui-sm);
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(250, 248, 244, 0.62);
-  cursor: pointer;
-  transition: color 0.22s var(--ease-soft);
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  white-space: nowrap;
-}
-
-.menu-chapter-btn::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0.15rem;
-  width: 100%;
-  max-width: 1.5rem;
-  height: 1px;
-  background: var(--tone-accent, var(--wheat));
-  opacity: 0;
-  transform: translateX(-50%) scaleX(0.6);
-  transition:
-    opacity 0.24s var(--ease-soft),
-    transform 0.24s var(--ease-soft);
-  pointer-events: none;
-}
-
-.menu-chapter-btn.is-active {
-  color: var(--tone-filter-active, var(--wheat));
-  text-shadow: var(--tone-filter-glow, 0 0 10px rgba(208, 192, 160, 0.28));
-}
-
-.menu-chapter-btn.is-active::after {
-  opacity: 0.9;
-  transform: translateX(-50%) scaleX(1);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .menu-chapter-btn:hover:not(.is-active) {
-    color: rgba(250, 248, 244, 0.88);
-  }
-}
-
-.menu-chapter-btn:focus-visible {
-  outline: 2px solid var(--wheat);
-  outline-offset: 3px;
-}
-
-/* First chapter group breathes under sticky bar */
-.menu-list-view > .menu-list-group:first-of-type {
-  margin-top: 0.15rem;
-  scroll-margin-top: 2.75rem;
-}
-
-.menu-list-group {
-  scroll-margin-top: 2.75rem;
-}
 
 /* Plate wall — snappier crossfade for dish changes */
 .menu.is-list-view .menu-wall-img {
@@ -4852,9 +4754,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .menu-list-item,
   .menu-list-item .list-detail,
   .menu.is-list-view .menu-wall-img,
-  .menu.is-list-view .menu-wall-img.is-leaving,
-  .menu-chapter-btn,
-  .menu-chapter-btn::after {
+  .menu.is-list-view .menu-wall-img.is-leaving {
     transition: none !important;
     animation: none !important;
   }
@@ -4866,25 +4766,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-list-item .list-detail {
-    /* Instant open/close; still collapse via 0fr when not active */
     transition: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .menu-chapters {
-    gap: 0.05rem 0.7rem;
-    padding-bottom: 0.4rem;
-    /* Lighter blur cost on phone */
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
-  .menu-chapter-btn {
-    min-height: 2.65rem;
-    padding-left: 0.15rem;
-    padding-right: 0.15rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
   }
 }
