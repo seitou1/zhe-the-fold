@@ -2,11 +2,16 @@
   "name": "zhe-the-fold",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 0.0.0.0 --port 3000",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start --hostname 0.0.0.0 --port 3000",
+    "lint": "eslint",
+    "ship:check": "npm run build",
+    "ship:preview": "npm run build && npm run start"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

@@ -1,88 +1,81 @@
-# Zhe · The Fold
+# Zhe · The Fold (Next.js)
 
-Next.js App Router site for **Zhe · The Fold** — handmade Chinese dumplings in New York.
+Product path for **Zhe · The Fold** — handmade dumplings in NYC.
 
-Warm void shell, serif display type, mobile-first layout. Supabase clients are wired but not required to run the home page.
-
-> Sibling static craft demo (if present): `../Zhe-The-Fold-Website`
+Focus: **ship / learn** (usable site on a modern stack).  
+Craft lookbook: sibling static demo `../Zhe-The-Fold-Website` — **do not delete**.
 
 ## Requirements
 
-- **Node.js ≥ 20.9** (Next 16)
+- **Node.js ≥ 20.9**
 - npm 10+
 
 ```bash
-# if you use nvm
 nvm use 20
+cd /Users/kenneth/Desktop/Code/zhe-the-fold
+npm install
 ```
 
-## Setup
+## Run locally
 
 ```bash
-cd zhe-the-fold
-npm install
-cp .env.local.example .env.local   # fill Supabase keys when ready
+# Dev (hot reload) — fine on Mac; phone on Wi‑Fi can be flaky with Turbopack
 npm run dev
+
+# Production mode — better for testing on phone (same Wi‑Fi)
+npm run ship:preview
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+- Mac: [http://localhost:3000](http://localhost:3000)
+- Phone (same Wi‑Fi): `http://YOUR_MAC_IP:3000` (e.g. `http://192.168.1.31:3000`)
+
+## What’s on the site
+
+| Section | Status |
+|---------|--------|
+| Hero + nav | Done (open chip, Reserve) |
+| Story | 3 chapters + photos |
+| Menu | Filters, dishes, thumbs, expand for desc |
+| Visit | Hours, sample NAP, Directions / Reserve / Call |
+| Supabase | Wired, unused |
+| SEO index | **Off** (`noindex`) until real NAP |
 
 ## Scripts
 
 | Command | Purpose |
 |---------|---------|
-| `npm run dev` | Dev server (Turbopack) |
-| `npm run build` | Production build |
-| `npm start` | Serve production build |
+| `npm run dev` | Dev server on `0.0.0.0:3000` |
+| `npm run build` / `ship:check` | Production compile |
+| `npm run start` / `ship:preview` | Serve production build |
 | `npm run lint` | ESLint |
 
-## Environment
+## Deploy
 
-| Variable | Public? | Purpose |
-|----------|---------|---------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anon / publishable key |
-| `SUPABASE_SERVICE_ROLE_KEY` | **No** | Server-only admin key |
+See **[SHIP.md](./SHIP.md)** — Vercel login + first URL, and optional GitHub.
 
-Helpers (throw only when called):
+## Environment (optional)
 
-- `lib/supabase/client.ts` — browser
-- `lib/supabase/server.ts` — RSC / route handlers
+Copy `.env.local.example` → `.env.local` when you use Supabase.
+
+| Variable | Public? |
+|----------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | **No** |
 
 ## Structure
 
 ```
-app/           # App Router pages + layout + globals
-components/    # Header, hero, footer, section heading
-lib/           # site SSOT + supabase clients
-public/        # static assets
+app/           # routes + layout
+components/    # UI
+lib/           # site, menu, story, hours SSOT
+public/media/  # images
+SHIP.md        # how to put it on the internet
 ```
 
-## Brand tokens
+## Ship / learn next (after deploy)
 
-| Token | Use |
-|-------|-----|
-| `void` `#12100e` | Background |
-| `cream` `#faf8f4` | Primary type |
-| `wheat` `#d0c0a0` | Accent / CTAs |
-| `clay` `#a67c52` | Secondary warmth |
-| Source Serif 4 | Display / titles |
-| Outfit | UI / body |
-
-## Relation to the original static site
-
-| | Path | Role |
-|---|------|------|
-| **Original craft demo** | `../Zhe-The-Fold-Website` | Design source of truth — **do not delete** |
-| **This Next app** | `zhe-the-fold` | Rebuild/port over time |
-
-We port pieces deliberately (nav open-chip + hero first). Extra scaffold CTAs that weren’t in the original were removed.
-
-## Next steps
-
-- Port menu list from static `data.js` → `lib/menu.ts`
-- Visit hours + directions CTAs
-- Story chapters + media
-- Optional: hero video loop
-- Supabase when editing code for prices gets old
-- Flip `robots` metadata when launch-ready
+1. Share the Vercel URL; test off home Wi‑Fi  
+2. Small polish only if something confuses guests  
+3. Supabase later if editing menu files gets old  
+4. Real NAP + `index` only when launch-ready  
