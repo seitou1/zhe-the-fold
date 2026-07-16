@@ -2,6 +2,16 @@
 
 Plain-English guide. The static craft site stays separate; this is the **Next product** path.
 
+## Live (done)
+
+| Thing | URL |
+|--------|-----|
+| **Production site** | https://zhe-the-fold.vercel.app |
+| **GitHub repo** | https://github.com/seitou1/zhe-the-fold |
+| **Auto-deploy** | Push to `main` → Vercel builds production |
+
+Static craft demo (unchanged): https://github.com/seitou1/Zhe-The-Fold-Website
+
 ## What you already “shipped” locally
 
 | Command | Meaning |
