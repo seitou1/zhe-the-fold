@@ -1,41 +1,43 @@
-"use client";
-
-import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   filterMenuItems,
   groupMenuItems,
   listMeta,
   listTitle,
   MENU_FILTERS,
-  MENU_ITEMS,
   type MenuCategory,
-  type MenuItem,
 } from "@/lib/menu";
 
 type FilterId = "all" | MenuCategory;
 
-/**
- * Scannable menu ledger — plain buttons (no listbox roles; cleaner on iOS).
- */
-export function MenuList() {
-  const [filter, setFilter] = useState<FilterId>("all");
-  const [activeId, setActiveId] = useState<string | null>(
-    MENU_ITEMS[0]?.id ?? null
-  );
+type MenuListProps = {
+  /** From URL ?cat= — works with zero client JS */
+  filter?: string;
+};
 
-  const visible = useMemo(() => filterMenuItems(filter), [filter]);
-  const groups = useMemo(() => {
-    if (filter !== "all") {
-      return [
-        {
-          category: filter,
-          label: visible[0]?.catLabel || filter,
-          items: visible,
-        },
-      ];
-    }
-    return groupMenuItems(visible);
-  }, [filter, visible]);
+function normalizeFilter(raw?: string): FilterId {
+  if (raw === "classic" || raw === "seasonal" || raw === "plant") return raw;
+  return "all";
+}
+
+/**
+ * Menu ledger — progressive enhancement.
+ * Filters = real links (?cat=). Rows = <details>/<summary> (native expand).
+ * No useState / no client bundle required for taps to work on mobile.
+ */
+export function MenuList({ filter: filterProp }: MenuListProps) {
+  const filter = normalizeFilter(filterProp);
+  const visible = filterMenuItems(filter);
+  const groups =
+    filter === "all"
+      ? groupMenuItems(visible)
+      : [
+          {
+            category: filter,
+            label: visible[0]?.catLabel || filter,
+            items: visible,
+          },
+        ];
 
   return (
     <div className="relative w-full max-w-xl">
@@ -45,19 +47,17 @@ export function MenuList() {
       >
         {MENU_FILTERS.map((f) => {
           const on = filter === f.id;
+          const href =
+            f.id === "all" ? "/#menu" : `/?cat=${encodeURIComponent(f.id)}#menu`;
           return (
-            <button
+            <Link
               key={f.id}
-              type="button"
-              aria-pressed={on}
-              onClick={() => {
-                setFilter(f.id);
-                const next = filterMenuItems(f.id);
-                setActiveId(next[0]?.id ?? null);
-              }}
-              className={`min-h-12 shrink-0 px-3 py-3 font-ui text-[0.9rem] tracking-[0.08em] ${
+              href={href}
+              scroll={true}
+              className={`inline-flex min-h-12 shrink-0 items-center px-3 py-3 font-ui text-[0.9rem] tracking-[0.08em] ${
                 on ? "text-wheat" : "text-cream/60 active:text-cream"
               }`}
+              aria-current={on ? "true" : undefined}
             >
               <span
                 className={`border-b-2 pb-1 ${
@@ -66,7 +66,7 @@ export function MenuList() {
               >
                 {f.label}
               </span>
-            </button>
+            </Link>
           );
         })}
       </div>
@@ -81,16 +81,41 @@ export function MenuList() {
             ) : null}
 
             <ul className="m-0 list-none p-0">
-              {group.items.map((item) => (
-                <MenuRow
-                  key={item.id}
-                  item={item}
-                  active={activeId === item.id}
-                  onSelect={() =>
-                    setActiveId((id) => (id === item.id ? null : item.id))
-                  }
-                />
-              ))}
+              {group.items.map((item) => {
+                const title = listTitle(item);
+                const meta = listMeta(item);
+                return (
+                  <li
+                    key={item.id}
+                    className="m-0 border-b border-cream/10 p-0"
+                  >
+                    <details className="group">
+                      <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 py-4 marker:content-none [&::-webkit-details-marker]:hidden">
+                        <span className="font-display text-[1.08rem] italic leading-snug text-cream sm:text-[1.15rem]">
+                          {title}
+                        </span>
+                        <span className="font-display text-[1rem] tabular-nums tracking-wide text-wheat">
+                          {item.price}
+                        </span>
+                        <span
+                          className="col-span-2 font-display text-[0.88rem] leading-snug text-cream/70"
+                          lang="zh-Hans"
+                        >
+                          {item.cn}
+                        </span>
+                        {meta ? (
+                          <span className="col-span-2 mt-0.5 font-ui text-[0.68rem] uppercase tracking-[0.1em] text-wheat/80">
+                            {meta}
+                          </span>
+                        ) : null}
+                      </summary>
+                      <p className="max-w-md pb-4 font-ui text-sm leading-relaxed text-cream/85">
+                        {item.desc}
+                      </p>
+                    </details>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -100,55 +125,5 @@ export function MenuList() {
         Steamed or pan-seared · Share allergies · About eight per order
       </p>
     </div>
-  );
-}
-
-function MenuRow({
-  item,
-  active,
-  onSelect,
-}: {
-  item: MenuItem;
-  active: boolean;
-  onSelect: () => void;
-}) {
-  const title = listTitle(item);
-  const meta = listMeta(item);
-
-  return (
-    <li className="m-0 p-0">
-      <button
-        type="button"
-        onClick={onSelect}
-        className={`grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 border-b border-cream/10 py-4 text-left ${
-          active
-            ? "border-wheat/35 bg-wheat/[0.06]"
-            : "active:bg-cream/[0.04]"
-        }`}
-      >
-        <span className="font-display text-[1.08rem] italic leading-snug text-cream sm:text-[1.15rem]">
-          {title}
-        </span>
-        <span className="font-display text-[1rem] tabular-nums tracking-wide text-wheat">
-          {item.price}
-        </span>
-        <span
-          className="col-span-2 font-display text-[0.88rem] leading-snug text-cream/70"
-          lang="zh-Hans"
-        >
-          {item.cn}
-        </span>
-        {meta ? (
-          <span className="col-span-2 mt-0.5 font-ui text-[0.68rem] uppercase tracking-[0.1em] text-wheat/80">
-            {meta}
-          </span>
-        ) : null}
-        {active ? (
-          <span className="col-span-2 mt-2 max-w-md font-ui text-sm leading-relaxed text-cream/85">
-            {item.desc}
-          </span>
-        ) : null}
-      </button>
-    </li>
   );
 }

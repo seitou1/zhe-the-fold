@@ -5,14 +5,18 @@ import { StorySection } from "@/components/story-section";
 import { VisitSection } from "@/components/visit-section";
 import { site } from "@/lib/site";
 
-export default function Home() {
+type HomeProps = {
+  searchParams: Promise<{ cat?: string }>;
+};
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
   const { menu } = site.sections;
 
   return (
     <>
       <Hero />
 
-      {/* Explicit stacking so section controls stay above any media */}
       <div className="relative z-10 mx-auto w-full max-w-6xl space-y-20 px-[var(--stage-x)] pb-24 pt-10 sm:space-y-28 sm:pb-32 sm:pt-14">
         <StorySection />
 
@@ -25,7 +29,7 @@ export default function Home() {
           <p className="mb-8 max-w-xl font-ui text-base leading-relaxed text-cream-soft sm:text-lg">
             {menu.body}
           </p>
-          <MenuList />
+          <MenuList filter={params.cat} />
         </section>
 
         <div className="relative">
