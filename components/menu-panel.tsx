@@ -22,6 +22,7 @@ type FilterId = "all" | MenuCategory;
 export function MenuPanel() {
   const [filter, setFilter] = useState<FilterId>("all");
   const [activeId, setActiveId] = useState(MENU_ITEMS[0]?.id ?? "pork");
+  const panelRef = useRef<HTMLElement>(null);
   const wallRef = useRef<HTMLDivElement>(null);
   const imgA = useRef<HTMLImageElement>(null);
   const imgB = useRef<HTMLImageElement>(null);
@@ -94,16 +95,25 @@ export function MenuPanel() {
   const onPrev = useCallback(() => step(-1), [step]);
   const onNext = useCallback(() => step(1), [step]);
 
+  // Panel + axis lock: horizontal steps dishes; vertical leaves list scroll alone.
+  // Wall-only fails on phone because .menu-ledger is full-width over the plate.
   useWallSwipe({
-    wallRef,
+    rootRef: panelRef,
     onPrev,
     onNext,
+    ignoreSelector:
+      "button, a, input, .filter-btn, .menu-head, .nav, .nav-links",
   });
 
   const seed = MENU_ITEMS[0];
 
   return (
-    <section className="menu panel is-list-view" id="menu" data-tone="dark">
+    <section
+      className="menu panel is-list-view"
+      id="menu"
+      data-tone="dark"
+      ref={panelRef}
+    >
       <div className="menu-wall" ref={wallRef} aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

@@ -25,7 +25,7 @@ Dual-buffer Story + Menu walls; wall-only swipe; ship to Vercel.
 |------|--------|
 | Dual-buffer Story | **done** (opacity crossfade layers; not full leave/enter sweep) |
 | Dual-buffer Menu | **done** (A/B buffer swap) |
-| Wall swipe | **done** (wall-only; agent untested on device — **human phone QA**) |
+| Wall swipe | **fixed** — panel-level + axis lock (ledger covers wall on mobile; wall-only never fired). Human re-QA |
 | Adaptive nav tone | **deferred** (frozen/out of session) |
 | Static repo | **untouched** |
 
