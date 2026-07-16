@@ -71,13 +71,24 @@ export async function getMenuItems(): Promise<MenuItem[]> {
   return items;
 }
 
-export async function getMenuItemsWithSource(): Promise<{
+export type MenuFetchMeta = {
   items: MenuItem[];
   source: MenuSource;
-}> {
+  /** Why static was used — safe for diagnostics (no secrets). */
+  reason?: string;
+  /** Supabase error code when present */
+  errorCode?: string;
+  rawRowCount?: number;
+};
+
+export async function getMenuItemsWithSource(): Promise<MenuFetchMeta> {
   const client = tryCreateServerClient();
   if (!client) {
-    return { items: MENU_ITEMS, source: "static" };
+    return {
+      items: MENU_ITEMS,
+      source: "static",
+      reason: "no_client_missing_or_placeholder_env",
+    };
   }
 
   try {
@@ -94,12 +105,22 @@ export async function getMenuItemsWithSource(): Promise<{
         "[menu] Supabase read failed, using static fallback:",
         error.message
       );
-      return { items: MENU_ITEMS, source: "static" };
+      return {
+        items: MENU_ITEMS,
+        source: "static",
+        reason: `supabase_error: ${error.message}`,
+        errorCode: error.code,
+      };
     }
 
     if (!data?.length) {
       console.warn("[menu] Supabase empty, using static fallback");
-      return { items: MENU_ITEMS, source: "static" };
+      return {
+        items: MENU_ITEMS,
+        source: "static",
+        reason: "supabase_empty_no_published_rows",
+        rawRowCount: 0,
+      };
     }
 
     const items = sortByChapter(
@@ -110,15 +131,30 @@ export async function getMenuItemsWithSource(): Promise<{
 
     if (!items.length) {
       console.warn("[menu] Supabase rows invalid, using static fallback");
-      return { items: MENU_ITEMS, source: "static" };
+      return {
+        items: MENU_ITEMS,
+        source: "static",
+        reason: "supabase_rows_failed_validation",
+        rawRowCount: data.length,
+      };
     }
 
-    return { items, source: "supabase" };
+    return {
+      items,
+      source: "supabase",
+      reason: "ok",
+      rawRowCount: data.length,
+    };
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     console.warn(
       "[menu] Supabase unexpected error, using static fallback:",
       err
     );
-    return { items: MENU_ITEMS, source: "static" };
+    return {
+      items: MENU_ITEMS,
+      source: "static",
+      reason: `unexpected: ${message}`,
+    };
   }
 }
