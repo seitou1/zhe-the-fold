@@ -1,58 +1,67 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Source_Serif_4 } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { SiteNav } from "@/components/site-nav";
+import { ScrollProgress } from "@/components/scroll-progress";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const sourceSerif = Source_Serif_4({
-  subsets: ["latin", "latin-ext"],
-  style: ["normal", "italic"],
-  weight: ["400", "500"],
-  variable: "--font-source-serif",
-  display: "swap",
-});
-
-const outfit = Outfit({
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500"],
-  variable: "--font-outfit",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: {
-    default: site.name,
+    default: `${site.name} | Handmade Dumplings in New York`,
     template: `%s · ${site.shortName}`,
   },
   description: site.description,
   robots: { index: false, follow: false },
+  openGraph: {
+    title: `${site.name} | Handmade Dumplings in New York`,
+    description: site.description,
+    type: "website",
+    locale: "en_US",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#12100e",
 };
 
+/**
+ * Craft shell — structure mirrors static index.html chrome.
+ * Panel CSS from zhe-craft.css (ported styles.css). Kit: AGENTS / BUILD_PLAYBOOK.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${sourceSerif.variable} ${outfit.variable} antialiased`}
-    >
-      <body className="bg-void font-ui text-cream">
-        <SiteHeader />
-        {/*
-          z-0 + isolate: keep page content in a stacking context BELOW the nav (z-50)
-          but above any accidental full-bleed media, and always receive taps.
-        */}
-        <main className="relative z-0 isolate min-h-dvh pt-14">{children}</main>
-        <SiteFooter />
+    <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="/assets/fonts/fonts.css"
+        />
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>褶</text></svg>"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/hero-dumplings.webp"
+          type="image/webp"
+        />
+      </head>
+      <body>
+        <a className="skip-link" href="#menu">
+          Skip to menu
+        </a>
+        <div className="grain" aria-hidden="true" />
+        <ScrollProgress />
+        <SiteNav />
+        {children}
       </body>
     </html>
   );

@@ -1,0 +1,4483 @@
+/* ═══════════════════════════════════════════
+   褶 · Zhe — Wabi-sabi dumpling house
+   Modern rustic · imperfect · bilingual
+   ═══════════════════════════════════════════ */
+
+:root {
+  /*
+   * Surfaces vs chrome type:
+   *   void   — shell underpaint (always under photos; never amber)
+   *   cream  — light type on dark plates / nav
+   *   wheat  — selected amber glow (nav active, filters)
+   *   paper  — legacy alias of void (no cream field)
+   */
+  --void: #12100e;
+  --paper: var(--void);
+  --cream: #faf8f4;
+  --ink: #1c1814;
+  --ink-soft: #3a342c;
+  --clay: #a67c52;
+  --clay-deep: #8a6340;
+  --wheat: #d0c0a0;
+  --charcoal: #2e2924;
+  --line: rgba(250, 248, 244, 0.12);
+
+  /*
+   * Type system
+   * Families (3): display · cn · ui
+   *
+   * Size ladder — fewer steps, clearer gaps (best practice):
+   *   micro → ui-sm → ui → body → title-sm → panel → dish → hero
+   * Reading (leads, story, visit, CTAs, list desc) = body only (floor 1rem).
+   * List dish row = title-sm (not a parallel mid-band).
+   */
+  --font-cn: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+  --font-display: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-ui: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --type-hero-cn: clamp(4.25rem, 14vw, 7rem);
+  --type-hero-en: clamp(1.4rem, 2.8vw, 1.9rem);
+  --type-panel-en: clamp(1.55rem, 3.2vw, 2.15rem);
+  --type-panel-cn: clamp(0.95rem, 1.7vw, 1.12rem);
+  --type-dish-en: clamp(1.65rem, 3.6vw, 2.4rem);
+  --type-dish-cn: clamp(1rem, 1.85vw, 1.2rem);
+  --type-title-sm: clamp(1.2rem, 1.9vw, 1.4rem);
+  --type-body: clamp(1rem, 1.35vw, 1.125rem);
+  --type-ui: 0.9rem;
+  --type-ui-sm: 0.78rem;
+  --type-micro: 0.7rem;
+  --type-price: clamp(1.45rem, 2.2vw, 1.7rem);
+  --type-logo-cn: 1.35rem;
+  --type-logo-en: 1.05rem;
+  --type-brand-cn: 1.65rem;
+
+  /* Aliases — same step, different call sites */
+  --type-lead: var(--type-body);
+  --type-prose: var(--type-body);
+  --type-list-en: var(--type-title-sm);
+  --type-list-cn: var(--type-panel-cn);
+  --type-list-price: var(--type-title-sm);
+  --type-kicker: var(--type-ui-sm);
+  --nav-ui-size: var(--type-ui);
+
+  /* Rhythm */
+  --type-lh-tight: 1.15;
+  --type-lh-ui: 1.25;
+  --type-lh-body: 1.55;
+  --type-lead-lh: var(--type-lh-body);
+  --type-body-lh: var(--type-lh-body);
+  --type-prose-lh: var(--type-lh-body);
+  --type-title-track: 0.02em;
+  --type-cn-track: 0.1em;
+  --type-kicker-track: 0.1em;
+  --type-ui-track: 0.04em;
+  --type-body-track: 0.015em;
+
+  /* Reading scrims — darken only where type lives */
+  --read-scrim-top: linear-gradient(
+    to bottom,
+    rgba(6, 4, 3, 0.78) 0%,
+    rgba(10, 7, 5, 0.55) 38%,
+    rgba(12, 8, 6, 0.22) 68%,
+    transparent 100%
+  );
+  --read-scrim-top-light: linear-gradient(
+    to bottom,
+    rgba(245, 236, 220, 0.88) 0%,
+    rgba(242, 230, 210, 0.58) 40%,
+    rgba(250, 242, 228, 0.18) 72%,
+    transparent 100%
+  );
+  --read-scrim-nav: linear-gradient(
+    to bottom,
+    rgba(6, 4, 3, 0.82) 0%,
+    rgba(8, 6, 5, 0.55) 52%,
+    rgba(10, 7, 5, 0.18) 82%,
+    transparent 100%
+  );
+  --read-scrim-nav-light: linear-gradient(
+    to bottom,
+    rgba(250, 244, 232, 0.9) 0%,
+    rgba(245, 236, 220, 0.55) 55%,
+    transparent 100%
+  );
+  /* Menu spotlight: bottom + left column */
+  --read-scrim-menu-copy: linear-gradient(
+      to top,
+      rgba(6, 4, 3, 0.8) 0%,
+      rgba(10, 7, 5, 0.48) 32%,
+      rgba(12, 8, 6, 0.14) 58%,
+      transparent 78%
+    ),
+    linear-gradient(
+      to right,
+      rgba(6, 4, 3, 0.62) 0%,
+      rgba(10, 7, 5, 0.32) 26%,
+      rgba(12, 8, 6, 0.08) 48%,
+      transparent 68%
+    );
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Shared tempo — steam, not bounce */
+  --motion: 0.42s var(--ease-out);
+  --motion-slow: 0.55s var(--ease-out);
+  /*
+   * Shared photo-panel veils — layered atmosphere, not flat slabs.
+   * Warm clay + cool ash in the darks; paper, wheat, and clay in the lights.
+   * Radial opens the plate; linear holds type; bottom grounds the frame.
+   */
+  /* Open plate like Hero — hold type at edges only, don’t mute the photo */
+  --panel-veil:
+    radial-gradient(
+      ellipse 92% 84% at 70% 42%,
+      transparent 0%,
+      transparent 42%,
+      rgba(22, 14, 10, 0.06) 68%,
+      rgba(12, 8, 6, 0.28) 100%
+    ),
+    linear-gradient(
+      108deg,
+      rgba(10, 7, 5, 0.58) 0%,
+      rgba(28, 18, 12, 0.32) 16%,
+      rgba(18, 12, 9, 0.14) 38%,
+      rgba(14, 10, 8, 0.04) 62%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(22, 12, 6, 0.36) 0%,
+      rgba(14, 9, 6, 0.14) 20%,
+      transparent 52%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(8, 6, 5, 0.16) 0%,
+      transparent 18%
+    );
+  --panel-veil-light:
+    /* Open plate — photo texture stays alive mid-frame */
+    radial-gradient(
+      ellipse 95% 88% at 68% 44%,
+      transparent 0%,
+      transparent 38%,
+      rgba(228, 200, 165, 0.12) 62%,
+      rgba(186, 150, 112, 0.36) 100%
+    ),
+    /* Type column: warm clay→wheat falloff, not a cream slab */
+    linear-gradient(
+      108deg,
+      rgba(228, 204, 172, 0.82) 0%,
+      rgba(236, 214, 184, 0.48) 14%,
+      rgba(214, 176, 132, 0.2) 34%,
+      rgba(250, 240, 220, 0.05) 56%,
+      transparent 78%
+    ),
+    /* Floor: clay dust rising into paper */
+    linear-gradient(
+      to top,
+      rgba(150, 112, 74, 0.28) 0%,
+      rgba(196, 158, 118, 0.26) 14%,
+      rgba(232, 208, 172, 0.14) 34%,
+      transparent 58%
+    ),
+    /* Soft sky haze */
+    linear-gradient(
+      to bottom,
+      rgba(250, 242, 228, 0.36) 0%,
+      rgba(236, 214, 184, 0.1) 14%,
+      transparent 32%
+    ),
+    /* Corner warmth (asymmetric, less “printed”) */
+    radial-gradient(
+      ellipse 55% 50% at 8% 88%,
+      rgba(176, 130, 88, 0.22) 0%,
+      transparent 70%
+    );
+  --panel-veil-mobile:
+    radial-gradient(
+      ellipse 130% 80% at 50% 30%,
+      transparent 0%,
+      transparent 38%,
+      rgba(18, 12, 8, 0.05) 62%,
+      rgba(12, 8, 6, 0.22) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(22, 12, 6, 0.48) 0%,
+      rgba(16, 10, 7, 0.28) 24%,
+      rgba(14, 10, 8, 0.1) 48%,
+      transparent 72%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(8, 6, 5, 0.12) 0%,
+      transparent 18%
+    );
+  --panel-veil-mobile-light:
+    radial-gradient(
+      ellipse 130% 85% at 50% 30%,
+      transparent 0%,
+      transparent 30%,
+      rgba(228, 200, 165, 0.12) 58%,
+      rgba(186, 150, 112, 0.3) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(150, 112, 74, 0.32) 0%,
+      rgba(196, 158, 118, 0.34) 16%,
+      rgba(228, 200, 165, 0.22) 36%,
+      rgba(244, 228, 200, 0.1) 58%,
+      transparent 82%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(250, 242, 228, 0.32) 0%,
+      rgba(236, 214, 184, 0.1) 16%,
+      transparent 32%
+    );
+  /* Soft paper grain over veils (noise SVG) */
+  --panel-veil-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Fixed chrome — stages clear these, never sit under them */
+  --nav-h: 4.5rem;
+  --dock-h: 0px; /* mobile: safe-area bottom only (dock removed) */
+  --chrome-gap: 0.7rem; /* air between chrome and content */
+  /* Locked section frame — same W×H for every panel
+     Use 100% (not 100vw) so the scrollbar gutter doesn’t open a dark strip */
+  --panel-w: 100%;
+  --panel-h: 100dvh;
+  --stage-pad-x: clamp(1.25rem, 4vw, 3rem);
+  /* Top always clears fixed nav; bottom clears dock (0 on desktop) */
+  --stage-pad-y: calc(var(--nav-h) + var(--chrome-gap));
+  --stage-pad-b: calc(var(--dock-h) + clamp(1.15rem, 2.4vh, 1.65rem));
+}
+
+/* ── Reset & base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: 0;
+}
+
+/* Programmatic section nav briefly disables snap — always via this class */
+html.js-snap-off {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
+}
+
+/* ── Locked panels (shared dimensions) ── */
+.panel {
+  width: var(--panel-w);
+  height: var(--panel-h);
+  min-width: var(--panel-w);
+  min-height: var(--panel-h);
+  max-width: var(--panel-w);
+  max-height: var(--panel-h);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  background: var(--void);
+}
+
+/* Shared full-bleed content stage (all panels use this) */
+.stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  padding: var(--stage-pad-y) var(--stage-pad-x) var(--stage-pad-b);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: clamp(0.75rem, 2vh, 1.25rem);
+  overflow: hidden; /* panels are static frames — page snap owns vertical scroll */
+}
+
+/*
+ * Desktop: document is the scroll/snap root.
+ * main is a normal flow wrapper (panels + footer). Mobile overrides this
+ * into a fixed shell with main as the scrollport — see max-width: 768px.
+ */
+main#top {
+  display: block;
+  position: static;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  background: var(--void);
+}
+
+html {
+  background: var(--void);
+}
+
+body {
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--type-body);
+  letter-spacing: var(--type-body-track);
+  line-height: var(--type-lh-body);
+  color: var(--cream);
+  /* Shell is dark underpaint only — every panel photo covers it */
+  background: var(--void);
+  background-image: none;
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* No page-field wash — amber field removed sitewide */
+body::before {
+  display: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* ── Skip link (keyboard) ── */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10000;
+  padding: 0.65rem 1.1rem;
+  font-family: var(--font-ui);
+  font-size: var(--type-ui);
+  font-weight: 400;
+  letter-spacing: var(--type-ui-track);
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: 2px;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--ink) 14%, transparent);
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+/* ── Focus ── */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+.menu :focus-visible,
+.visit :focus-visible {
+  outline-color: var(--wheat);
+}
+
+.filter-btn:focus-visible,
+.menu-rail-item:focus-visible,
+.menu-list-item:focus-visible,
+.menu-view-btn:focus-visible,
+.visit-action:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+.menu .filter-btn:focus-visible,
+.menu .menu-rail-item:focus-visible,
+.menu .menu-list-item:focus-visible,
+.menu .menu-view-btn:focus-visible,
+.visit .visit-action:focus-visible {
+  outline-color: var(--wheat);
+}
+
+/* ── Atmosphere ── */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* Scroll progress — deep brown track, lighter brown fill */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  width: 100%;
+  z-index: 10000;
+  pointer-events: none;
+  /* Deep clay / espresso track */
+  background: rgba(46, 32, 22, 0.72);
+  overflow: hidden;
+}
+
+.scroll-progress-bar {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Lighter brown progress — clay → warm wheat-brown */
+  background: linear-gradient(
+    90deg,
+    #a67c52 0%,
+    #c4a06a 50%,
+    #d4b483 100%
+  );
+  /* No CSS transition — rAF drives 1:1 with scroll (transition causes mobile jank) */
+  transform: scale3d(0, 1, 1);
+  transform-origin: left center;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ── Typography helpers (roles) ── */
+/*
+ * Chinese marks (sitewide):
+ *   ✓ Brand 褶 (hero + logo)
+ *   ✓ One ceremonial mark under each panel EN title (由来 / 菜单 / 造访)
+ *   ✓ Dish Chinese names (spotlight, list, rail)
+ *   ✗ No dual-language echoes on eyebrows, leads, or body copy
+ *
+ * EN/CN share tone tokens + text-shadow from the panel; CN is never
+ * forced through italic Latin display.
+ */
+
+/* Chinese — serif mark / dish (never italic) */
+.cn {
+  font-family: var(--font-cn);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: var(--type-cn-track);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* English display default — large titles; leads override to UI */
+.en {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: var(--type-title-track);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Readable prose + chrome — Outfit (UI role) */
+.menu-spotlight-desc,
+.story-head-lead .en,
+.visit-head-lead .en,
+.story-spotlight .en,
+.hero-tagline .en,
+.hero-eyebrow .en,
+.hero-scroll,
+.visit-address,
+.visit-hours p,
+.visit-access,
+.visit-kicker,
+.visit-action .en,
+.visit-social-link,
+.story-label,
+.menu-note,
+.menu-list-item .list-desc,
+.menu-note .en,
+.footer-tag .en,
+.footer-copy,
+.toast {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: var(--type-body-track);
+}
+
+/* Panel ceremonial CN under EN title — same full ink as EN */
+.story-head-title .cn,
+.menu-head-title .cn,
+.visit-head-title .cn {
+  font-family: var(--font-cn);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-panel-cn);
+  letter-spacing: var(--type-cn-track);
+  color: var(--tone-fg);
+  margin-top: 0.15rem;
+  opacity: 1;
+  text-shadow: inherit;
+}
+
+/* Dish CN under dish EN — same full ink as dish EN */
+.menu-spotlight-cn,
+.menu-list-item .list-cn {
+  font-family: var(--font-cn);
+  font-style: normal;
+  font-weight: 400;
+  color: var(--tone-fg);
+  letter-spacing: var(--type-cn-track);
+  opacity: 1;
+  text-shadow: inherit;
+}
+
+/* Crawlable story chapters — available to bots, not painted in the UI */
+.seo-story-chapters {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Navigation — one optical midline for logo · hours · links ── */
+.nav {
+  --nav-line: 1.15rem; /* shared text box height for level alignment */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: grid;
+  /* auto | 1fr | auto → hours sit in the true midpoint between logo and links */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center; /* vertical center of the bar */
+  column-gap: 0.75rem;
+  height: var(--nav-h);
+  padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  color: var(--cream);
+  transition: color 0.35s var(--ease-soft);
+}
+
+/* Fixed fade under chrome — extends slightly below bar, no blur slab */
+.nav::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(var(--nav-h) + 1.75rem);
+  pointer-events: none;
+  z-index: 0;
+  background: var(--read-scrim-nav);
+}
+
+.nav > * {
+  position: relative;
+  z-index: 1;
+  /* Every direct child is a single-height strip on the same midline */
+  display: flex;
+  align-items: center;
+  height: var(--nav-line);
+  min-height: var(--nav-line);
+  max-height: var(--nav-line);
+  box-sizing: border-box;
+}
+
+.nav-logo {
+  gap: 0.4rem;
+  z-index: 2;
+  flex-shrink: 0;
+  justify-self: start;
+  margin-right: 0;
+  color: inherit;
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.55),
+    0 2px 12px rgba(0, 0, 0, 0.5),
+    0 0 18px rgba(0, 0, 0, 0.3);
+}
+
+.nav-logo .logo-cn {
+  font-family: var(--font-cn);
+  font-size: var(--type-logo-cn);
+  font-weight: 500;
+  line-height: 1;
+  display: block;
+  /* Optical nudge: CJK caps sit high vs Latin — settle on the shared line */
+  transform: translateY(0.02em);
+}
+
+.nav-logo .logo-en {
+  font-family: var(--font-display);
+  font-size: var(--type-logo-en);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  opacity: 1;
+  letter-spacing: var(--type-ui-track);
+  display: block;
+}
+
+/* Chrome on every panel — scrim stays; links always present */
+.nav.is-past-hero {
+  background: transparent;
+  box-shadow: none;
+  color: var(--cream);
+}
+
+body:has(#hero[data-tone="light"]) .nav:not(.is-past-hero)::before,
+body:has(.panel[data-tone="light"]:not(#hero)) .nav::before {
+  background: var(--read-scrim-nav-light);
+}
+
+.nav-links {
+  gap: clamp(1.15rem, 3.2vw, 2.25rem);
+  justify-self: end;
+  justify-content: flex-end;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  min-width: 0;
+}
+
+.nav-links a {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: var(--type-ui);
+  font-weight: 400;
+  letter-spacing: var(--type-ui-track);
+  line-height: 1;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  opacity: 1;
+  /* Stronger lift over busy hero/menu plates */
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.55),
+    0 2px 10px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(0, 0, 0, 0.35);
+  transition: color 0.3s;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  /* Sit just under the glyph, not under a padded box */
+  bottom: -0.2rem;
+  width: 100%;
+  height: 1px;
+  background: var(--clay);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.nav-links a:hover::after,
+.nav-links a:focus-visible::after,
+.nav-links a.is-active::after {
+  transform: scaleX(1);
+}
+
+.nav-links a.is-active {
+  color: var(--wheat);
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: #fff;
+  opacity: 1;
+}
+
+/*
+ * Kitchen status — same strip height as logo + links.
+ * Soft clay ember; state + meta on one optical line.
+ * Not brand: slightly quieter type + air so it doesn’t glue to 褶 Zhe.
+ */
+.nav-hours {
+  justify-self: center;
+  grid-column: 2;
+  justify-content: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  padding: 0 0.25rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  pointer-events: none;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Single soft ember — kitchen lamp, not a status LED */
+.nav-hours-mark {
+  flex-shrink: 0;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: rgba(250, 248, 244, 0.28);
+  border: 1px solid rgba(250, 248, 244, 0.35);
+  box-shadow: none;
+  /* Center the ember on the text midline */
+  margin: 0;
+  transition:
+    background 0.45s var(--ease-soft),
+    border-color 0.45s var(--ease-soft),
+    box-shadow 0.45s var(--ease-soft),
+    opacity 0.45s var(--ease-soft);
+  opacity: 0.85;
+}
+
+.nav-hours.is-open .nav-hours-mark {
+  background: var(--wheat);
+  border-color: rgba(235, 207, 160, 0.9);
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px rgba(235, 207, 160, 0.2),
+    0 0 10px rgba(235, 207, 160, 0.35);
+  animation: hoursEmber 4.2s var(--ease-soft) infinite;
+}
+
+.nav-hours.is-closed .nav-hours-mark {
+  background: transparent;
+  border-color: rgba(250, 248, 244, 0.42);
+  opacity: 0.75;
+  box-shadow: none;
+  animation: none;
+}
+
+/* One line, centered on the same strip as links */
+.nav-hours-copy {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  height: 100%;
+  line-height: 1;
+  text-align: left;
+}
+
+.nav-hours-state {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  /* One step quieter than logo/links — status, not brand */
+  font-size: var(--type-ui-sm);
+  letter-spacing: var(--type-ui-track);
+  line-height: 1;
+  color: inherit;
+  opacity: 0.92;
+  white-space: nowrap;
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.45),
+    0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.nav-hours-meta {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-ui-sm);
+  letter-spacing: var(--type-ui-track);
+  line-height: 1;
+  text-transform: lowercase;
+  color: inherit;
+  opacity: 0.88;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-hours-meta:not([hidden])::before {
+  content: "·";
+  margin-right: 0.35rem;
+  opacity: 0.5;
+}
+
+.nav-hours.is-open .nav-hours-state {
+  color: var(--wheat);
+}
+
+.nav-hours.is-closed .nav-hours-state {
+  color: inherit;
+  opacity: 0.92;
+}
+
+/* Reserve sits with Story/Menu/Visit — same rest/hover/active grammar */
+.nav-links a.nav-reserve {
+  letter-spacing: var(--type-ui-track);
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours-mark {
+  background: rgba(28, 24, 20, 0.12);
+  border-color: rgba(28, 24, 20, 0.32);
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours.is-open .nav-hours-mark {
+  background: var(--clay-deep, var(--clay));
+  border-color: rgba(138, 99, 64, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(166, 124, 82, 0.18),
+    0 0 10px rgba(166, 124, 82, 0.28);
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours.is-closed .nav-hours-mark {
+  background: transparent;
+  border-color: rgba(28, 24, 20, 0.38);
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours.is-open .nav-hours-state {
+  color: var(--clay-deep, var(--clay));
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours-state,
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours-meta {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 8px rgba(255, 252, 247, 0.3);
+}
+
+/* Slow warm breath — steam, not a pulse LED */
+@keyframes hoursEmber {
+  0%,
+  100% {
+    opacity: 0.92;
+    box-shadow:
+      0 0 0 1px rgba(235, 207, 160, 0.15),
+      0 0 6px rgba(235, 207, 160, 0.22);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      0 0 0 1px rgba(235, 207, 160, 0.28),
+      0 0 12px rgba(235, 207, 160, 0.4);
+  }
+}
+
+/* ── Adaptive type over photo panels ──
+   data-tone="dark"  → dark photo, light type (default)
+   data-tone="light" → light photo, dark type
+   JS samples image luminance under copy regions.
+*/
+.hero,
+.story,
+.menu,
+.visit {
+  /*
+   * Legibility: primary copy + links share one full ink.
+   * soft = same as fg (no accidental dim on CN/desc vs links)
+   */
+  --tone-fg: #faf8f4;
+  --tone-fg-soft: #faf8f4;
+  --tone-accent: #ebcfa0;
+  --tone-accent-soft: #f0dcb4;
+  --tone-line: rgba(250, 246, 240, 0.34);
+  --tone-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.62),
+    0 4px 22px rgba(0, 0, 0, 0.45);
+  --tone-shadow-soft:
+    0 1px 2px rgba(0, 0, 0, 0.78),
+    0 2px 12px rgba(0, 0, 0, 0.55),
+    0 8px 28px rgba(0, 0, 0, 0.42);
+  --tone-filter: #faf8f4;
+  /* Selected chrome — same wheat amber as nav .is-active */
+  --tone-filter-active: var(--wheat);
+  --tone-filter-line-active: rgba(208, 192, 160, 0.95);
+  --tone-filter-glow:
+    0 0 12px rgba(208, 192, 160, 0.35),
+    0 0 22px rgba(208, 192, 160, 0.18);
+  --tone-rule: linear-gradient(
+    90deg,
+    rgba(250, 246, 240, 0.98) 0%,
+    rgba(250, 246, 240, 0.4) 100%
+  );
+}
+
+.hero[data-tone="light"],
+.story[data-tone="light"],
+.menu[data-tone="light"],
+.visit[data-tone="light"] {
+  --tone-fg: #1c1814;
+  --tone-fg-soft: #1c1814;
+  --tone-accent: #8a6340;
+  --tone-accent-soft: #a67c52;
+  --tone-line: rgba(28, 24, 20, 0.2);
+  --tone-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 16px rgba(255, 252, 247, 0.35);
+  --tone-shadow-soft:
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 14px rgba(255, 252, 247, 0.4);
+  --tone-filter: #1c1814;
+  /* Light plates — clay amber (nav light-panel active) */
+  --tone-filter-active: var(--clay-deep, var(--clay));
+  --tone-filter-line-active: rgba(138, 99, 64, 0.9);
+  --tone-filter-glow:
+    0 0 10px rgba(166, 124, 82, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.35);
+  --tone-rule: linear-gradient(
+    90deg,
+    rgba(28, 24, 20, 0.88) 0%,
+    rgba(28, 24, 20, 0.28) 100%
+  );
+}
+
+/* Light plates: warm paper veil (Menu sets its own stacked reading bands) */
+.visit[data-tone="light"] .visit-wall-veil {
+  background: var(--panel-veil-light);
+}
+
+/* Nav logo on hero when the plate is light */
+/* Light photo under transparent chrome — flip to ink type */
+/* Nav inherits light chrome from active light panel (hero included) */
+body:has(#hero[data-tone="light"]) .nav:not(.is-past-hero),
+body:has(.panel[data-tone="light"]:not(#hero)) .nav {
+  color: var(--ink);
+}
+
+body:has(#hero[data-tone="light"]) .nav:not(.is-past-hero) .nav-logo,
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-logo,
+body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-links a {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 8px rgba(255, 252, 247, 0.35);
+}
+
+body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is-active {
+  color: var(--clay-deep);
+}
+
+/* ── Hero ── */
+.hero {
+  justify-content: stretch;
+  padding: 0;
+  background: var(--void);
+}
+
+.hero-stage {
+  justify-content: flex-end;
+  align-items: flex-start; /* caption lives bottom-left, not stretched full width */
+  z-index: 2;
+  gap: 0;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--void);
+}
+
+/*
+ * Full-bleed cover — fill the panel edge-to-edge (no letterbox).
+ * Slight scale crops empty table/sky so the plate owns the frame.
+ */
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  transform: scale(1.12);
+  transform-origin: center 42%;
+  will-change: auto;
+}
+
+/* Still poster under video for LCP; fades when video is ready */
+.hero-poster {
+  z-index: 0;
+}
+.hero-video {
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1.1s ease;
+  background: var(--void);
+  pointer-events: none;
+}
+.hero-video.is-ready {
+  opacity: 1;
+}
+.hero-video.is-ready + .hero-poster {
+  opacity: 0;
+  transition: opacity 1.1s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none;
+  }
+  .hero-poster {
+    opacity: 1 !important;
+    position: absolute;
+  }
+}
+
+/* Soft warmth + rising steam — above media */
+.hero-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  left: 15%;
+  bottom: 8%;
+  width: min(55vw, 520px);
+  height: min(40vh, 320px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 236, 200, 0.28) 0%,
+    rgba(255, 210, 150, 0.1) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: heroGlow 7s ease-in-out infinite alternate;
+  mix-blend-mode: soft-light;
+}
+
+.hero-steam {
+  position: absolute;
+  left: 18%;
+  bottom: 22%;
+  width: min(42vw, 380px);
+  height: min(48vh, 360px);
+}
+
+.hero-steam span {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.12) 45%,
+    transparent 70%
+  );
+  filter: blur(6px);
+  opacity: 0;
+  animation: heroSteam 6.5s ease-in infinite;
+}
+
+.hero-steam span:nth-child(1) {
+  left: 12%;
+  width: 48px;
+  height: 48px;
+  animation-delay: 0s;
+  animation-duration: 6.2s;
+}
+.hero-steam span:nth-child(2) {
+  left: 32%;
+  width: 64px;
+  height: 64px;
+  animation-delay: 1.1s;
+  animation-duration: 7s;
+}
+.hero-steam span:nth-child(3) {
+  left: 48%;
+  width: 42px;
+  height: 42px;
+  animation-delay: 2.2s;
+  animation-duration: 5.8s;
+}
+.hero-steam span:nth-child(4) {
+  left: 62%;
+  width: 56px;
+  height: 56px;
+  animation-delay: 0.6s;
+  animation-duration: 6.8s;
+}
+.hero-steam span:nth-child(5) {
+  left: 78%;
+  width: 36px;
+  height: 36px;
+  animation-delay: 1.8s;
+  animation-duration: 5.5s;
+}
+
+@keyframes heroGlow {
+  from {
+    opacity: 0.55;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08) translateY(-8px);
+  }
+}
+
+@keyframes heroSteam {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.7);
+  }
+  15% {
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(10px, -120px, 0) scale(1.35);
+  }
+}
+
+/*
+ * Hero caption — one quiet stack, bottom-left over the plate.
+ * Rhythm: eyebrow → 褶 → name → hairline → line of belief.
+ */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(26rem, 100%);
+  max-width: min(26rem, 100%);
+  color: var(--tone-fg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  /* Local contrast so type stays readable without a dark overlay */
+  text-shadow: var(--tone-shadow);
+  transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft);
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: var(--type-ui-sm);
+  font-weight: 400;
+  margin: 0 0 0.85rem;
+  letter-spacing: var(--type-kicker-track);
+  color: var(--tone-fg);
+  opacity: 0.92;
+  text-transform: uppercase;
+}
+
+.hero-eyebrow .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  margin: 0 0 1rem;
+}
+
+.hero-title .title-cn {
+  display: block;
+  font-family: var(--font-cn);
+  /* Slightly quieter than before — ceremony, not a billboard */
+  font-size: var(--type-hero-cn);
+  font-weight: 500;
+  font-style: normal;
+  line-height: 0.88;
+  letter-spacing: var(--type-title-track);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+.hero-title .title-en {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--type-hero-en);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: var(--type-title-track);
+  margin-top: 0.4rem;
+  color: var(--tone-fg);
+  opacity: 1;
+  text-shadow: var(--tone-shadow-soft);
+}
+
+/* Quiet fold mark between name and belief line */
+.hero-title::after {
+  content: "";
+  display: block;
+  width: 1.65rem;
+  height: 1px;
+  margin-top: 1rem;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+.hero-tagline {
+  display: block;
+  margin: 0;
+  max-width: 22rem;
+}
+
+.hero-tagline .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-lead);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+/* Thin edge cue only — no floating arrow glyph */
+.hero-scroll {
+  position: absolute;
+  right: clamp(1.25rem, 5vw, 2.5rem);
+  bottom: clamp(1.25rem, 4vh, 2.25rem);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 2.75rem;
+  background: linear-gradient(to bottom, var(--cream), transparent);
+  animation: scrollPulse 2.8s var(--ease-soft) infinite;
+}
+
+@keyframes scrollPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scaleY(0.7);
+    transform-origin: top;
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* ── Story — photo wall + type (same language as Menu / Visit) ── */
+.story {
+  isolation: isolate;
+  color: var(--cream);
+  background: var(--void);
+  padding: 0;
+  /* Vertical page-snap free; horizontal chapter swipe owned by JS */
+  touch-action: pan-y;
+  overscroll-behavior-x: none;
+}
+
+.story-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Horizontal swipe zone (JS); vertical pan still pages */
+  pointer-events: auto;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.story-wall-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+  display: block;
+  /* Match menu plate lift — Origins was ungraded and read duller than Hero */
+  filter: saturate(1.05) contrast(1.03) brightness(1.06);
+  /* Always fully opaque — motion is horizontal sweep only */
+  opacity: 1;
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  z-index: 0;
+  backface-visibility: hidden;
+  pointer-events: none;
+}
+
+.story-wall-img.is-active {
+  transform: translate3d(0, 0, 0);
+  z-index: 2;
+}
+
+/* Instant park off-screen before a sweep starts (no fade) */
+.story-wall-img.is-park-left {
+  transform: translate3d(-100%, 0, 0);
+  transition: none;
+  z-index: 0;
+}
+.story-wall-img.is-park-right {
+  transform: translate3d(100%, 0, 0);
+  transition: none;
+  z-index: 0;
+}
+
+/* Animate out of frame — same duration/easing as enter */
+.story-wall-img.is-leave-left {
+  transform: translate3d(-100%, 0, 0);
+  z-index: 1;
+}
+.story-wall-img.is-leave-right {
+  transform: translate3d(100%, 0, 0);
+  z-index: 1;
+}
+
+.story-wall-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  /* Shared panel veil recipe (Menu / Visit / Story) */
+  background: var(--panel-veil);
+  transition: background var(--motion-slow);
+}
+
+/* Top reading scrim under section heads */
+.story-wall-veil::before,
+.visit-wall-veil::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: min(38%, 13.5rem);
+  pointer-events: none;
+  z-index: 1;
+  background: var(--read-scrim-top);
+  transition: background var(--motion-slow);
+}
+
+.visit[data-tone="light"] .visit-wall-veil::before {
+  background: var(--read-scrim-top-light);
+}
+
+.story-wall-veil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: soft-light;
+  background-image: var(--panel-veil-grain);
+  background-size: 160px;
+}
+
+/* Origins never uses cream light-veil (washes flour/wood plates). Type stays paper. */
+.story[data-tone="light"] .story-wall-veil {
+  background: var(--panel-veil);
+}
+
+.story[data-tone="light"] .story-wall-veil::after {
+  opacity: 0.14;
+  mix-blend-mode: soft-light;
+}
+
+.story-stage {
+  z-index: 1;
+  justify-content: space-between;
+  gap: 0.85rem;
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+  /* Let wall receive horizontal swipes; controls re-enable pointer events */
+  pointer-events: none;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.story-stage .story-head,
+.story-stage .story-carousel,
+.story-stage .story-spotlight {
+  pointer-events: auto;
+}
+
+.story-head {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.75fr) minmax(0, 1.4fr);
+  gap: 0.75rem 1.5rem;
+  align-items: end;
+  width: 100%;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--tone-line);
+  transition: border-color var(--motion), color var(--motion);
+}
+
+.story-head-title h2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  color: var(--tone-fg);
+}
+
+.story-head-title .en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-panel-en);
+  font-weight: 400;
+  letter-spacing: var(--type-title-track);
+  line-height: var(--type-lh-tight);
+  color: var(--tone-fg);
+}
+
+/* Panel CN mark uses shared .story-head-title .cn / .menu-head-title .cn rule */
+
+.story-head-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 32rem;
+  margin: 0;
+}
+
+.story-head-lead .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-lead);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+/* One chapter at a time — Menu spotlight grammar */
+.story-spotlight {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  max-width: min(36rem, 100%);
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  transition: opacity var(--motion), transform var(--motion);
+}
+
+.story-spotlight.is-fading {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.story-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-kicker);
+  color: var(--tone-accent);
+  letter-spacing: var(--type-kicker-track);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.story-spotlight .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-prose);
+  line-height: var(--type-prose-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+  opacity: 1;
+  color: var(--tone-fg-soft);
+  margin: 0;
+  max-width: 34rem;
+}
+
+/*
+ * Origins chapter controls — pips + quiet chevrons (same language as Menu).
+ * Thin strokes, no pills; swipe / keyboard / autoplay still work.
+ */
+.story-carousel {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1.1rem;
+  width: 100%;
+  max-width: 15rem;
+  margin: 0 auto;
+  padding-top: 0.45rem;
+}
+
+.story-carousel-btn,
+.menu-carousel-btn {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  min-width: 2.6rem;
+  height: 2.6rem;
+  min-height: 2.6rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--tone-fg);
+  opacity: 0.4;
+  cursor: pointer;
+  box-shadow: none;
+  transition:
+    opacity 0.35s var(--ease-soft),
+    color 0.35s var(--ease-soft),
+    transform 0.2s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.story-carousel-btn .carousel-chevron,
+.menu-carousel-btn .carousel-chevron {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+  overflow: visible;
+}
+
+.story-carousel-btn:hover,
+.menu-carousel-btn:hover,
+.story-carousel-btn:focus-visible,
+.menu-carousel-btn:focus-visible {
+  background: transparent;
+  opacity: 0.95;
+  color: var(--tone-fg);
+}
+
+.story-carousel-btn:focus-visible,
+.menu-carousel-btn:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+.story-carousel-btn:active,
+.menu-carousel-btn:active {
+  transform: translateY(0.5px);
+  opacity: 0.75;
+}
+
+.story-dots {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.story-dot {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.65rem;
+  min-width: 1.65rem;
+  height: 2.5rem; /* comfortable hit target on mouse + touch */
+  padding: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: transparent;
+  font-size: 0;
+  letter-spacing: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Labels stay for screen readers only (aria-label also set in JS) */
+.story-dot-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.story-dot::after {
+  content: "";
+  position: static;
+  display: block;
+  width: 1.35rem;
+  max-width: none;
+  height: 2px;
+  border-radius: 1px;
+  opacity: 0.35;
+  background: currentColor;
+  color: var(--tone-fg, var(--cream));
+  transform: none;
+  pointer-events: none;
+  transition:
+    opacity 0.3s var(--ease-out),
+    width 0.35s var(--ease-out),
+    background 0.3s,
+    height 0.25s;
+}
+
+.story-dot.is-active {
+  color: transparent;
+}
+
+.story-dot.is-active::after {
+  width: 1.65rem;
+  height: 2px;
+  opacity: 0.95;
+  background: var(--wheat);
+}
+
+.story[data-tone="light"] .story-dot::after {
+  background: rgba(28, 24, 20, 0.35);
+}
+
+.story[data-tone="light"] .story-dot.is-active::after {
+  background: var(--clay-deep, var(--clay));
+  opacity: 0.9;
+}
+
+.story-dot:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .story-dot:hover::after {
+    opacity: 0.7;
+  }
+  .story-dot.is-active:hover::after {
+    opacity: 0.95;
+  }
+}
+
+/* ── Menu ── */
+.menu {
+  isolation: isolate;
+  color: var(--cream);
+  background: var(--void);
+  padding: 0;
+  /* Vertical page-snap free; horizontal dish swipe owned by JS */
+  touch-action: pan-y;
+  overscroll-behavior-x: none;
+}
+
+.menu-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Horizontal swipe zone (with spotlight); vertical pan still pages */
+  pointer-events: auto;
+  touch-action: pan-y;
+  cursor: grab;
+  /* Ensure wall paints full panel box */
+  width: 100%;
+  height: 100%;
+}
+
+.menu-wall-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Full cover — no inset/width mismatch that leaves a strip */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Default; per-dish object-position may be set in JS — never change scale/origin mid-view */
+  object-position: center 52%;
+  opacity: 0;
+  /* Gentle grade — avoid blowing out pale plates (tofu, etc.) */
+  filter: saturate(1.06) contrast(1.04) brightness(1.06);
+  /*
+   * Opacity-only transitions. Scale + origin stay locked for photo AND list
+   * so List/Photos never resizes the plate (mobile was jumping hard).
+   */
+  transition: opacity var(--motion-slow);
+  will-change: opacity;
+  transform: scale(var(--menu-wall-scale, 1.12));
+  transform-origin: var(--menu-wall-origin, center center);
+  animation: none;
+}
+
+.menu-wall-img.is-active {
+  opacity: 1;
+  z-index: 1;
+  /* Same transform as idle layer — only opacity differs */
+  transform: scale(var(--menu-wall-scale, 1.12));
+  transform-origin: var(--menu-wall-origin, center center);
+  animation: none;
+}
+
+.menu-wall-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  /* Base atmosphere + extra bottom/left for dish copy */
+  background:
+    var(--read-scrim-menu-copy),
+    var(--panel-veil);
+  transition: background var(--motion-slow);
+}
+
+/* Top scrim — head + filters + tools reading band */
+.menu-wall-veil::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: min(42%, 15rem);
+  pointer-events: none;
+  z-index: 1;
+  background: var(--read-scrim-top);
+  transition: background var(--motion-slow), opacity var(--motion-slow);
+}
+
+.menu[data-tone="light"] .menu-wall-veil {
+  background:
+    linear-gradient(
+      to top,
+      rgba(245, 232, 210, 0.78) 0%,
+      rgba(240, 224, 198, 0.4) 30%,
+      transparent 58%
+    ),
+    linear-gradient(
+      to right,
+      rgba(245, 232, 210, 0.65) 0%,
+      rgba(240, 224, 198, 0.28) 30%,
+      transparent 58%
+    ),
+    var(--panel-veil-light);
+}
+
+.menu[data-tone="light"] .menu-wall-veil::before {
+  background: var(--read-scrim-top-light);
+}
+
+/* List mode — keep the same reading bands */
+.menu.is-list-view .menu-wall-veil {
+  background:
+    var(--read-scrim-menu-copy),
+    var(--panel-veil);
+}
+
+.menu-wall-veil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: soft-light;
+  background-image: var(--panel-veil-grain);
+  background-size: 160px;
+}
+
+.menu[data-tone="light"] .menu-wall-veil::after {
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+.menu-wall-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0.045;
+  mix-blend-mode: soft-light;
+  background-image: url("/assets/paper-texture.webp?v=1784192000");
+  background-size: cover;
+}
+
+.menu[data-tone="light"] .menu-wall-grain {
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+}
+
+.menu-stage {
+  justify-content: space-between;
+  gap: 0.75rem;
+  /* Wall behind handles dish swipe; chrome stays interactive */
+  pointer-events: none;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.menu-stage .menu-head,
+.menu-stage .menu-carousel,
+.menu-stage .menu-list-view,
+.menu-stage .menu-note,
+.menu-stage .menu-spotlight-copy {
+  pointer-events: auto;
+}
+
+.menu-head {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
+  grid-template-areas: "title actions";
+  gap: 0.65rem 1.5rem;
+  align-items: end;
+  width: 100%;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--tone-line);
+  color: var(--tone-fg);
+  /* Stronger lift over busy plate (pairs with top scrim) */
+  text-shadow: var(--tone-shadow-soft);
+  transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft),
+    border-color 0.45s var(--ease-soft);
+}
+
+.menu-head-title {
+  grid-area: title;
+  min-width: 0;
+}
+
+.menu-head-title h2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  color: var(--tone-fg);
+}
+
+.menu-head-title .en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-panel-en);
+  font-weight: 400;
+  letter-spacing: var(--type-title-track);
+  color: var(--tone-fg);
+}
+
+/* .menu-head-title .cn — shared panel CN mark rule */
+
+/* Filters + List on one right block, same baseline (no orphan List under) */
+.menu-actions {
+  grid-area: actions;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.15rem 1.25rem;
+  min-width: 0;
+}
+
+.menu-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1rem;
+  justify-content: flex-end;
+  text-shadow: none;
+}
+
+.filter-btn {
+  position: relative;
+  /* Expand hit area ≥ ~44×44 without looking like a fat button */
+  padding: 0.65rem 0.55rem 0.55rem;
+  margin: 0;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  border: none;
+  border-radius: 0;
+  /* No border-bottom underline — ::after only on .is-active (avoids sticky touch :hover dual lines) */
+  border-bottom: none;
+  /* Chrome — Outfit for legibility over photo (not display italic) */
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-ui);
+  letter-spacing: var(--type-ui-track);
+  color: var(--tone-filter);
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  transition: color var(--motion), opacity var(--motion);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Hairline only when selected — never on :hover / :focus */
+.filter-btn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.05rem;
+  width: 100%;
+  max-width: 1.65rem;
+  height: 1px;
+  background: var(--tone-filter-line-active);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 0.28s var(--ease-out);
+  pointer-events: none;
+}
+
+.filter-btn.is-active {
+  background: transparent;
+  color: var(--tone-filter-active);
+  box-shadow: none;
+  text-shadow: var(--tone-filter-glow);
+}
+
+.filter-btn.is-active::after {
+  opacity: 0.95;
+  background: var(--tone-filter-line-active);
+  box-shadow: 0 0 8px rgba(208, 192, 160, 0.45);
+}
+
+/* Color lift only — underline stays exclusive to .is-active */
+@media (hover: hover) and (pointer: fine) {
+  .filter-btn:hover:not(.is-active) {
+    color: var(--tone-filter-active);
+    opacity: 0.9;
+    background: transparent;
+  }
+}
+
+/* Touch / coarse pointers: kill any sticky :hover paint entirely */
+@media (hover: none), (pointer: coarse) {
+  .filter-btn:hover:not(.is-active),
+  .filter-btn:focus:not(.is-active),
+  .filter-btn:active:not(.is-active) {
+    color: var(--tone-filter);
+    background: transparent;
+  }
+
+  .filter-btn:hover:not(.is-active)::after,
+  .filter-btn:focus:not(.is-active)::after,
+  .filter-btn:active:not(.is-active)::after {
+    opacity: 0;
+  }
+}
+
+/*
+ * Menu display — icon pair (photo | list), no box, no text.
+ * Words live in aria-label / title; active = full ink + hairline.
+ */
+.menu-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  text-shadow: none;
+  flex-shrink: 0;
+}
+
+.menu-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.menu-view-sep {
+  width: 1px;
+  height: 0.9rem;
+  margin: 0 0.05rem;
+  background: var(--tone-line);
+  opacity: 0.9;
+  flex-shrink: 0;
+  align-self: center;
+  pointer-events: none;
+}
+
+.menu-view-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.35rem 0.5rem;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--tone-filter);
+  opacity: 0.78;
+  box-shadow: none;
+  transition: color var(--motion), opacity var(--motion);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.menu-view-btn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.2rem;
+  width: 1.2rem;
+  height: 1px;
+  background: var(--tone-filter-line-active);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 0.28s var(--ease-out);
+  pointer-events: none;
+}
+
+.menu-view-icon {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  opacity: 1;
+  /* Keep strokes crisp when scaled */
+  overflow: visible;
+}
+
+.menu-view-btn.is-active,
+.menu-view-btn[aria-pressed="true"] {
+  color: var(--tone-filter-active);
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgba(208, 192, 160, 0.4));
+}
+
+.menu-view-btn.is-active::after,
+.menu-view-btn[aria-pressed="true"]::after {
+  opacity: 0.95;
+  background: var(--tone-filter-line-active);
+  box-shadow: 0 0 8px rgba(208, 192, 160, 0.45);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .menu-view-btn:hover:not(.is-active) {
+    color: var(--tone-filter-active);
+    opacity: 0.9;
+    background: transparent;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .menu-view-btn:hover:not(.is-active),
+  .menu-view-btn:focus:not(.is-active) {
+    color: var(--tone-filter);
+    opacity: 0.78;
+    background: transparent;
+  }
+
+  .menu-view-btn:hover:not(.is-active)::after,
+  .menu-view-btn:focus:not(.is-active)::after {
+    opacity: 0;
+  }
+}
+
+/* Light plates — clay amber, not wheat wash */
+.menu[data-tone="light"] .filter-btn.is-active {
+  text-shadow: var(--tone-filter-glow);
+}
+
+.menu[data-tone="light"] .filter-btn.is-active::after,
+.menu[data-tone="light"] .menu-view-btn.is-active::after,
+.menu[data-tone="light"] .menu-view-btn[aria-pressed="true"]::after {
+  box-shadow: 0 0 6px rgba(138, 99, 64, 0.35);
+}
+
+.menu[data-tone="light"] .menu-view-btn.is-active,
+.menu[data-tone="light"] .menu-view-btn[aria-pressed="true"] {
+  filter: drop-shadow(0 0 4px rgba(138, 99, 64, 0.3));
+}
+
+/* Spotlight: one dish at a time — spans full stage width */
+.menu-spotlight {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.menu-spotlight-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  max-width: min(32rem, 100%);
+  color: var(--tone-fg);
+  /* Dual-layer shadow: crisp edge + soft lift off the photo */
+  text-shadow: var(--tone-shadow-soft);
+  transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft);
+}
+
+.menu-spotlight-cat {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-kicker);
+  color: var(--tone-accent);
+  letter-spacing: var(--type-kicker-track);
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.menu-spotlight-en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-dish-en);
+  font-weight: 400;
+  letter-spacing: var(--type-title-track);
+  line-height: var(--type-lh-tight);
+  color: var(--tone-fg);
+  margin: 0;
+}
+
+.menu-spotlight-cn {
+  font-size: var(--type-dish-cn);
+  line-height: var(--type-lh-ui);
+  /* family/color from shared dish CN rule */
+}
+
+.menu-spotlight-desc {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: var(--type-body);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+  opacity: 1;
+  max-width: 30rem;
+  margin-top: 0.4rem;
+  font-weight: 400;
+}
+
+/* Spotlight is hidden in list view — no expand rules needed here */
+
+.menu-spotlight-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem 1rem;
+  margin-top: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.menu-spotlight-price {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: var(--type-price);
+  color: var(--tone-accent-soft);
+  letter-spacing: var(--type-title-track);
+  font-weight: 500;
+}
+
+.menu-spotlight-marks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+}
+
+.dish-mark {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-micro);
+  letter-spacing: var(--type-kicker-track);
+  text-transform: uppercase;
+  color: var(--tone-fg);
+  border: 1px solid rgba(242, 235, 224, 0.4);
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem 0.18rem;
+  line-height: var(--type-lh-ui);
+  opacity: 1;
+}
+
+.dish-mark--house {
+  color: var(--tone-accent-soft, var(--wheat));
+  border-color: rgba(212, 184, 150, 0.45);
+  letter-spacing: var(--type-kicker-track);
+}
+
+.menu[data-tone="light"] .dish-mark {
+  color: var(--tone-fg);
+  border-color: rgba(28, 24, 20, 0.28);
+}
+
+.menu[data-tone="light"] .dish-mark--house {
+  color: var(--clay-deep, var(--clay));
+  border-color: rgba(154, 86, 68, 0.35);
+}
+
+.menu-list-item .list-marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  grid-column: 1 / -1;
+  margin-top: 0.15rem;
+}
+
+.menu-list-item .list-marks .dish-mark {
+  font-size: var(--type-micro);
+  padding: 0.15rem 0.42rem;
+}
+
+/* Dish carousel — thumbs only + chevrons (labels live in spotlight) */
+.menu-carousel {
+  --menu-thumb-w: 6.5rem;
+  --menu-thumb-h: 4.25rem;
+  --menu-rail-pad-y: 0.2rem;
+  --menu-rail-gap: 0.5rem;
+  --menu-chev-size: 2.35rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 0.2rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+  margin-top: 0.15rem;
+}
+
+.menu-carousel-btn {
+  /* Shared quiet chevron chrome with .story-carousel-btn */
+  z-index: 2;
+  width: var(--menu-chev-size);
+  min-width: var(--menu-chev-size);
+  height: var(--menu-chev-size);
+  min-height: var(--menu-chev-size);
+  margin-top: 0; /* thumbs-only rail — center with align-items on carousel */
+}
+
+.menu-carousel-btn[hidden] {
+  display: none !important;
+}
+
+/* Few items: hug content, no empty stretch, no side fade */
+.menu-carousel.is-compact .menu-rail-wrap {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  mask-image: none;
+}
+
+.menu-carousel.is-compact .menu-rail {
+  width: max-content;
+  max-width: none;
+  overflow-x: hidden;
+  scroll-snap-type: none;
+  scroll-padding-inline: 0;
+  cursor: default;
+}
+
+/* Many items: fill remaining width and scroll */
+.menu-carousel.is-overflowing .menu-rail-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.menu-carousel.is-overflowing .menu-rail {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc(50% - (var(--menu-thumb-w) / 2));
+  cursor: grab;
+}
+
+.menu-rail-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  /* Soft edge fade only when overflowing (see .is-overflowing) */
+  mask-image: none;
+}
+
+.menu-carousel.is-overflowing .menu-rail-wrap {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 1.5%,
+    #000 98.5%,
+    transparent 100%
+  );
+}
+
+.menu-rail {
+  display: flex;
+  gap: var(--menu-rail-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc(50% - (var(--menu-thumb-w) / 2));
+  padding: var(--menu-rail-pad-y) 0.25rem calc(var(--menu-rail-pad-y) + 0.35rem);
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.menu-rail:active {
+  cursor: grabbing;
+}
+
+.menu-rail::-webkit-scrollbar {
+  display: none;
+  height: 0;
+}
+
+.menu-rail-item {
+  flex: 0 0 auto;
+  width: var(--menu-thumb-w);
+  scroll-snap-align: center;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  cursor: pointer;
+  /* Photo view: thumb only — no name/price stack under the plate */
+  padding: 0 0 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  transition: opacity var(--motion), transform 0.3s var(--ease-out);
+  opacity: 0.52;
+  touch-action: manipulation;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.menu-rail-item.is-hidden {
+  display: none;
+}
+
+.menu-rail-item img {
+  width: 100%;
+  height: 4.5rem;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.02);
+  border-radius: 0;
+  /* Quiet photo plate — no card chrome */
+  box-shadow: none;
+}
+
+/* Short hairline under active dish — same grammar as filters */
+.menu-rail-item::after {
+  content: "";
+  display: block;
+  width: 1.35rem;
+  height: 1px;
+  margin: 0.3rem auto 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--motion), width var(--motion), background var(--motion);
+}
+
+.menu-rail-item:hover,
+.menu-rail-item:focus-visible {
+  opacity: 0.88;
+  transform: none;
+  outline: none;
+}
+
+.menu-rail-item:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+/* Legacy list shell — display/layout owned by ledger hybrid block below */
+.menu-list-view {
+  /* kept for cascade safety; hybrid rules supersede */
+}
+
+/*
+ * List mode = same room, calmer light.
+ * Same paper-on-dark language as spotlight / Visit — no floating paper card.
+ * Legibility comes from a deeper veil + steady type, not a new surface.
+ */
+.menu.is-list-view {
+  /* Same full ink as photo mode — no softer “list language” */
+  --tone-fg: #faf8f4;
+  --tone-fg-soft: #faf8f4;
+  --tone-accent: #ebcfa0;
+  --tone-line: rgba(250, 246, 240, 0.34);
+  --tone-filter: #faf8f4;
+  --tone-filter-active: var(--wheat);
+  --tone-filter-line-active: rgba(208, 192, 160, 0.95);
+  --tone-filter-glow:
+    0 0 12px rgba(208, 192, 160, 0.35),
+    0 0 22px rgba(208, 192, 160, 0.18);
+  --tone-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.62),
+    0 4px 22px rgba(0, 0, 0, 0.45);
+  --tone-shadow-soft:
+    0 1px 2px rgba(0, 0, 0, 0.78),
+    0 2px 12px rgba(0, 0, 0, 0.55),
+    0 8px 28px rgba(0, 0, 0, 0.42);
+}
+
+.menu.is-list-view .menu-list-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: min(36rem, 100%);
+  /* Seamless — no box, border, or cast shadow */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.1rem 0.1rem 0.25rem;
+  color: var(--tone-fg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 235, 224, 0.22) transparent;
+}
+
+/* List mode: the list is the menu — free vertical space from spotlight + rail */
+.menu.is-list-view .menu-spotlight,
+.menu.is-list-view .menu-carousel {
+  display: none;
+}
+
+/* Legacy list-mode note — hybrid ledger owns .menu-note colophon */
+
+/*
+ * List backdrop: SAME geometry as photo mode (scale/origin/filter locked).
+ * Only opacity crossfade may differ in timing — never reframe the plate.
+ */
+.menu.is-list-view .menu-wall-img {
+  transition: opacity 1.15s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: none;
+  /* Explicit: inherit same vars — do not override scale */
+  transform: scale(var(--menu-wall-scale, 1.12));
+  transform-origin: var(--menu-wall-origin, center center);
+  filter: saturate(1.06) contrast(1.04) brightness(1.06);
+  will-change: opacity;
+}
+
+.menu.is-list-view .menu-wall-img.is-active {
+  animation: none;
+  transform: scale(var(--menu-wall-scale, 1.12));
+  transform-origin: var(--menu-wall-origin, center center);
+}
+
+.menu.is-list-view .menu-wall-veil {
+  /* Keep reading bands; skip slow transition on mode switch */
+  transition: none;
+  background:
+    var(--read-scrim-menu-copy),
+    var(--panel-veil);
+}
+
+/* Legacy list-row rules removed — see Menu ledger hybrid block */
+
+.menu-rail-item.is-active {
+  opacity: 1;
+  transform: none;
+  box-shadow: none;
+}
+
+.menu-rail-item.is-active::after {
+  opacity: 0.85;
+  width: 1.65rem;
+  height: 1.5px;
+  background: var(--tone-accent);
+}
+
+/* .menu-note — colophon styles live in the ledger hybrid block below */
+
+
+/* ═══════════════════════════════════════════
+   Menu ledger hybrid — plate behind, list as instrument
+   (Phase 1: no photo/list modes, no bottom rail)
+   ═══════════════════════════════════════════ */
+
+.menu-stage {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  height: 100%;
+  min-height: 0;
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+  pointer-events: none; /* wall receives swipes; ledger re-enables */
+}
+
+.menu-stage .menu-head,
+.menu-stage .menu-ledger {
+  pointer-events: auto;
+}
+
+.menu-head {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.55rem 1.25rem;
+  width: 100%;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--tone-line);
+}
+
+.menu-head-title {
+  min-width: 0;
+}
+
+.menu-head-title h2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  color: var(--tone-fg);
+}
+
+.menu-head-title .en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-panel-en);
+  font-weight: 400;
+  letter-spacing: var(--type-title-track);
+  line-height: var(--type-lh-tight);
+  color: var(--tone-fg);
+}
+
+.menu-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1rem;
+  justify-content: flex-end;
+  text-shadow: none;
+}
+
+/* Ledger column — left edge (scan path); plate opens to the right */
+.menu-ledger {
+  /* flex-basis 0 so overflow child gets a real height (not content-sized) */
+  flex: 1 1 0%;
+  min-height: 0;
+  width: min(26.5rem, 100%);
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.35rem 1rem 0.25rem 0.15rem;
+  overflow: hidden;
+  /* No side band — type-shadow holds the list over open plate */
+  background: transparent;
+  border-radius: 0;
+}
+
+.menu-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1 1 0%;
+  min-height: 0;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  overscroll-behavior-x: none;
+  /* Nested scroller owns vertical pan; horizontal dish swipe is on the wall */
+  touch-action: pan-y;
+  list-style: none;
+  margin: 0;
+  padding: 0.1rem 0.2rem 0.35rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 235, 224, 0.22) transparent;
+}
+
+.menu-list-group {
+  list-style: none;
+  margin: 0.65rem 0 0.15rem;
+  padding: 0;
+}
+
+.menu-list-group:first-child {
+  margin-top: 0.15rem;
+}
+
+.menu-list-group.is-hidden,
+.menu-list-group[hidden] {
+  display: none !important;
+}
+
+.menu-list-group-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: var(--type-ui-sm);
+  font-weight: 400;
+  letter-spacing: var(--type-kicker-track);
+  text-transform: uppercase;
+  color: var(--tone-accent);
+  opacity: 0.88;
+  padding: 0.35rem 0.1rem 0.28rem;
+  border-bottom: 1px solid rgba(250, 246, 240, 0.1);
+}
+
+/*
+ * Type-first legibility (no wall dimming):
+ * ink halo + hairline stroke hold glyphs; soft row mat is local only.
+ * Source Serif italic ships 400 only — contrast comes from halo/stroke, not fake bold.
+ */
+.menu {
+  --menu-ink: #faf8f4;
+  --menu-type-halo:
+    0 0 0.6px rgba(0, 0, 0, 0.95),
+    0 1px 1px rgba(0, 0, 0, 0.88),
+    0 1px 3px rgba(0, 0, 0, 0.72),
+    0 3px 12px rgba(0, 0, 0, 0.48),
+    0 8px 28px rgba(0, 0, 0, 0.32);
+  --menu-type-halo-strong:
+    0 0 0.8px rgba(0, 0, 0, 1),
+    0 1px 1px rgba(0, 0, 0, 0.92),
+    0 2px 4px rgba(0, 0, 0, 0.78),
+    0 4px 14px rgba(0, 0, 0, 0.52),
+    0 10px 32px rgba(0, 0, 0, 0.36);
+  --menu-row-mat: linear-gradient(
+    90deg,
+    rgba(6, 4, 3, 0.2) 0%,
+    rgba(6, 4, 3, 0.12) 42%,
+    rgba(6, 4, 3, 0.04) 78%,
+    transparent 100%
+  );
+  --menu-row-mat-active: linear-gradient(
+    90deg,
+    rgba(6, 4, 3, 0.28) 0%,
+    rgba(6, 4, 3, 0.14) 38%,
+    rgba(235, 207, 160, 0.06) 62%,
+    transparent 100%
+  );
+}
+
+/* Row — name leads, price confirms; leader dots fill the gutter (print menu) */
+.menu-list-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "en price"
+    "cn price";
+  column-gap: 0.55rem;
+  row-gap: 0.06rem;
+  align-items: baseline;
+  padding: 0.55rem 0.15rem 0.55rem 0.65rem;
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid rgba(242, 235, 224, 0.12);
+  border-radius: 0;
+  /* Local letter mat — row height only, not a plate curtain */
+  background: var(--menu-row-mat);
+  cursor: pointer;
+  color: var(--menu-ink);
+  text-shadow: var(--menu-type-halo);
+  transition:
+    background 0.2s var(--ease-soft),
+    border-color 0.2s var(--ease-soft);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.menu-list-item.has-meta {
+  grid-template-areas:
+    "en price"
+    "cn price"
+    "meta meta";
+}
+
+.menu-list-item.is-hidden {
+  display: none !important;
+}
+
+.menu-list-item .list-en {
+  grid-area: en;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-list-en);
+  font-weight: 400;
+  letter-spacing: var(--type-title-track);
+  line-height: var(--type-lh-ui);
+  color: var(--menu-ink);
+  /* Hairline edge — holds serif over steam without a scrim */
+  -webkit-text-stroke: 0.28px rgba(0, 0, 0, 0.45);
+  paint-order: stroke fill;
+  text-shadow: var(--menu-type-halo-strong);
+}
+
+/* Dotted leader toward price — quiet at rest, a bit clearer on hover/active */
+.menu-list-item .list-en::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 0.65rem;
+  height: 0;
+  margin-right: 0.05rem;
+  border-bottom: 1px dotted rgba(250, 248, 244, 0.42);
+  transform: translateY(-0.38em);
+  opacity: 0.7;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.55));
+  transition: opacity 0.2s var(--ease-soft), border-color 0.2s var(--ease-soft);
+}
+
+/* Price — full opacity, medium weight (roman 500 is loaded) */
+.menu-list-item .list-price {
+  grid-area: price;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: calc(var(--type-list-price) * 0.92);
+  font-weight: 500;
+  color: var(--tone-accent);
+  justify-self: end;
+  align-self: start;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.14rem;
+  opacity: 1;
+  -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.35);
+  paint-order: stroke fill;
+  text-shadow: var(--menu-type-halo-strong);
+}
+
+.menu-list-item .list-cn {
+  grid-area: cn;
+  font-size: var(--type-list-cn);
+  line-height: var(--type-lh-ui);
+  min-width: 0;
+  color: var(--menu-ink);
+  opacity: 0.82;
+  text-shadow: var(--menu-type-halo);
+}
+
+.menu-list-item .list-meta {
+  grid-area: meta;
+  font-family: var(--font-ui);
+  font-size: var(--type-ui-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tone-accent);
+  opacity: 0.88;
+  line-height: 1.3;
+  margin-top: 0.08rem;
+  text-shadow: var(--menu-type-halo);
+}
+
+.menu-list-item .list-desc {
+  display: none;
+  grid-area: desc;
+  font-family: var(--font-ui);
+  font-size: var(--type-body);
+  line-height: var(--type-lh-body);
+  letter-spacing: var(--type-body-track);
+  color: var(--menu-ink);
+  opacity: 0.94;
+  margin: 0.22rem 0 0;
+  max-width: 32rem;
+  text-shadow: var(--menu-type-halo);
+}
+
+/*
+ * Active = open pleat: short imperfect crease + slightly stronger mat.
+ */
+.menu-list-item.is-active {
+  grid-template-areas:
+    "en price"
+    "cn price"
+    "desc desc";
+  padding-top: 0.65rem;
+  padding-bottom: 0.7rem;
+  border-bottom-color: rgba(201, 184, 150, 0.38);
+  background: var(--menu-row-mat-active);
+}
+
+/* Fold crease — short, slightly skewed, only on the open row */
+.menu-list-item.is-active::before {
+  content: "";
+  position: absolute;
+  left: 0.12rem;
+  top: 50%;
+  width: 1.5px;
+  height: 1.4rem;
+  transform: translateY(-52%) rotate(1.2deg);
+  border-radius: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--wheat) 12%,
+    var(--tone-accent) 50%,
+    var(--wheat) 88%,
+    transparent 100%
+  );
+  box-shadow:
+    1px 0 0 rgba(8, 5, 4, 0.35),
+    0 0 10px rgba(208, 192, 160, 0.28);
+  pointer-events: none;
+}
+
+.menu-list-item.is-active.has-meta {
+  grid-template-areas:
+    "en price"
+    "cn price"
+    "meta meta"
+    "desc desc";
+}
+
+.menu-list-item.is-active .list-desc {
+  display: block;
+}
+
+.menu-list-item.is-active .list-en {
+  color: var(--menu-ink);
+  text-shadow: var(--menu-type-halo-strong);
+}
+
+.menu-list-item.is-active .list-en::after {
+  border-bottom-color: rgba(235, 207, 160, 0.55);
+  opacity: 0.9;
+}
+
+.menu-list-item.is-active .list-price {
+  opacity: 1;
+  font-weight: 500;
+}
+
+.menu-list-item.is-active .list-cn {
+  opacity: 0.92;
+}
+
+.menu-list-item.is-active .list-meta {
+  opacity: 0.92;
+}
+
+.menu-list-item:hover:not(.is-active),
+.menu-list-item:focus-visible:not(.is-active) {
+  border-bottom-color: rgba(242, 235, 224, 0.3);
+  background: linear-gradient(
+    90deg,
+    rgba(6, 4, 3, 0.24) 0%,
+    rgba(6, 4, 3, 0.14) 45%,
+    rgba(6, 4, 3, 0.05) 78%,
+    transparent 100%
+  );
+}
+
+.menu-list-item:hover:not(.is-active) .list-en::after,
+.menu-list-item:focus-visible:not(.is-active) .list-en::after {
+  opacity: 0.85;
+  border-bottom-color: rgba(250, 248, 244, 0.5);
+}
+
+.menu-list-item:focus-visible {
+  outline: 2px solid var(--wheat);
+  outline-offset: 2px;
+}
+
+.menu-list-group-label {
+  text-shadow: var(--menu-type-halo);
+}
+
+.menu-head {
+  text-shadow: var(--menu-type-halo-strong);
+}
+
+.menu-head .filter-btn {
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.75),
+    0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* Colophon — short rule, not full-bleed chrome */
+.menu-note {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 0;
+  margin: 0.15rem 0 0;
+  padding: 0.7rem 0.15rem 0.25rem 0.65rem;
+  max-width: 22rem;
+  border-top: none;
+  font-size: var(--type-micro);
+  color: var(--menu-ink, var(--tone-fg));
+  opacity: 0.78;
+  text-shadow: var(--menu-type-halo, var(--tone-shadow-soft));
+}
+
+.menu-note::before {
+  content: "";
+  display: block;
+  width: 2.6rem;
+  height: 1px;
+  margin: 0 0 0.45rem;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 246, 240, 0.5) 0%,
+    rgba(250, 246, 240, 0.12) 70%,
+    transparent 100%
+  );
+}
+
+.menu-note .en {
+  font-family: var(--font-ui);
+  letter-spacing: var(--type-body-track);
+  line-height: 1.45;
+}
+
+/*
+ * Menu plate: open photo, not a mud field.
+ * Type lives on text-shadow; only a whisper at head + floor.
+ */
+.menu-wall-veil {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(6, 4, 3, 0.22) 0%,
+      rgba(8, 5, 4, 0.06) 12%,
+      transparent 28%
+    ),
+    linear-gradient(
+      to top,
+      rgba(8, 5, 4, 0.14) 0%,
+      transparent 16%
+    );
+}
+
+.menu-wall-veil::before {
+  /* Kill the dense shared top scrim — head uses stage text-shadow */
+  height: min(22%, 7.5rem);
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 3, 2, 0.28) 0%,
+    rgba(8, 5, 4, 0.1) 55%,
+    transparent 100%
+  );
+}
+
+.menu-wall-veil::after {
+  opacity: 0.08;
+}
+
+.menu-wall-grain {
+  opacity: 0.03;
+}
+
+/* Wide: nudge plate into the open right half beside the list */
+@media (min-width: 901px) {
+  .menu {
+    --menu-wall-origin: 62% center;
+  }
+}
+
+@media (max-width: 900px) {
+  /*
+   * Phone / narrow: head on top, ledger fills remaining stage.
+   * Plate shows through — no half-panel dock, no black slab.
+   */
+  .menu-stage {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .menu-head {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem 0;
+    flex-shrink: 0;
+    width: 100%;
+    padding-bottom: 0.4rem;
+  }
+
+  .menu-filters {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0.1rem 0.85rem;
+    width: 100%;
+  }
+
+  .menu-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menu-ledger {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0;
+    flex: 1 1 0%;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0.35rem 0.2rem 0.2rem;
+    background: transparent;
+  }
+
+  .menu-list-view {
+    flex: 1 1 0%;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    padding-right: 0.15rem;
+  }
+
+  /* Phone: same open-plate idea — no shared mobile mud stack */
+  .menu-wall-veil {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(6, 4, 3, 0.28) 0%,
+        rgba(8, 5, 4, 0.08) 14%,
+        transparent 32%
+      ),
+      linear-gradient(
+        to top,
+        rgba(8, 5, 4, 0.16) 0%,
+        transparent 18%
+      );
+  }
+
+  .menu-list-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "en price"
+      "cn price";
+    column-gap: 0.45rem;
+    row-gap: 0.08rem;
+    padding: 0.55rem 0.1rem 0.55rem 0.6rem;
+    /* Halo + row mat already from type-first block */
+  }
+
+  .menu-list-item.is-active {
+    grid-template-areas:
+      "en price"
+      "cn price"
+      "desc desc";
+    padding-top: 0.65rem;
+    padding-bottom: 0.7rem;
+  }
+
+  .menu-list-item.is-active.has-meta {
+    grid-template-areas:
+      "en price"
+      "cn price"
+      "meta meta"
+      "desc desc";
+  }
+
+  .menu-list-item .list-en {
+    font-size: clamp(1.05rem, 4.2vw, 1.18rem);
+  }
+
+  .menu-list-item .list-en::after {
+    /* Slightly stronger on phone — plate is busier */
+    border-bottom-color: rgba(242, 235, 224, 0.32);
+    opacity: 0.6;
+  }
+
+  .menu-list-item .list-desc {
+    display: none;
+    -webkit-line-clamp: unset;
+    max-width: none;
+  }
+
+  .menu-list-item.is-active .list-desc {
+    display: block;
+    -webkit-line-clamp: unset;
+  }
+
+  .menu-list-item .list-meta {
+    font-size: 0.68rem;
+  }
+
+  .menu-note {
+    padding: 0.65rem 0.1rem 0.2rem 0.6rem;
+    max-width: none;
+    font-size: 0.68rem;
+    opacity: 0.7;
+  }
+}
+
+
+
+
+/* ── Visit — storefront is the dish (same stage grammar as Story / Menu) ── */
+.visit {
+  isolation: isolate;
+  background: var(--void);
+  padding: 0;
+  color: var(--cream);
+}
+
+.visit-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--void);
+}
+
+.visit-wall-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  /* Sign + lanterns fill the frame; type sits bottom-left */
+  object-position: center 36%;
+  display: block;
+  filter: saturate(1.06) contrast(1.04) brightness(1.08);
+  /* Tighter crop so storefront owns the whole panel */
+  transform: scale(1.14);
+  transform-origin: center 36%;
+}
+
+/* Poster under video (Hero grammar); loop fades in when ready */
+.visit-wall-poster {
+  z-index: 0;
+}
+
+.visit-wall-video {
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1.1s ease;
+  background: var(--void);
+  pointer-events: none;
+}
+
+.visit-wall-video.is-ready {
+  opacity: 1;
+}
+
+.visit-wall-video.is-ready + .visit-wall-poster {
+  opacity: 0;
+  transition: opacity 1.1s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visit-wall-video {
+    display: none;
+  }
+  .visit-wall-poster {
+    opacity: 1 !important;
+  }
+}
+
+.visit-wall-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--panel-veil);
+  transition: background var(--motion-slow);
+}
+
+.visit-wall-veil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: soft-light;
+  background-image: var(--panel-veil-grain);
+  background-size: 160px;
+}
+
+.visit[data-tone="light"] .visit-wall-veil::after {
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+/*
+ * Full-bleed stage like Story/Menu:
+ * head top · photo breathes · spotlight bottom-left
+ */
+.visit-stage {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+.visit-head {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.75fr) minmax(0, 1.4fr);
+  gap: 0.75rem 1.5rem;
+  align-items: end;
+  width: 100%;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--tone-line);
+  transition: border-color var(--motion), color var(--motion);
+}
+
+.visit-head-title h2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  color: var(--tone-fg);
+}
+
+.visit-head-title .en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-panel-en);
+  font-weight: 400;
+  letter-spacing: var(--type-title-track);
+  line-height: var(--type-lh-tight);
+  color: var(--tone-fg);
+}
+
+/* .visit-head-title .cn — shared panel CN mark rule */
+
+.visit-head-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 32rem;
+  margin: 0;
+  min-width: 0;
+}
+
+.visit-head-lead .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-lead);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+/*
+ * Visit spotlight — Story/Menu caption grammar:
+ * single reading column, kicker + body, text links (not a form / icon dock).
+ */
+.visit-spotlight {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  width: 100%;
+  max-width: min(36rem, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+/* One column of facts — not a two-up directory card */
+.visit-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  width: 100%;
+  max-width: min(34rem, 100%);
+}
+
+.visit-fact {
+  min-width: 0;
+}
+
+/* Same kicker language as story-label / menu-spotlight-cat */
+.visit-kicker {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-kicker);
+  letter-spacing: var(--type-kicker-track);
+  text-transform: uppercase;
+  color: var(--tone-accent);
+}
+
+.visit-address,
+.visit-access,
+.visit-hours p {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-body);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+}
+
+.visit-access {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.visit-access[hidden] {
+  display: none !important;
+}
+
+.visit-hours {
+  margin: 0;
+}
+
+.visit-hours p + p {
+  margin-top: 0.2rem;
+}
+
+.visit-hours-note {
+  margin-top: 0.35rem !important;
+}
+
+/* CTAs — filter/tool hairline grammar (full ink, body tracking) */
+.visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.15rem 1.35rem;
+  width: 100%;
+}
+
+.visit-action {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 0.35rem 0.1rem 0.4rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--tone-fg);
+  box-shadow: none;
+  position: relative;
+  transition: color 0.3s var(--ease-soft);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.visit-action::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.05rem;
+  width: 100%;
+  max-width: 1.65rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+  transform: translateX(-50%);
+  transition: opacity 0.28s var(--ease-out);
+  pointer-events: none;
+}
+
+.visit-action .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: var(--type-body);
+  letter-spacing: var(--type-body-track);
+  font-weight: 400;
+  line-height: var(--type-lh-ui);
+  color: inherit;
+}
+
+.visit-action:hover,
+.visit-action:focus-visible {
+  color: var(--tone-fg);
+}
+
+.visit-action:hover::after,
+.visit-action:focus-visible::after {
+  opacity: 0.9;
+}
+
+/* Social — text links, same strip as actions (no icon pills) */
+.visit-social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 1.15rem;
+  width: 100%;
+  padding-top: 0.05rem;
+}
+
+.visit-social-link {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-body);
+  letter-spacing: var(--type-body-track);
+  line-height: var(--type-lh-ui);
+  color: var(--tone-fg);
+  text-decoration: none;
+  padding: 0.35rem 0.05rem 0.4rem;
+  position: relative;
+  transition: color 0.3s var(--ease-soft), opacity 0.25s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.visit-social-link[hidden] {
+  display: none !important;
+}
+
+.visit-social-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.05rem;
+  width: 100%;
+  max-width: 1.45rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform: translateX(-50%);
+  transition: opacity 0.28s var(--ease-out);
+  pointer-events: none;
+}
+
+.visit-social-link:hover,
+.visit-social-link:focus-visible {
+  color: var(--tone-fg);
+  opacity: 1;
+}
+
+.visit-social-link:hover::after,
+.visit-social-link:focus-visible::after {
+  opacity: 0.85;
+}
+
+
+
+
+
+/* ── Footer (full-bleed bar; lives after Visit inside main) ── */
+.footer {
+  width: var(--panel-w);
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding: 0;
+  border-top: 1px solid rgba(250, 248, 244, 0.1);
+  background: var(--void);
+  color: var(--cream);
+  /* Desktop: soft end snap after last panel. Mobile: none (see 768 media). */
+  scroll-snap-align: end;
+  scroll-snap-stop: normal;
+}
+
+.footer-stage {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.35rem var(--stage-pad-x) 1.25rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem 2rem;
+  align-items: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.footer-brand .logo-cn {
+  font-family: var(--font-cn);
+  font-size: var(--type-brand-cn);
+  font-weight: 500;
+  font-style: normal;
+  color: inherit;
+}
+
+.footer-brand .logo-en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-logo-en);
+  opacity: 1;
+}
+
+.footer-tag {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem;
+  margin: 0;
+  opacity: 1;
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-tag .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  letter-spacing: var(--type-body-track);
+  font-weight: 400;
+  font-size: var(--type-body);
+  line-height: var(--type-lh-body);
+  opacity: 1;
+}
+
+.footer-copy {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-ui-sm);
+  opacity: 1;
+  letter-spacing: var(--type-body-track);
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(1rem);
+  z-index: 10001;
+  padding: 0.9rem 1.5rem;
+  background: var(--charcoal);
+  color: var(--cream);
+  font-family: var(--font-cn);
+  font-size: var(--type-body);
+  letter-spacing: var(--type-ui-track);
+  border-radius: 2px 10px 2px 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s, transform 0.35s var(--ease-out), visibility 0.35s;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast[hidden] {
+  display: block;
+}
+
+/* ── Reveal animations ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal[data-delay="1"] {
+  transition-delay: 0.12s;
+}
+.reveal[data-delay="2"] {
+  transition-delay: 0.24s;
+}
+
+/* ── Responsive ── */
+
+/* Tablet */
+@media (max-width: 960px) {
+  .story-head {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .menu-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "title actions";
+    gap: 0.55rem 1rem;
+    align-items: end;
+  }
+
+  .menu-actions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+  }
+
+  /* Tablet: keep full-bleed stage; slightly tighter spotlight */
+  .visit-spotlight {
+    max-width: min(30rem, 100%);
+  }
+
+  .menu-spotlight-copy {
+    max-width: min(36rem, 100%);
+  }
+}
+
+/* Phone + small tablet: stacked layouts + same section snap as desktop */
+@media (max-width: 768px) {
+  :root {
+    /*
+     * Phone nav is one row again (logo + hours | links).
+     * Shell model: body fixed frame; main scrolls. No bottom dock.
+     * Photo walls paint edge-to-edge (under status bar / home indicator);
+     * only type/chrome use safe-area padding — not the media.
+     */
+    --nav-h: calc(3.2rem + env(safe-area-inset-top, 0px));
+    --dock-h: env(safe-area-inset-bottom, 0px);
+    --chrome-gap: 0.4rem;
+    --stage-pad-y: calc(var(--nav-h) + var(--chrome-gap));
+    --stage-pad-x: max(0.9rem, calc(env(safe-area-inset-left, 0px) + 0.85rem));
+    --stage-pad-b: calc(var(--dock-h) + 0.75rem);
+    --panel-h: 100%;
+    /* Prefer large viewport so panels don’t leave amber bands under iOS chrome */
+    --shell-h: 100dvh;
+    --shell-h: 100lvh;
+
+    /* Phone ladder — same steps; aliases (lead/prose/list-*) follow */
+    --type-hero-cn: clamp(3.1rem, 18vw, 4.5rem);
+    --type-hero-en: clamp(1.15rem, 4.2vw, 1.35rem);
+    --type-panel-en: clamp(1.45rem, 6vw, 1.85rem);
+    --type-panel-cn: 0.9rem;
+    --type-dish-en: clamp(1.4rem, 6.5vw, 1.85rem);
+    --type-dish-cn: 0.9rem;
+    --type-title-sm: 1.15rem;
+    --type-body: 1rem;
+    --type-ui: 0.88rem;
+    --type-ui-sm: 0.78rem;
+    --type-micro: 0.7rem;
+    --type-price: 1.35rem;
+    --type-logo-cn: 1.2rem;
+    --type-logo-en: 0.92rem;
+    --type-brand-cn: 1.45rem;
+  }
+
+  html {
+    height: 100%;
+    height: -webkit-fill-available;
+    overflow: hidden;
+    scroll-behavior: auto;
+    /* Document no longer snaps — the site-scroll root does */
+    scroll-snap-type: none;
+    overscroll-behavior: none;
+    background: var(--void);
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    /* Fill the physical screen (lvh / fill-available), not only the short toolbar viewport */
+    height: var(--shell-h, 100lvh);
+    min-height: 100%;
+    min-height: -webkit-fill-available;
+    max-height: none;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: var(--void);
+    background-image: none;
+  }
+
+  /*
+   * Scrollport fills the shell. Photo panels paint edge-to-edge under
+   * status bar + home indicator (viewport-fit=cover). Type still clears
+   * chrome via --stage-pad-* / safe-area. When the URL bar moves,
+   * --shell-h updates from visualViewport (see script.js).
+   */
+  main#top {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-padding: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    /* Keep horizontal swipes with JS carousels (not history / rubber-band) */
+    overscroll-behavior-x: none;
+    background: var(--void);
+  }
+
+  main#top.js-snap-off {
+    scroll-snap-type: none !important;
+  }
+
+  .panel {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    min-width: 0;
+    max-width: none;
+    overflow: hidden;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Footer lives inside main now — no full-viewport snap claim */
+  .footer {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  /* Static panel content — page snap only; no nested vertical scroll */
+  .stage {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    gap: 0.65rem;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+
+  /* Under notch, thick enough to read on a phone screen */
+  .scroll-progress {
+    top: env(safe-area-inset-top, 0px);
+    height: 3px;
+    background: rgba(46, 32, 22, 0.78);
+  }
+
+  /*
+   * Phone nav — same 3-column grammar as desktop so hours is
+   * equidistant from logo (left) and links (right):
+   *   [褶 Zhe]     [○ opens …]     [Story Menu Visit Reserve]
+   */
+  .nav {
+    --nav-line: 1.05rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 0.35rem;
+    height: var(--nav-h);
+    min-height: var(--nav-h);
+    max-height: var(--nav-h);
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: max(0.65rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
+    padding-bottom: 0;
+  }
+
+  .nav-logo {
+    justify-self: start;
+    flex-shrink: 0;
+    gap: 0.28rem;
+    height: var(--nav-line);
+    min-height: var(--nav-line);
+    max-height: var(--nav-line);
+  }
+
+  .nav-logo .logo-cn {
+    transform: translateY(0.03em);
+  }
+
+  .nav-hours {
+    grid-column: 2;
+    justify-self: center;
+    justify-content: center;
+    max-width: min(100%, 11rem);
+    margin: 0;
+    padding: 0 0.15rem;
+    gap: 0.28rem;
+    min-width: 0;
+    height: var(--nav-line);
+    min-height: var(--nav-line);
+    max-height: var(--nav-line);
+  }
+
+  .nav-hours-mark {
+    width: 0.28rem;
+    height: 0.28rem;
+  }
+
+  .nav-hours-copy {
+    min-width: 0;
+    gap: 0.22rem;
+    justify-content: center;
+  }
+
+  .nav-hours-state {
+    font-size: var(--type-ui-sm);
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-hours-meta {
+    display: inline;
+    font-size: var(--type-ui-sm);
+    letter-spacing: var(--type-ui-track);
+    opacity: 0.88;
+    min-width: 0;
+  }
+
+  .nav-hours-meta:not([hidden])::before {
+    margin-right: 0.22rem;
+  }
+
+  .nav-links {
+    display: flex !important;
+    justify-self: end;
+    flex: 0 0 auto;
+    margin-left: 0;
+    min-width: 0;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    gap: 0.35rem 0.42rem;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    height: var(--nav-line);
+    min-height: var(--nav-line);
+    max-height: var(--nav-line);
+  }
+
+  .nav-links a {
+    font-family: var(--font-ui);
+    font-style: normal;
+    font-size: var(--type-ui);
+    font-weight: 400;
+    letter-spacing: var(--type-ui-track);
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  /*
+   * Full-bleed photos: portrait phone crops landscape sources hard.
+   * Static cover + object-position only (no scroll parallax).
+   */
+  .hero-img {
+    object-position: center 40%;
+    transform: scale(1.18);
+    transform-origin: center 40%;
+  }
+
+  .story-wall-img {
+    /* Keep translate sweeps; no scale pop on mobile */
+    object-position: center center;
+    transform-origin: center center;
+  }
+
+  /*
+   * Phone menu wall: ONE locked geometry for photo + list.
+   * Square plates fill tall viewports — scale + bottom-biased origin clear
+   * the head band without changing when List/Photos toggles.
+   */
+  .menu {
+    --menu-wall-scale: 1.36;
+    --menu-wall-origin: center 76%;
+  }
+
+  .menu-wall-img,
+  .menu-wall-img.is-active,
+  .menu.is-list-view .menu-wall-img,
+  .menu.is-list-view .menu-wall-img.is-active {
+    transform: scale(var(--menu-wall-scale, 1.36));
+    transform-origin: var(--menu-wall-origin, center 76%);
+    animation: none;
+    /* object-position may still be set per dish in JS; scale/origin never flip */
+  }
+
+  .visit-wall-img {
+    /* Static on phone — ken-burns restart on section enter looked like a pop */
+    animation: none;
+    /* Tall phones: punch in so storefront fills height, not letterbox bands */
+    transform: scale(1.22);
+    transform-origin: center 38%;
+    object-position: center 38%;
+  }
+
+  .menu-rail-item img {
+    object-fit: cover;
+    object-position: center 40%;
+  }
+
+  /* ── Hero: caption block, photo first ── */
+  .hero-stage {
+    justify-content: flex-end;
+    align-items: flex-start;
+    height: 100%;
+    min-height: 0;
+    padding-bottom: max(1.15rem, env(safe-area-inset-bottom, 0px) + 0.75rem);
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: min(22rem, 100%);
+  }
+
+  .hero-eyebrow {
+    margin-bottom: 0.7rem;
+  }
+
+  .hero-title {
+    margin-bottom: 0.85rem;
+  }
+
+  .hero-title .title-en {
+    margin-top: 0.3rem;
+  }
+
+  .hero-title::after {
+    margin-top: 0.85rem;
+    width: 1.35rem;
+  }
+
+  .hero-tagline {
+    max-width: 18rem;
+  }
+
+  .hero-scroll {
+    display: none;
+  }
+
+  .hero-steam {
+    left: 8%;
+    bottom: 28%;
+    width: 70%;
+    height: 40%;
+  }
+
+  /* ── Story carousel (one chapter) ── */
+  .story-stage {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    justify-content: flex-end;
+    /* pad via --stage-pad-b (clears dock) — do not override */
+  }
+
+  .story-wall-veil,
+  .story[data-tone="light"] .story-wall-veil {
+    background: var(--panel-veil-mobile);
+  }
+
+  .story-head {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    align-items: start;
+    flex-shrink: 0;
+    padding-bottom: 0.4rem;
+  }
+
+  .story-head-lead {
+    max-width: none;
+    width: 100%;
+  }
+
+  .story-head-lead .en {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .story-spotlight {
+    flex: 1 1 auto;
+    min-height: 0;
+    justify-content: flex-end;
+    gap: 0.3rem;
+  }
+
+  .story-spotlight .en {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .story-carousel {
+    padding: 0.15rem 0 0.1rem;
+    max-width: 13.5rem;
+    gap: 0.45rem 0.75rem;
+  }
+
+  .story-carousel-btn,
+  .menu-carousel-btn {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .story-carousel-btn .carousel-chevron,
+  .menu-carousel-btn .carousel-chevron {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .story-label {
+    margin-bottom: 0.1rem;
+  }
+
+  /* ── Menu phone: head + ledger (hybrid); wall full-bleed ── */
+  .menu-stage {
+    height: 100%;
+    min-height: 0;
+    gap: 0.35rem;
+    overflow: hidden;
+  }
+
+  .menu-head {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.15rem;
+    padding-bottom: 0.35rem;
+    flex-shrink: 0;
+    width: 100%;
+  }
+
+  .menu-filters {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.15rem 0.75rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-width: 0;
+  }
+
+  .menu-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .story-wall-veil::before,
+  .visit-wall-veil::before {
+    height: min(44%, 12.5rem);
+  }
+
+  /* Menu head — whisper only; list type-shadow does the rest */
+  .menu-wall-veil::before {
+    height: min(26%, 8rem);
+    background: linear-gradient(
+      to bottom,
+      rgba(5, 3, 2, 0.32) 0%,
+      rgba(8, 5, 4, 0.1) 50%,
+      transparent 100%
+    );
+  }
+
+  .nav::before {
+    height: calc(var(--nav-h) + 2.1rem);
+  }
+
+  .menu-view-btn {
+    width: 2.65rem;
+    min-width: 2.65rem;
+    min-height: 2.65rem;
+    padding: 0.4rem 0.3rem 0.45rem;
+  }
+
+  .menu-view-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .menu-view-btn::after {
+    bottom: 0.18rem;
+    width: 1.15rem;
+  }
+
+  .filter-btn {
+    padding: 0.45rem 0.2rem 0.45rem;
+    flex-shrink: 0;
+    min-height: 2.75rem;
+  }
+
+  .menu-spotlight {
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .menu-spotlight-copy {
+    max-width: none;
+    width: 100%;
+    gap: 0.18rem;
+  }
+
+  .menu-spotlight-cat {
+    margin-bottom: 0.05rem;
+  }
+
+  .menu-spotlight-desc {
+    max-width: none;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.15rem;
+  }
+
+  .menu-spotlight-copy.is-expanded .menu-spotlight-desc {
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+  }
+
+  .menu-spotlight-meta {
+    margin-top: 0.45rem;
+  }
+
+
+
+  .menu-list-view,
+  .menu-list-item {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  .menu-list-item .list-en {
+    white-space: normal;
+  }
+
+  .menu-list-item .list-cn {
+    display: block;
+    letter-spacing: var(--type-cn-track);
+  }
+
+  .visit-wall-veil {
+    background: var(--panel-veil-mobile);
+  }
+
+  .visit[data-tone="light"] .visit-wall-veil {
+    background: var(--panel-veil-mobile-light);
+  }
+
+  /* ── Visit mobile — Origins rhythm: head top, photo mid, caption bottom ── */
+  .visit {
+    overflow: hidden;
+  }
+
+  .visit-stage {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.45rem;
+  }
+
+  .visit-wall-img {
+    animation: none;
+    transform: scale(1.22);
+    transform-origin: center 34%;
+    object-position: center 34%;
+  }
+
+  .visit-wall-veil,
+  .visit[data-tone="light"] .visit-wall-veil {
+    background: var(--panel-veil-mobile);
+  }
+
+  .visit-head {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    align-items: start;
+    flex-shrink: 0;
+    padding-bottom: 0.4rem;
+    border-bottom-color: rgba(242, 235, 224, 0.22);
+    text-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.75),
+      0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .visit-head-lead {
+    max-width: none;
+    width: 100%;
+  }
+
+  /* Pin caption to the bottom — storefront owns the middle */
+  .visit-spotlight {
+    flex: 0 0 auto;
+    margin-top: auto;
+    max-width: none;
+    width: 100%;
+    gap: 0.85rem;
+    text-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.75),
+      0 2px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .visit-facts {
+    gap: 0.8rem;
+    max-width: none;
+  }
+
+  .visit-kicker {
+    margin-bottom: 0.28rem;
+  }
+
+  .visit-access {
+    margin-top: 0.3rem;
+  }
+
+  .visit-actions {
+    gap: 0.1rem 1.1rem;
+  }
+
+  .visit-social {
+    gap: 0.1rem 1rem;
+    padding-top: 0;
+  }
+
+  /* ── Footer (inside main scrollport — clear the dock) ── */
+  .footer-stage {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+    gap: 0.55rem;
+    padding:
+      1.15rem
+      max(1rem, env(safe-area-inset-left, 0px))
+      calc(var(--dock-h) + 0.75rem);
+  }
+
+  .footer-copy {
+    text-align: center;
+    white-space: normal;
+  }
+
+  .footer-tag {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+}
+
+/* Very small phones — only scale tokens + layout */
+@media (max-width: 380px) {
+  :root {
+    --type-hero-cn: clamp(2.85rem, 18vw, 4rem);
+    --type-ui: 0.84rem;
+    --type-ui-sm: 0.76rem;
+    --type-body: 1rem;
+    --type-title-sm: 1.1rem;
+  }
+
+  .menu-rail-item {
+    width: 5rem;
+  }
+
+  .story-spotlight .en {
+    -webkit-line-clamp: 4;
+  }
+
+  .story-head-lead .en {
+    -webkit-line-clamp: 2;
+  }
+
+  .filter-btn {
+    padding: 0.25rem 0.02rem 0.32rem;
+  }
+
+  .menu-spotlight-desc {
+    -webkit-line-clamp: 2;
+  }
+
+  .visit-facts {
+    gap: 0.7rem;
+  }
+
+  .visit-spotlight {
+    gap: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .scroll-line,
+  .hero-glow,
+  .hero-steam span,
+  .nav-hours.is-open .nav-hours-mark {
+    animation: none;
+  }
+
+  .hero-steam {
+    display: none;
+  }
+
+  .hero-glow {
+    opacity: 0.7;
+  }
+
+  .menu-wall-img,
+  .story-wall-img,
+  .story-spotlight,
+  .story-carousel-btn,
+  .story-dot,
+  .menu-rail-item,
+  .menu-list-item,
+  .menu-view-btn,
+  .visit-action,
+  .visit-social-link {
+    transition: none;
+  }
+
+  .menu-wall-img,
+  .menu-wall-img.is-active,
+  .menu.is-list-view .menu-wall-img,
+  .menu.is-list-view .menu-wall-img.is-active {
+    /* Still no motion; keep the same crop as motion mode */
+    transform: scale(1.12);
+    animation: none;
+  }
+
+  /* Instant chapter swaps — no slide under reduced motion */
+  .story-wall-img,
+  .story-wall-img.is-active,
+  .story-wall-img.is-park-left,
+  .story-wall-img.is-park-right,
+  .story-wall-img.is-leave-left,
+  .story-wall-img.is-leave-right {
+    transition: none;
+    transform: translate3d(0, 0, 0);
+    animation: none;
+  }
+  .story-wall-img:not(.is-active) {
+    opacity: 0;
+  }
+  .story-wall-img.is-active {
+    opacity: 1;
+  }
+
+  .visit-wall-img {
+    animation: none;
+    /* Keep fill scale; only freeze the ken-burns drift */
+    transform: scale(1.14);
+  }
+
+  .hero-img {
+    /* Keep punch-in fill under reduced motion */
+    transform: scale(1.12);
+  }
+
+  .story-spotlight.is-fading {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Selection */
+::selection {
+  background: rgba(166, 124, 82, 0.35);
+  color: var(--ink);
+}

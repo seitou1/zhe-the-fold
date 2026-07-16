@@ -1,6 +1,6 @@
 /**
- * Menu SSOT — ported from Zhe-The-Fold-Website/data.js MENU_ITEMS.
- * Edit dishes here only (until Supabase later).
+ * Menu SSOT — from Zhe-The-Fold-Website/data.js MENU_ITEMS.
+ * Paths under /public/assets (craft asset layout).
  */
 
 export type MenuCategory = "classic" | "seasonal" | "plant";
@@ -9,17 +9,16 @@ export type MenuItem = {
   id: string;
   category: MenuCategory;
   catLabel: string;
-  /** Full English name */
   en: string;
-  /** Short list title (preferred in the ledger) */
   rail: string;
   cn: string;
   desc: string;
   price: string;
   popular?: boolean;
   tags: string[];
-  /** Path under /public */
   image: string;
+  position?: string;
+  positionMobile?: string;
 };
 
 export const MENU_CATEGORY_ORDER: MenuCategory[] = [
@@ -47,7 +46,9 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$14",
     popular: true,
     tags: ["pork"],
-    image: "/media/dishes/pork.webp",
+    image: "/assets/dish-pork.webp",
+    position: "center 68%",
+    positionMobile: "center 72%",
   },
   {
     id: "beef",
@@ -59,7 +60,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Northern heartiness in a thin skin—bright scallion, quiet soy.",
     price: "$16",
     tags: ["beef"],
-    image: "/media/dishes/beef.webp",
+    image: "/assets/dish-beef.webp",
   },
   {
     id: "shrimp",
@@ -72,7 +73,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$18",
     popular: true,
     tags: ["shellfish"],
-    image: "/media/dishes/shrimp.webp",
+    image: "/assets/dish-shrimp.webp",
   },
   {
     id: "bamboo",
@@ -84,7 +85,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Crisp spring bamboo meeting slow-cooked pork.",
     price: "$17",
     tags: ["pork", "seasonal"],
-    image: "/media/dishes/bamboo.webp",
+    image: "/assets/dish-bamboo.webp",
   },
   {
     id: "crab",
@@ -96,7 +97,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Delicate crab roe and broth that warms the palm first.",
     price: "$22",
     tags: ["shellfish", "seasonal"],
-    image: "/media/dishes/crab.webp",
+    image: "/assets/dish-crab.webp",
   },
   {
     id: "chestnut",
@@ -108,7 +109,7 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Autumn chestnuts and tender chicken—earth and steam.",
     price: "$16",
     tags: ["poultry", "seasonal"],
-    image: "/media/dishes/chestnut.webp",
+    image: "/assets/dish-chestnut.webp",
   },
   {
     id: "mushroom",
@@ -121,7 +122,9 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$13",
     popular: true,
     tags: ["plant"],
-    image: "/media/dishes/mushroom.webp",
+    image: "/assets/dish-mushroom.webp",
+    position: "center 62%",
+    positionMobile: "center 70%",
   },
   {
     id: "tofu",
@@ -133,19 +136,16 @@ export const MENU_ITEMS: MenuItem[] = [
     desc: "Silken tofu and mild daikon—clean and quiet.",
     price: "$12",
     tags: ["plant"],
-    image: "/media/dishes/tofu.webp",
+    image: "/assets/dish-tofu.webp",
+    position: "center 58%",
+    positionMobile: "center 65%",
   },
 ];
 
-/** List title — short rail name when set */
 export function listTitle(item: MenuItem): string {
   return (item.rail || item.en).trim();
 }
 
-/**
- * Meta under the name — only what title/group don't already say.
- * House mark + shellfish allergen (same rule as static ledger).
- */
 export function listMeta(item: MenuItem): string {
   const bits: string[] = [];
   if (item.popular) bits.push("House");
@@ -159,7 +159,6 @@ export type MenuGroup = {
   items: MenuItem[];
 };
 
-/** Group dishes for “All” view — Classic → Seasonal → Plant */
 export function groupMenuItems(items: MenuItem[] = MENU_ITEMS): MenuGroup[] {
   return MENU_CATEGORY_ORDER.map((category) => {
     const groupItems = items.filter((i) => i.category === category);
