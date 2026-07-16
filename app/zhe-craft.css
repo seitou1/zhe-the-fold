@@ -1884,6 +1884,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-start;
   gap: 0.35rem;
   width: 100%;
   padding-bottom: 0.75rem;
@@ -1897,6 +1898,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-head-title {
   min-width: 0;
+  text-align: left;
 }
 
 .menu-head-title h2 {
@@ -2585,17 +2587,31 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .menu-head {
   flex-shrink: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.55rem 1.25rem;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  /* Column flex: align-items is horizontal — must stay start (left), not end */
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.2rem;
   width: 100%;
+  max-width: 100%;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--tone-line);
+  box-sizing: border-box;
 }
 
 .menu-head-title {
   min-width: 0;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.menu-head-title h2 {
+  align-items: flex-start;
+  text-align: left;
 }
 
 .menu-head-title h2 {
@@ -3690,10 +3706,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-head {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "title actions";
-    gap: 0.55rem 1rem;
-    align-items: end;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.35rem;
   }
 
   .menu-actions {
@@ -4792,8 +4808,26 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu .menu-head {
   flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   padding-bottom: 0.45rem;
   margin: 0;
+  margin-right: auto;
+  /* Sit over the left ledger column — not full stage / not right edge */
+  width: min(28rem, 42vw);
+  max-width: 100%;
+  text-align: left;
+}
+
+.menu .menu-head-title,
+.menu .menu-head-title h2,
+.menu .menu-head-title .en,
+.menu .menu-head-title .cn {
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+  align-self: flex-start;
 }
 
 .menu .menu-ledger {
@@ -4808,6 +4842,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   overflow: hidden;
   padding-top: 0.15rem;
   padding-bottom: 0;
+  margin-left: 0;
+  margin-right: auto;
 }
 
 .menu .menu-list-view {
@@ -4870,7 +4906,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu .menu-head {
+    width: 100%;
+    max-width: 100%;
     padding-bottom: 0.3rem;
+    align-items: flex-start;
   }
 
   .menu .menu-ledger {
