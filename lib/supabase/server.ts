@@ -31,11 +31,22 @@ export function tryCreateServerClient(
 
   if (!url || !key || isPlaceholderUrl(url)) return null;
 
+  // New publishable keys (sb_publishable_…) are not JWTs. Avoid forcing
+  // them into Authorization the way legacy anon JWTs expect.
+  const isLegacyJwt = key.startsWith("eyJ");
+
   return createClient(url, key, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
     },
+    global: isLegacyJwt
+      ? undefined
+      : {
+          headers: {
+            apikey: key,
+          },
+        },
   });
 }
 
