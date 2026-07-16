@@ -72,9 +72,6 @@ export function HeroPanel() {
           </p>
         </div>
       </div>
-      <div className="hero-scroll" aria-hidden="true">
-        <div className="scroll-line" />
-      </div>
     </section>
   );
 }
