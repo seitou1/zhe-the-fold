@@ -15,6 +15,7 @@ import {
   MENU_ITEMS,
   type MenuItem,
 } from "@/lib/menu";
+import { site } from "@/lib/site";
 
 /**
  * Menu panel — full-bleed dish plate + calm hybrid ledger.
@@ -311,9 +312,7 @@ export function MenuPanel() {
             })}
           </div>
           <p className="menu-note">
-            <span className="en">
-              Steamed or pan-seared · Share allergies · About eight per order
-            </span>
+            <span className="en">{site.menuNote}</span>
           </p>
         </div>
       </div>

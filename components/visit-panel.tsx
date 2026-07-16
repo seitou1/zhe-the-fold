@@ -13,8 +13,8 @@ import { usePanelVideo } from "@/lib/use-panel-video";
 
 /**
  * Visit — logistics hierarchy (scan order):
- * Title → Find us | Hours → Directions · Call · Reserve → social.
- * Storefront loop only while panel is in view (balanced resources).
+ * Title → Find us | Hours → Here (hybrid) → Directions · Takeout · Table → social.
+ * Storefront wall = space cue (physical room); copy = how to use it.
  */
 export function VisitPanel() {
   const panelRef = useRef<HTMLElement>(null);
@@ -25,6 +25,7 @@ export function VisitPanel() {
   });
   const addressLines = formatAddressLines();
   const hours = getHoursDisplayLines();
+  const { service } = site;
 
   return (
     <section
@@ -44,7 +45,7 @@ export function VisitPanel() {
           loop
           playsInline
           preload="none"
-          aria-label="Zhe · The Fold storefront at dusk"
+          aria-label="Zhe · The Fold storefront — small dumpling room at street level"
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -103,6 +104,20 @@ export function VisitPanel() {
                   ) : null}
                 </div>
               </div>
+
+              <div className="visit-fact visit-fact--serve">
+                <p className="visit-kicker">
+                  <span className="en">{service.kicker}</span>
+                </p>
+                <ul className="visit-serve">
+                  {service.modes.map((mode) => (
+                    <li key={mode.id} className="visit-serve-row">
+                      <span className="visit-serve-mode">{mode.label}</span>
+                      <span className="visit-serve-detail">{mode.detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <nav className="visit-actions" aria-label="Visit actions">
@@ -112,17 +127,21 @@ export function VisitPanel() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="en">Directions</span>
+                <span className="en">{service.actions.directions}</span>
               </a>
               <a
-                className="visit-action"
+                className="visit-action visit-action--takeout"
                 href={telHref()}
-                aria-label={`Call ${site.telephoneDisplay}`}
+                aria-label={`${service.actions.takeout}: call ${site.telephoneDisplay}`}
               >
-                <span className="en">Call</span>
+                <span className="en">{service.actions.takeout}</span>
               </a>
-              <a className="visit-action" href={reserveMailto()}>
-                <span className="en">Reserve</span>
+              <a
+                className="visit-action visit-action--table"
+                href={reserveMailto()}
+                aria-label={`${service.actions.table}: email for a reservation`}
+              >
+                <span className="en">{service.actions.table}</span>
               </a>
             </nav>
 

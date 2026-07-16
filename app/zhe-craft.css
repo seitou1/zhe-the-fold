@@ -382,10 +382,12 @@ button {
 .menu-spotlight-desc,
 .story-spotlight .en,
 .hero-eyebrow .en,
+.hero-line .en,
 .hero-scroll,
 .visit-address,
 .visit-hours p,
 .visit-kicker,
+.visit-serve,
 .visit-action .en,
 .visit-social-link,
 .story-label,
@@ -1129,6 +1131,29 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   color: var(--tone-fg);
   opacity: 1;
   text-shadow: var(--tone-shadow);
+}
+
+/*
+ * Orient line — product, not poetry.
+ * Air after the lockup so place / mark+name / format read as three steps.
+ */
+.hero-line {
+  display: block;
+  margin: 0.7rem 0 0;
+  max-width: 22rem;
+  padding: 0;
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
+}
+
+.hero-line .en {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-body);
+  line-height: var(--type-lh-body);
+  letter-spacing: var(--type-body-track);
+  opacity: 0.88;
 }
 
 /* Thin edge cue only — no floating arrow glyph */
@@ -2836,13 +2861,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   min-width: 100%;
   min-height: 100%;
   object-fit: cover;
-  /* Sign + lanterns fill the frame; type sits bottom-left */
-  object-position: center 36%;
+  /* Facade + door — physical room cue for hybrid (table & takeout) */
+  object-position: center 34%;
   display: block;
   filter: saturate(1.06) contrast(1.04) brightness(1.08);
-  /* Tighter crop so storefront owns the whole panel */
-  transform: scale(1.14);
-  transform-origin: center 36%;
+  transform: scale(1.12);
+  transform-origin: center 34%;
 }
 
 /* Poster under video (Hero grammar); loop fades in when ready */
@@ -2976,7 +3000,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   color: var(--tone-fg);
 }
 
-/* Facts as one region — two columns on wide */
+/* Facts: Find | Hours on one row; Here (hybrid) spans full band under */
 .visit-facts {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -2991,6 +3015,49 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .visit-fact {
   min-width: 0;
   margin: 0;
+}
+
+.visit-fact--serve {
+  grid-column: 1 / -1;
+  padding-top: 0.15rem;
+  border-top: 1px solid var(--tone-line);
+  margin-top: 0.1rem;
+  padding-top: 1rem;
+}
+
+/* Hybrid modes — quiet two-column list (mode | detail) */
+.visit-serve {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.visit-serve-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  column-gap: 0.85rem;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-body);
+  line-height: var(--type-lh-body);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+}
+
+.visit-serve-mode {
+  font-size: var(--type-ui);
+  letter-spacing: var(--type-ui-track);
+  opacity: 0.95;
+}
+
+.visit-serve-detail {
+  opacity: 0.88;
 }
 
 .visit-kicker {
@@ -3645,6 +3712,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     margin-top: 0.32rem;
   }
 
+  .hero-line {
+    margin-top: 0.55rem;
+    max-width: 18rem;
+  }
+
+  .hero-line .en {
+    font-size: var(--type-ui);
+  }
+
   .hero-scroll {
     display: none;
   }
@@ -3889,6 +3965,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     grid-template-columns: 1fr;
     column-gap: 0;
     row-gap: 1.05rem;
+  }
+
+  .visit-fact--serve {
+    padding-top: 0.9rem;
+  }
+
+  .visit-serve-row {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    column-gap: 0.65rem;
   }
 
   .visit-kicker {

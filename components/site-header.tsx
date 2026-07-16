@@ -49,7 +49,7 @@ export function SiteHeader() {
                   href={reserveMailto()}
                   className="inline-flex h-14 items-center px-2.5 text-wheat transition-colors hover:text-cream active:opacity-80 sm:px-3"
                 >
-                  Reserve
+                  {site.service.actions.reserveNav}
                 </a>
               </li>
             </ul>

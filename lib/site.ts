@@ -10,10 +10,15 @@ export const site = {
   shortName: "Zhe",
   /** Meta / SEO description */
   description:
-    "Handmade Chinese dumplings in New York. Every fold holds the mark of a hand.",
+    "Handmade Chinese dumplings in New York — a small hybrid room for the table or takeout. Every fold holds the mark of a hand.",
   city: "New York City",
+  /**
+   * Hero orient line — plain product, not poetry.
+   * Answers: what + format (hybrid: sit-in + take home).
+   */
+  heroLine: "Handmade dumplings · table & takeout",
   email: "hello@zhethefold.com",
-  reserveSubject: "Reservation · Zhe",
+  reserveSubject: "Table · Zhe",
   telephone: "+12125550100",
   telephoneDisplay: "(212) 555-0100",
   address: {
@@ -27,6 +32,37 @@ export const site = {
   social: {
     instagram: "https://instagram.com/zhe.thefold",
   },
+  /**
+   * Hybrid service model — Visit “Here” block + action labels.
+   * SSOT so hero / Visit / nav / menu note stay aligned.
+   */
+  service: {
+    format: "hybrid" as const,
+    /** Visit kicker for the service fact */
+    kicker: "Here",
+    modes: [
+      {
+        id: "table",
+        label: "Table",
+        detail: "Walk-ins welcome · reserve for 4+",
+      },
+      {
+        id: "takeout",
+        label: "Takeout",
+        detail: "Call ahead or walk up · no delivery",
+      },
+    ],
+    /** Primary actions (Visit row + nav reserve) */
+    actions: {
+      directions: "Directions",
+      takeout: "Takeout",
+      table: "Table",
+      reserveNav: "Table",
+    },
+  },
+  /** Menu colophon — ops, not atmosphere */
+  menuNote:
+    "Steamed or pan-seared · About eight per order · Table or take home · Share allergies",
   /**
    * Open badge + Visit hours.
    * Days: Sun Mon Tue Wed Thu Fri Sat (en-US short from Intl).

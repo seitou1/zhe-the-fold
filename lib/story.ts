@@ -24,7 +24,7 @@ export const STORY_CHAPTERS: StoryChapter[] = [
     id: "city",
     label: "Two · City",
     short: "City",
-    body: "New York winters met her flour. A quiet shop in the city, where the same hands fold for strangers as they once folded for family.",
+    body: "New York winters met her flour. A quiet hybrid room in the city—table or takeout—where the same hands fold for strangers as they once folded for family.",
     image: "/assets/story-city.webp",
     position: "42% 40%",
   },

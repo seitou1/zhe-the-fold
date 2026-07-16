@@ -67,6 +67,9 @@ export function HeroPanel() {
             </span>
             <span className="title-en">{site.name}</span>
           </h1>
+          <p className="hero-line">
+            <span className="en">{site.heroLine}</span>
+          </p>
         </div>
       </div>
       <div className="hero-scroll" aria-hidden="true">

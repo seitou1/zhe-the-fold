@@ -1,7 +1,7 @@
 import { OpenChip } from "@/components/open-chip";
 import { reserveMailto, site } from "@/lib/site";
 
-/** Original nav grammar: logo · kitchen status · Story Menu Visit Reserve */
+/** Original nav grammar: logo · kitchen status · Story Menu Visit · Table */
 export function SiteNav() {
   return (
     <header className="nav" id="nav">
@@ -21,7 +21,7 @@ export function SiteNav() {
           </a>
         ))}
         <a className="nav-reserve" href={reserveMailto()}>
-          Reserve
+          {site.service.actions.reserveNav}
         </a>
       </nav>
     </header>
