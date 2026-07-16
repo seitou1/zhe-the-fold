@@ -3303,9 +3303,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Visit — logistics hierarchy:
- * title → quiet lead → address | hours → Directions · Call · Reserve → social
- * Top-left band (same grammar as Menu) — not caption-docked to the floor.
+ * Visit — research hierarchy, one left reading column:
+ * 1) Title + quiet lead
+ * 2) Find us | Hours (grouped facts)
+ * 3) Directions · Call · Reserve (equal body links)
+ * 4) Instagram (tertiary)
+ * Storefront fills the open field to the right / behind.
  */
 .visit-stage {
   z-index: 1;
@@ -3325,40 +3328,42 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .visit-band {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.85rem;
-  width: min(32rem, 100%);
+  align-items: stretch;
+  /* Major blocks: head · body (spotlight) */
+  gap: 1.25rem;
+  width: min(30rem, 100%);
   max-width: 100%;
   max-height: 100%;
   min-height: 0;
   margin: 0;
   margin-right: auto;
-  padding: 0.15rem 0.35rem 0.5rem 0;
+  padding: 0.1rem 0.5rem 0.75rem 0.05rem;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: rgba(242, 235, 224, 0.28) transparent;
+  scrollbar-color: rgba(242, 235, 224, 0.22) transparent;
 }
 
+/* ── 1. Title block ── */
 .visit-head {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.4rem;
+  gap: 0.45rem;
   width: 100%;
-  padding-bottom: 0.65rem;
+  margin: 0;
+  padding: 0 0 0.85rem;
   border-bottom: 1px solid var(--tone-line);
-  transition: border-color var(--motion), color var(--motion);
   text-align: left;
 }
 
 .visit-head-title {
   min-width: 0;
+  width: 100%;
   text-align: left;
 }
 
@@ -3366,7 +3371,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.1rem;
+  gap: 0.12rem;
+  margin: 0;
   color: var(--tone-fg);
   text-align: left;
 }
@@ -3385,7 +3391,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .visit-head-lead {
   display: block;
-  max-width: 22rem;
+  max-width: 24rem;
   margin: 0;
   min-width: 0;
 }
@@ -3399,36 +3405,41 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   letter-spacing: var(--type-body-track);
   color: var(--tone-fg);
   opacity: 0.78;
-  text-shadow: var(--tone-shadow-soft);
 }
 
+/* ── 2–4. Body stack under head ── */
 .visit-spotlight {
   flex: 0 0 auto;
-  align-self: stretch;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  /* Clear steps: facts → actions → social */
+  gap: 1.35rem;
+  width: 100%;
   min-width: 0;
+  margin: 0;
+  padding: 0;
   color: var(--tone-fg);
-  text-shadow: var(--tone-shadow-soft);
 }
 
-/* Desktop: Find us | Hours as one grouped region */
+/* Facts as one region — two columns on wide */
 .visit-facts {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 1rem 1.75rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: 2rem;
+  row-gap: 1.15rem;
   width: 100%;
   align-items: start;
+  margin: 0;
+  padding: 0;
 }
 
 .visit-fact {
   min-width: 0;
+  margin: 0;
 }
 
 .visit-kicker {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.45rem;
   font-family: var(--font-ui);
   font-style: normal;
   font-weight: 400;
@@ -3438,7 +3449,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   color: var(--tone-accent);
 }
 
-/* NAP text — maps intent lives on the map plate + Get directions */
 .visit-address {
   display: block;
   margin: 0;
@@ -3449,7 +3459,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   line-height: var(--type-body-lh);
   letter-spacing: var(--type-body-track);
   color: var(--tone-fg);
-  text-decoration: none;
 }
 
 .visit-address-line {
@@ -3471,12 +3480,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .visit-access {
   display: block;
   margin-top: 0.4rem;
-  opacity: 0.82;
+  opacity: 0.8;
   font-size: var(--type-ui);
+  line-height: 1.4;
 }
 
 .visit-access--demo {
-  opacity: 0.5;
+  opacity: 0.48;
   font-size: var(--type-ui-sm);
 }
 
@@ -3489,7 +3499,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .visit-hours p + p {
-  margin-top: 0.22rem;
+  margin-top: 0.2rem;
 }
 
 .visit-hours-note {
@@ -3498,32 +3508,24 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-size: var(--type-ui);
 }
 
-/*
- * Directions · Call · Reserve — same type as address/hours body.
- * One row of equal text links; no primary scale / meta stack.
- */
-.visit-cta-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  width: 100%;
-  padding-top: 0.15rem;
-}
-
+/* Equal action row — same body type as facts */
 .visit-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.35rem 1.5rem;
+  gap: 0.5rem 1.65rem;
   width: 100%;
+  margin: 0;
+  padding: 0.15rem 0 0;
+  border: none;
 }
 
 .visit-action {
-  display: inline;
+  display: inline-flex;
+  align-items: baseline;
   flex: 0 0 auto;
   margin: 0;
-  padding: 0.2rem 0;
+  padding: 0.15rem 0;
   border: none;
   border-radius: 0;
   background: transparent;
@@ -3536,34 +3538,25 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   line-height: var(--type-body-lh);
   letter-spacing: var(--type-body-track);
   text-decoration: underline;
-  text-decoration-color: rgba(250, 246, 240, 0.28);
+  text-decoration-color: rgba(250, 246, 240, 0.3);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.28em;
+  text-underline-offset: 0.3em;
   transition:
-    color 0.22s var(--ease-soft),
-    text-decoration-color 0.22s var(--ease-soft),
-    opacity 0.22s var(--ease-soft);
+    opacity 0.2s var(--ease-soft),
+    text-decoration-color 0.2s var(--ease-soft);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-.visit-action::after {
-  content: none;
-  display: none;
-}
-
 .visit-action .en {
   font: inherit;
-  letter-spacing: inherit;
-  line-height: inherit;
   color: inherit;
 }
 
 .visit-action:hover,
 .visit-action:focus-visible {
-  color: var(--tone-fg);
   opacity: 0.88;
-  text-decoration-color: rgba(250, 246, 240, 0.55);
+  text-decoration-color: rgba(250, 246, 240, 0.58);
 }
 
 .visit-action:focus-visible {
@@ -3571,18 +3564,21 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   outline-offset: 3px;
 }
 
-/* Social — tertiary */
+/* Tertiary social — quieter, same family */
 .visit-social {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.15rem 1.15rem;
+  align-items: baseline;
+  gap: 0.35rem 1.25rem;
   width: 100%;
-  padding-top: 0.1rem;
-  margin-top: -0.15rem;
+  margin: 0;
+  padding: 0;
 }
 
 .visit-social-link {
+  display: inline-flex;
+  margin: 0;
+  padding: 0.1rem 0;
   font-family: var(--font-ui);
   font-style: normal;
   font-weight: 400;
@@ -3590,11 +3586,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   letter-spacing: var(--type-body-track);
   line-height: var(--type-lh-ui);
   color: var(--tone-fg);
-  text-decoration: none;
-  padding: 0.3rem 0.05rem 0.35rem;
-  position: relative;
-  opacity: 0.62;
-  transition: color 0.3s var(--ease-soft), opacity 0.25s;
+  opacity: 0.55;
+  text-decoration: underline;
+  text-decoration-color: rgba(250, 246, 240, 0.2);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  transition:
+    opacity 0.2s var(--ease-soft),
+    text-decoration-color 0.2s var(--ease-soft);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -3603,28 +3602,19 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .visit-social-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0.05rem;
-  width: 100%;
-  max-width: 1.2rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.3;
-  transition: opacity 0.28s var(--ease-out);
-  pointer-events: none;
+  content: none;
+  display: none;
 }
 
 .visit-social-link:hover,
 .visit-social-link:focus-visible {
-  color: var(--tone-fg);
-  opacity: 0.92;
+  opacity: 0.88;
+  text-decoration-color: rgba(250, 246, 240, 0.45);
 }
 
-.visit-social-link:hover::after,
-.visit-social-link:focus-visible::after {
-  opacity: 0.85;
+.visit-social-link:focus-visible {
+  outline: 2px solid var(--wheat);
+  outline-offset: 3px;
 }
 
 
@@ -4341,7 +4331,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     background: var(--panel-veil-mobile-light);
   }
 
-  /* ── Visit mobile — band at bottom; storefront mid ── */
+  /* ── Visit mobile — same hierarchy, stacked facts ── */
   .visit {
     overflow: hidden;
   }
@@ -4375,8 +4365,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     max-width: none;
     max-height: 100%;
     min-height: 0;
-    gap: 0.65rem;
-    padding: 0.15rem 0.15rem 0.45rem;
+    gap: 1rem;
+    padding: 0.1rem 0.1rem 0.65rem;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -4387,9 +4377,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-head {
-    gap: 0.22rem;
+    gap: 0.35rem;
     flex-shrink: 0;
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.7rem;
     border-bottom-color: rgba(242, 235, 224, 0.22);
   }
 
@@ -4399,41 +4389,47 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-spotlight {
-    flex: 0 0 auto;
     width: 100%;
-    gap: 0.7rem;
+    gap: 1.15rem;
   }
 
   .visit-facts {
     grid-template-columns: 1fr;
-    gap: 0.7rem;
+    column-gap: 0;
+    row-gap: 1rem;
   }
 
   .visit-kicker {
-    margin-bottom: 0.22rem;
+    margin-bottom: 0.35rem;
   }
 
   .visit-access {
-    margin-top: 0.25rem;
+    margin-top: 0.3rem;
   }
 
   .visit-actions {
-    gap: 0.45rem 1.35rem;
+    gap: 0.55rem 1.4rem;
     width: 100%;
+    padding-top: 0.05rem;
   }
 
   .visit-action {
-    min-height: 2.5rem;
-    padding-top: 0.45rem;
-    padding-bottom: 0.45rem;
-    display: inline-flex;
+    min-height: 2.55rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
     align-items: center;
   }
 
   .visit-social {
-    gap: 0.1rem 1rem;
-    padding-top: 0;
-    padding-bottom: 0.25rem;
+    gap: 0.35rem 1rem;
+    padding-bottom: 0.15rem;
+  }
+
+  .visit-social-link {
+    min-height: 2.4rem;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    align-items: center;
   }
 
   /* ── Footer (inside main scrollport — clear the dock) ── */

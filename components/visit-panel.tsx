@@ -11,8 +11,9 @@ import {
 } from "@/lib/site";
 
 /**
- * Visit — logistics first, no map embed.
- * Title → quiet lead → address | hours → Directions · Call · Reserve → social.
+ * Visit — logistics hierarchy (scan order):
+ * Title → quiet lead → Find us | Hours → Directions · Call · Reserve → social.
+ * Left band over storefront; no map embed.
  */
 export function VisitPanel() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -130,28 +131,26 @@ export function VisitPanel() {
               </div>
             </div>
 
-            <div className="visit-cta-block">
-              <div className="visit-actions">
-                <a
-                  className="visit-action"
-                  href={mapsUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="en">Directions</span>
-                </a>
-                <a
-                  className="visit-action"
-                  href={telHref()}
-                  aria-label={`Call ${site.telephoneDisplay}`}
-                >
-                  <span className="en">Call</span>
-                </a>
-                <a className="visit-action" href={reserveMailto()}>
-                  <span className="en">Reserve</span>
-                </a>
-              </div>
-            </div>
+            <nav className="visit-actions" aria-label="Visit actions">
+              <a
+                className="visit-action"
+                href={mapsUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="en">Directions</span>
+              </a>
+              <a
+                className="visit-action"
+                href={telHref()}
+                aria-label={`Call ${site.telephoneDisplay}`}
+              >
+                <span className="en">Call</span>
+              </a>
+              <a className="visit-action" href={reserveMailto()}>
+                <span className="en">Reserve</span>
+              </a>
+            </nav>
 
             {site.social.instagram ? (
               <nav className="visit-social" aria-label="Social">
