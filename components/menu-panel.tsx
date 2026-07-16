@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   filterMenuItems,
   groupMenuItems,
@@ -11,21 +11,15 @@ import {
   type MenuCategory,
   type MenuItem,
 } from "@/lib/menu";
-import { useWallSwipe } from "@/components/use-wall-swipe";
 
 type FilterId = "all" | MenuCategory;
 
 /**
- * Menu — dual-buffer plate + left ledger.
- * Wall swipe only on .menu-wall (never ledger) — kit mobile lesson.
+ * Menu panel — full-bleed dish plate + hybrid ledger (static site craft).
  */
 export function MenuPanel() {
   const [filter, setFilter] = useState<FilterId>("all");
   const [activeId, setActiveId] = useState(MENU_ITEMS[0]?.id ?? "pork");
-  const wallRef = useRef<HTMLDivElement>(null);
-  const imgA = useRef<HTMLImageElement>(null);
-  const imgB = useRef<HTMLImageElement>(null);
-  const activeIsA = useRef(true);
 
   const visible = useMemo(() => filterMenuItems(filter), [filter]);
   const active =
@@ -44,87 +38,20 @@ export function MenuPanel() {
     return groupMenuItems(visible);
   }, [filter, visible]);
 
-  const setWall = useCallback((item: MenuItem, animate: boolean) => {
-    if (!imgA.current || !imgB.current) return;
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const pos = item.position || "center center";
-    const activeEl = activeIsA.current ? imgA.current : imgB.current;
-    const idleEl = activeIsA.current ? imgB.current : imgA.current;
-
-    if (!animate || reduced) {
-      activeEl.src = item.image;
-      activeEl.style.objectPosition = pos;
-      activeEl.className = "menu-wall-img is-active";
-      idleEl.className = "menu-wall-img";
-      return;
-    }
-
-    const finish = () => {
-      idleEl.className = "menu-wall-img is-active";
-      activeEl.className = "menu-wall-img";
-      activeIsA.current = !activeIsA.current;
-      idleEl.onload = null;
-    };
-
-    idleEl.style.objectPosition = pos;
-    idleEl.onload = finish;
-    if (idleEl.getAttribute("src") === item.image) finish();
-    else idleEl.src = item.image;
-  }, []);
-
-  useEffect(() => {
-    if (active) setWall(active, true);
-  }, [active, setWall]);
-
-  const step = useCallback(
-    (dir: number) => {
-      if (!visible.length) return;
-      const idx = Math.max(
-        0,
-        visible.findIndex((i) => i.id === activeId)
-      );
-      const next = visible[(idx + dir + visible.length) % visible.length];
-      if (next) setActiveId(next.id);
-    },
-    [visible, activeId]
-  );
-
-  const onPrev = useCallback(() => step(-1), [step]);
-  const onNext = useCallback(() => step(1), [step]);
-
-  useWallSwipe({
-    wallRef,
-    onPrev,
-    onNext,
-  });
-
-  const seed = MENU_ITEMS[0];
+  const pos = active?.position || "center center";
 
   return (
     <section className="menu panel is-list-view" id="menu" data-tone="dark">
-      <div className="menu-wall" ref={wallRef} aria-hidden="true">
+      <div className="menu-wall" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          ref={imgA}
+          key={active?.id}
           className="menu-wall-img is-active"
-          src={seed.image}
+          src={active?.image}
           alt=""
           width={1000}
           height={1000}
-          style={{ objectPosition: seed.position || "center center" }}
-          decoding="async"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={imgB}
-          className="menu-wall-img"
-          src={seed.image}
-          alt=""
-          width={1000}
-          height={1000}
-          style={{ objectPosition: seed.position || "center center" }}
+          style={{ objectPosition: pos }}
           decoding="async"
         />
         <div className="menu-wall-veil" />
