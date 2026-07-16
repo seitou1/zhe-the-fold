@@ -1092,8 +1092,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-style: normal;
   font-size: var(--type-kicker);
   font-weight: 400;
-  /* Same step as 褶 → name — even caption stack */
-  margin: 0 0 0.5rem;
+  /* Place label floats above the mark — not an equal rung */
+  margin: 0 0 0.8rem;
   letter-spacing: var(--type-kicker-track);
   line-height: var(--type-lh-ui);
   color: var(--tone-fg);
@@ -1133,8 +1133,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-style: italic;
   letter-spacing: var(--type-title-track);
   line-height: var(--type-lh-tight);
-  /* Match NYC → 褶; +a hair for tight CN line-box (lh 0.88) */
-  margin-top: 0.55rem;
+  /* Snug under 褶 — name + mark read as one lockup */
+  margin-top: 0.38rem;
   color: var(--tone-fg);
   opacity: 1;
   text-shadow: var(--type-halo-strong);
@@ -3722,11 +3722,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .hero-eyebrow {
-    margin-bottom: 0.42rem;
+    margin-bottom: 0.7rem;
   }
 
   .hero-title .title-en {
-    margin-top: 0.48rem;
+    margin-top: 0.32rem;
   }
 
   .hero-scroll {
