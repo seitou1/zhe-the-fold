@@ -2664,8 +2664,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Type-first legibility (no wall dimming):
+ * Type-first legibility (no wall dimming / no price pads):
  * ink halo + hairline stroke hold glyphs; soft row mat is local only.
+ * Price uses full cream ink at name scale — decision data, not accent chrome.
  * Source Serif italic ships 400 only — contrast comes from halo/stroke, not fake bold.
  */
 .menu {
@@ -2762,22 +2763,26 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   transition: opacity 0.2s var(--ease-soft), border-color 0.2s var(--ease-soft);
 }
 
-/* Price — full opacity, medium weight (roman 500 is loaded) */
+/*
+ * Price — type only (no pad/scrim). Full cream ink + name scale so $
+ * reads with the dish; wheat accent stays for meta/kickers.
+ */
 .menu-list-item .list-price {
   grid-area: price;
   font-family: var(--font-display);
   font-style: normal;
-  font-size: calc(var(--type-list-price) * 0.92);
+  font-size: var(--type-list-price);
   font-weight: 500;
-  color: var(--tone-accent);
+  color: var(--menu-ink);
   justify-self: end;
   align-self: start;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  line-height: var(--type-lh-ui);
   padding-top: 0.14rem;
   opacity: 1;
-  -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.35);
+  -webkit-text-stroke: 0.28px rgba(0, 0, 0, 0.5);
   paint-order: stroke fill;
   text-shadow: var(--menu-type-halo-strong);
 }
@@ -2901,6 +2906,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-item.is-active .list-price {
+  color: var(--menu-ink);
   opacity: 1;
   font-weight: 500;
 }
