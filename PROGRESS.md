@@ -31,6 +31,15 @@
 - Prefer reliable controls (already present) over reintroducing swipe  
 - If swipe returns: design first (where does finger land on mobile menu?) then §15  
 
+## Phone polish (2026-07-16)
+
+- [x] visualViewport `--shell-h` + past-hero / active nav link (`ShellChrome`)  
+- [x] Larger Story dots/chevrons + menu row taps  
+- [x] Open chip: hide meta on phone (state only)  
+- [x] Visit CTAs full-width stack  
+- [x] Menu type halo on rows  
+- Phone QA: **human** on live URL after deploy  
+
 ## Blockers
 
 None for demo.

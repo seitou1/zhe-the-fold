@@ -15,8 +15,12 @@ export function OpenChip() {
       <span className="nav-hours-copy">
         <span className="nav-hours-state">{status.state}</span>
         {status.meta ? (
-          <span className="nav-hours-meta">{status.meta}</span>
-        ) : null}
+          <span className="nav-hours-meta" data-zhe-open-meta>
+            {status.meta}
+          </span>
+        ) : (
+          <span className="nav-hours-meta" hidden data-zhe-open-meta />
+        )}
       </span>
     </span>
   );

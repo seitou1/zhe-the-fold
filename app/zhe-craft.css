@@ -4481,3 +4481,86 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background: rgba(166, 124, 82, 0.35);
   color: var(--ink);
 }
+
+/* ═══════════════════════════════════════════
+   Phone polish (Next port) — tap targets + chrome
+   No swipe reintroduction. Kit: mobile = desktop craft.
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Open chip: state only — meta crowds the 3-column nav */
+  .nav-hours-meta {
+    display: none !important;
+  }
+
+  .nav-hours-copy {
+    gap: 0;
+  }
+
+  /* Nav links: larger finger targets without growing bar height awkwardly */
+  .nav-links a {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+  }
+
+  /* Story chapter controls */
+  .story-carousel-btn {
+    min-width: 2.85rem;
+    min-height: 2.85rem;
+  }
+
+  .story-dot {
+    min-width: 2.65rem;
+    min-height: 2.65rem;
+  }
+
+  /* Menu filters already min-height; ensure list rows are easy taps */
+  .menu-list-item {
+    min-height: 3.1rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    -webkit-tap-highlight-color: rgba(208, 192, 160, 0.18);
+  }
+
+  .menu-list-item.is-active {
+    padding-top: 0.8rem;
+    padding-bottom: 0.85rem;
+  }
+
+  /* Visit CTAs full-width stack on phone */
+  .visit-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+    width: 100%;
+  }
+
+  .visit-action {
+    width: 100%;
+    min-height: 2.9rem;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .visit-social {
+    gap: 0.75rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Footer clears home indicator */
+  .footer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Type halo on menu rows over bright plates */
+  .menu-list-item .list-en,
+  .menu-list-item .list-cn,
+  .menu-list-item .list-price {
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.85),
+      0 2px 12px rgba(0, 0, 0, 0.55);
+  }
+}
