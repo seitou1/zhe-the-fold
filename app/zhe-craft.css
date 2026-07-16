@@ -4599,24 +4599,24 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     gap: 0;
   }
 
-  /* Nav links: larger finger targets without growing bar height awkwardly */
+  /*
+   * Nav links — same visual box as desktop (height: 100% of --nav-line,
+   * padding 0, ::after bottom: -0.2rem / 1px clay / wheat active).
+   * Expand the hit target with an invisible ::before so the active mark
+   * does not shift or widen like a tall padded touch box would.
+   */
   .nav-links a {
-    min-height: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    padding-left: 0.2rem;
-    padding-right: 0.2rem;
+    height: 100%;
+    min-height: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  /*
-   * Same active grammar as desktop: 1px clay underline, wheat type, weight 400.
-   * Only re-anchor ::after under the centered glyph — the tall touch box
-   * (min-height) would otherwise park the mark below the bar.
-   */
-  .nav-links a::after {
-    top: calc(50% + 0.5em);
-    bottom: auto;
-    height: 1px;
+  .nav-links a::before {
+    content: "";
+    position: absolute;
+    /* ~44px tall touch target, a little air L/R */
+    inset: -0.75rem -0.28rem;
   }
 
   /* Story pips — keep even optical spacing (don’t inflate hit boxes) */
