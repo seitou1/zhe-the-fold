@@ -69,9 +69,20 @@ public/        # static assets
 | Source Serif 4 | Display / titles |
 | Outfit | UI / body |
 
+## Relation to the original static site
+
+| | Path | Role |
+|---|------|------|
+| **Original craft demo** | `../Zhe-The-Fold-Website` | Design source of truth — **do not delete** |
+| **This Next app** | `zhe-the-fold` | Rebuild/port over time |
+
+We port pieces deliberately (nav open-chip + hero first). Extra scaffold CTAs that weren’t in the original were removed.
+
 ## Next steps
 
-- Port menu / story content (or load from Supabase)
-- Real NAP, hours, Resy URL
-- Media from the static site assets folder
+- Port menu list from static `data.js` → `lib/menu.ts`
+- Visit hours + directions CTAs
+- Story chapters + media
+- Optional: hero video loop
+- Supabase when editing code for prices gets old
 - Flip `robots` metadata when launch-ready
