@@ -1217,7 +1217,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 45%;
+  /* Desktop crop from --story-pos; phone uses --story-pos-m (see mobile block) */
+  object-position: var(--story-pos, center 42%);
   display: block;
   /* Match menu plate lift — Origins was ungraded and read duller than Hero */
   filter: saturate(1.05) contrast(1.03) brightness(1.06);
@@ -1550,8 +1551,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Default; per-dish object-position may be set in JS — never change scale/origin mid-view */
-  object-position: center 52%;
+  /* Desktop --menu-pos; phone --menu-pos-m (see mobile block) */
+  object-position: var(--menu-pos, center 52%);
   opacity: 0;
   /* Gentle grade — avoid blowing out pale plates (tofu, etc.) */
   filter: saturate(1.06) contrast(1.04) brightness(1.06);
@@ -3641,44 +3642,44 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
    * Static cover + object-position only (no scroll parallax).
    */
   .hero-img {
-    object-position: center 40%;
-    transform: scale(1.18);
-    transform-origin: center 40%;
+    object-position: center 42%;
+    transform: scale(1.12);
+    transform-origin: center 42%;
   }
 
   .story-wall-img {
-    /* Keep translate sweeps; no scale pop on mobile */
-    object-position: center center;
+    /* Subject-safe phone crop from chapter --story-pos-m (not random %) */
+    object-position: var(--story-pos-m, center 42%);
+    /* Keep horizontal sweep only — no extra scale that fights the crop */
     transform-origin: center center;
   }
 
   /*
-   * Phone menu wall: ONE locked geometry for photo + list.
-   * Square plates fill tall viewports — scale + bottom-biased origin clear
-   * the head band without changing when List/Photos toggles.
+   * Phone menu wall: moderate scale + centered plate.
+   * Old 1.36 / origin 76% felt like a random zoom into the plate edge.
    */
   .menu {
-    --menu-wall-scale: 1.36;
-    --menu-wall-origin: center 76%;
+    --menu-wall-scale: 1.18;
+    --menu-wall-origin: center center;
   }
 
   .menu-wall-img,
   .menu-wall-img.is-active,
   .menu.is-list-view .menu-wall-img,
   .menu.is-list-view .menu-wall-img.is-active {
-    transform: scale(var(--menu-wall-scale, 1.36));
-    transform-origin: var(--menu-wall-origin, center 76%);
+    transform: scale(var(--menu-wall-scale, 1.18));
+    transform-origin: var(--menu-wall-origin, center center);
+    object-position: var(--menu-pos-m, center 48%);
     animation: none;
-    /* object-position may still be set per dish in JS; scale/origin never flip */
   }
 
   .visit-wall-img {
     /* Static on phone — ken-burns restart on section enter looked like a pop */
     animation: none;
-    /* Tall phones: punch in so storefront fills height, not letterbox bands */
-    transform: scale(1.22);
-    transform-origin: center 38%;
-    object-position: center 38%;
+    /* Mild fill; keep facade/door in frame */
+    transform: scale(1.12);
+    transform-origin: center 40%;
+    object-position: center 40%;
   }
 
   .menu-rail-item img {
@@ -3929,9 +3930,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .visit-wall-img {
     animation: none;
-    transform: scale(1.22);
-    transform-origin: center 34%;
-    object-position: center 34%;
+    transform: scale(1.12);
+    transform-origin: center 40%;
+    object-position: center 40%;
   }
 
   .visit-band {
@@ -4106,8 +4107,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .menu-wall-img.is-active,
   .menu.is-list-view .menu-wall-img,
   .menu.is-list-view .menu-wall-img.is-active {
-    /* Still no motion; keep the same crop as motion mode */
-    transform: scale(1.12);
+    /* Still no motion; match phone menu crop */
+    transform: scale(var(--menu-wall-scale, 1.18));
+    transform-origin: var(--menu-wall-origin, center center);
     animation: none;
   }
 
@@ -4131,13 +4133,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .visit-wall-img {
     animation: none;
-    /* Keep fill scale; only freeze the ken-burns drift */
-    transform: scale(1.14);
+    transform: scale(1.12);
+    transform-origin: center 40%;
   }
 
   .hero-img {
-    /* Keep punch-in fill under reduced motion */
     transform: scale(1.12);
+    transform-origin: center 42%;
   }
 
   .story-spotlight.is-fading {

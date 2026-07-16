@@ -41,11 +41,12 @@ export const MENU_FILTERS: { id: "all" | MenuCategory; label: string }[] = [
 ];
 
 /**
- * Wall crops: plate sits mid-low so the left ledger keeps quieter pixels
- * under cream type (legibility without dimming the photo).
+ * Wall crops for square dish stills under object-fit: cover.
+ * Desktop: slight low bias for ledger. Phone: center the plate
+ * (tall cover + bottom-origin scale used to randomly crop food).
  */
-const WALL_POS = "center 58%";
-const WALL_POS_MOBILE = "center 62%";
+const WALL_POS = "center 52%";
+const WALL_POS_MOBILE = "center 48%";
 
 export const MENU_ITEMS: MenuItem[] = [
   {

@@ -17,9 +17,31 @@ const STORY_USER_PAUSE_MS = 12000;
 
 type Layer = {
   src: string;
+  /** Desktop object-position */
   position: string;
+  /** Phone portrait object-position */
+  positionMobile: string;
   cls: string;
 };
+
+function layerFromChapter(
+  chapter: (typeof STORY_CHAPTERS)[number],
+  cls: string
+): Layer {
+  return {
+    src: chapter.image,
+    position: chapter.position,
+    positionMobile: chapter.positionMobile || chapter.position,
+    cls,
+  };
+}
+
+function wallStyle(layer: Layer): CSSProperties {
+  return {
+    ["--story-pos" as string]: layer.position,
+    ["--story-pos-m" as string]: layer.positionMobile,
+  };
+}
 
 /**
  * The house — place-first carousel (House → Hands → Night):
@@ -53,16 +75,8 @@ export function StoryPanel() {
   const [body, setBody] = useState(first.body);
   const [copyFading, setCopyFading] = useState(false);
   const [layers, setLayers] = useState<[Layer, Layer]>([
-    {
-      src: first.image,
-      position: first.position,
-      cls: "story-wall-img is-active",
-    },
-    {
-      src: first.image,
-      position: first.position,
-      cls: "story-wall-img is-park-right",
-    },
+    layerFromChapter(first, "story-wall-img is-active"),
+    layerFromChapter(first, "story-wall-img is-park-right"),
   ]);
 
   useEffect(() => {
@@ -128,6 +142,7 @@ export function StoryPanel() {
     async (
       src: string,
       position: string,
+      positionMobile: string,
       dir: number,
       animate: boolean
     ) => {
@@ -137,7 +152,7 @@ export function StoryPanel() {
         const active = activeBufRef.current;
         setLayers((prev) => {
           const next: [Layer, Layer] = [...prev] as [Layer, Layer];
-          next[active] = { ...next[active], position };
+          next[active] = { ...next[active], position, positionMobile };
           return next;
         });
         return;
@@ -163,6 +178,7 @@ export function StoryPanel() {
           next[idle] = {
             src,
             position,
+            positionMobile,
             cls: "story-wall-img is-active",
           };
           next[active] = {
@@ -182,6 +198,7 @@ export function StoryPanel() {
         next[idle] = {
           src,
           position,
+          positionMobile,
           cls: `story-wall-img ${goForward ? "is-park-right" : "is-park-left"}`,
         };
         return next;
@@ -258,7 +275,13 @@ export function StoryPanel() {
         setCopyFading(false);
         setLabel(chapter.label);
         setBody(chapter.body);
-        void setWall(chapter.image, chapter.position, sweepDir, false);
+        void setWall(
+          chapter.image,
+          chapter.position,
+          chapter.positionMobile || chapter.position,
+          sweepDir,
+          false
+        );
         return;
       }
 
@@ -268,7 +291,13 @@ export function StoryPanel() {
       }
 
       setCopyFading(true);
-      void setWall(chapter.image, chapter.position, sweepDir, true);
+      void setWall(
+        chapter.image,
+        chapter.position,
+        chapter.positionMobile || chapter.position,
+        sweepDir,
+        true
+      );
 
       fadeTimerRef.current = setTimeout(() => {
         fadeTimerRef.current = null;
@@ -589,9 +618,7 @@ export function StoryPanel() {
           alt=""
           width={1400}
           height={787}
-          style={
-            { objectPosition: layers[0].position } as CSSProperties
-          }
+          style={wallStyle(layers[0])}
           decoding="async"
           draggable={false}
         />
@@ -602,9 +629,7 @@ export function StoryPanel() {
           alt=""
           width={1400}
           height={787}
-          style={
-            { objectPosition: layers[1].position } as CSSProperties
-          }
+          style={wallStyle(layers[1])}
           decoding="async"
           draggable={false}
         />

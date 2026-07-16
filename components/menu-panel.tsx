@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
 } from "react";
 import {
@@ -213,8 +214,12 @@ export function MenuPanel() {
     [allItems, moveActive, selectDish]
   );
 
-  const posA = slotA?.position || "center center";
-  const posB = slotB?.position || "center center";
+  const wallVars = (item: typeof slotA): CSSProperties =>
+    ({
+      ["--menu-pos" as string]: item?.position || "center 52%",
+      ["--menu-pos-m" as string]:
+        item?.positionMobile || item?.position || "center 48%",
+    }) as CSSProperties;
 
   return (
     <section className="menu panel is-list-view" id="menu" data-tone="dark">
@@ -226,7 +231,7 @@ export function MenuPanel() {
           alt=""
           width={1000}
           height={1000}
-          style={{ objectPosition: posA }}
+          style={wallVars(slotA)}
           decoding="async"
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -236,7 +241,7 @@ export function MenuPanel() {
           alt=""
           width={1000}
           height={1000}
-          style={{ objectPosition: posB }}
+          style={wallVars(slotB)}
           decoding="async"
         />
       </div>
