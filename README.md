@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zhe · The Fold
 
-## Getting Started
+Next.js App Router site for **Zhe · The Fold** — handmade Chinese dumplings in New York.
 
-First, run the development server:
+Warm void shell, serif display type, mobile-first layout. Supabase clients are wired but not required to run the home page.
+
+> Sibling static craft demo (if present): `../Zhe-The-Fold-Website`
+
+## Requirements
+
+- **Node.js ≥ 20.9** (Next 16)
+- npm 10+
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# if you use nvm
+nvm use 20
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd zhe-the-fold
+npm install
+cp .env.local.example .env.local   # fill Supabase keys when ready
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm start` | Serve production build |
+| `npm run lint` | ESLint |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Public? | Purpose |
+|----------|---------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anon / publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | **No** | Server-only admin key |
 
-## Deploy on Vercel
+Helpers (throw only when called):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `lib/supabase/client.ts` — browser
+- `lib/supabase/server.ts` — RSC / route handlers
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Structure
+
+```
+app/           # App Router pages + layout + globals
+components/    # Header, hero, footer, section heading
+lib/           # site SSOT + supabase clients
+public/        # static assets
+```
+
+## Brand tokens
+
+| Token | Use |
+|-------|-----|
+| `void` `#12100e` | Background |
+| `cream` `#faf8f4` | Primary type |
+| `wheat` `#d0c0a0` | Accent / CTAs |
+| `clay` `#a67c52` | Secondary warmth |
+| Source Serif 4 | Display / titles |
+| Outfit | UI / body |
+
+## Next steps
+
+- Port menu / story content (or load from Supabase)
+- Real NAP, hours, Resy URL
+- Media from the static site assets folder
+- Flip `robots` metadata when launch-ready
