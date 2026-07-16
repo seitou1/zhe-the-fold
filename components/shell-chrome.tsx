@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-const SECTION_IDS = ["hero", "story", "menu", "visit"] as const;
+import { panelIds } from "@/lib/site";
 
 /**
  * Mobile shell: --shell-h for iOS URL bar, past-hero nav, active section.
@@ -49,7 +48,7 @@ export function ShellChrome() {
       let bestId: string = "hero";
       let bestDist = Infinity;
 
-      for (const id of SECTION_IDS) {
+      for (const id of panelIds()) {
         const el = document.getElementById(id);
         if (!el) continue;
         const r = el.getBoundingClientRect();
@@ -115,7 +114,7 @@ export function ShellChrome() {
       sectionObs?.disconnect();
       sectionObs = null;
 
-      const sections = SECTION_IDS.map((id) =>
+      const sections = panelIds().map((id) =>
         document.getElementById(id)
       ).filter((el): el is HTMLElement => Boolean(el));
       if (!sections.length) return;

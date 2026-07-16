@@ -67,8 +67,9 @@ function getOpenPeriod(weekday: string, minutes: number) {
 
 function getNextService(weekday: string, minutes: number) {
   const { closedWeekdays, periods, note } = getHoursConfig();
+  const k = site.kitchen;
   if (!periods.length) {
-    return { state: note || "see Visit", meta: "" };
+    return { state: note || k.seeVisit, meta: "" };
   }
   const dayIdx = WEEKDAYS.indexOf(weekday as (typeof WEEKDAYS)[number]);
   const safeIdx = dayIdx >= 0 ? dayIdx : 0;
@@ -86,18 +87,21 @@ function getNextService(weekday: string, minutes: number) {
     if (offset === 0) {
       for (const per of dayPeriods) {
         if (minutes < per.start) {
-          return { state: `opens ${formatTimeEn(per.start)}`, meta: "" };
+          return {
+            state: `${k.opens} ${formatTimeEn(per.start)}`,
+            meta: "",
+          };
         }
       }
       continue;
     }
 
     return {
-      state: `opens ${day} ${formatTimeEn(dayPeriods[0].start)}`,
+      state: `${k.opens} ${day} ${formatTimeEn(dayPeriods[0].start)}`,
       meta: "",
     };
   }
-  return { state: note || "see Visit", meta: "" };
+  return { state: note || k.seeVisit, meta: "" };
 }
 
 function formatTimeDisplay(hm: string, compact = false): string {
@@ -123,9 +127,10 @@ export function getHoursDisplayLines(): {
   }
   const daysList = [...(periods[0].days || [])];
   const dayCount = daysList.length;
+  const k = site.kitchen;
   const days =
     dayCount === 7
-      ? "Daily"
+      ? k.daily
       : dayCount > 0
         ? `${daysList[0]}–${daysList[dayCount - 1]}`
         : "";
@@ -137,7 +142,9 @@ export function getHoursDisplayLines(): {
     .join(" · ");
   const closedNote =
     note ||
-    (closedWeekdays?.length ? `Closed ${closedWeekdays.join(", ")}` : "");
+    (closedWeekdays?.length
+      ? `${k.closedPrefix} ${closedWeekdays.join(", ")}`
+      : "");
   return { days, times, note: closedNote };
 }
 
@@ -147,12 +154,14 @@ export function getKitchenStatus(date = new Date()): KitchenStatus {
   const period = getOpenPeriod(parts.weekday, parts.minutes);
   const open = Boolean(period);
 
+  const k = site.kitchen;
   if (open && period) {
+    const end = formatTimeEn(period.end);
     return {
       open: true,
-      state: "Open",
-      meta: `until ${formatTimeEn(period.end)}`,
-      title: `Kitchen open until ${formatTimeEn(period.end)} (Eastern time)`,
+      state: k.open,
+      meta: `${k.until} ${end}`,
+      title: `${k.titleOpenPrefix} ${end} (${k.easternTime})`,
     };
   }
 
@@ -161,6 +170,6 @@ export function getKitchenStatus(date = new Date()): KitchenStatus {
     open: false,
     state: next.state,
     meta: next.meta,
-    title: `Kitchen ${next.state} (Eastern time)`,
+    title: `${k.titleClosedPrefix} ${next.state} (${k.easternTime})`,
   };
 }

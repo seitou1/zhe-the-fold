@@ -13,19 +13,19 @@ import { usePanelVideo } from "@/lib/use-panel-video";
 
 /**
  * Visit — logistics hierarchy (scan order):
- * Title → Find us | Hours → Here (hybrid) → Directions · Takeout · Table → social.
- * Storefront wall = space cue (physical room); copy = how to use it.
+ * Title → Find us | Hours → Join us → Directions · Takeout · Table → social.
+ * Storefront wall = space cue; copy SSOT = site.visit / site.service.
  */
 export function VisitPanel() {
   const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { media, service, visit, sections, social } = site;
   const videoReady = usePanelVideo(videoRef, panelRef, {
-    src: "/assets/storefront-loop.mp4",
-    srcMobile: "/assets/storefront-loop-sm.mp4",
+    src: media.storefrontVideo,
+    srcMobile: media.storefrontVideoMobile,
   });
   const addressLines = formatAddressLines();
   const hours = getHoursDisplayLines();
-  const { service } = site;
 
   return (
     <section
@@ -38,19 +38,19 @@ export function VisitPanel() {
         <video
           ref={videoRef}
           className={`visit-wall-img visit-wall-video${videoReady ? " is-ready" : ""}`}
-          poster="/assets/storefront.webp"
+          poster={media.storefrontPoster}
           width={1280}
           height={720}
           muted
           loop
           playsInline
           preload="none"
-          aria-label="Zhe · The Fold storefront — small dumpling room at street level"
+          aria-label={media.storefrontVideoLabel}
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="visit-wall-img visit-wall-poster"
-          src="/assets/storefront.webp"
+          src={media.storefrontPoster}
           alt=""
           width={1400}
           height={787}
@@ -65,9 +65,9 @@ export function VisitPanel() {
           <header className="visit-head">
             <div className="visit-head-title">
               <h2>
-                <span className="en">Visit</span>
+                <span className="en">{sections.visit.en}</span>
                 <span className="cn" lang="zh-Hans">
-                  造访
+                  {sections.visit.cn}
                 </span>
               </h2>
             </div>
@@ -77,7 +77,7 @@ export function VisitPanel() {
             <div className="visit-facts">
               <div className="visit-fact visit-fact--find">
                 <p className="visit-kicker">
-                  <span className="en">Find us</span>
+                  <span className="en">{visit.findUs}</span>
                 </p>
                 <p className="visit-address">
                   {addressLines.map((line) => (
@@ -90,7 +90,7 @@ export function VisitPanel() {
 
               <div className="visit-fact visit-fact--hours">
                 <p className="visit-kicker">
-                  <span className="en">Hours</span>
+                  <span className="en">{visit.hours}</span>
                 </p>
                 <div className="visit-hours">
                   {hours.days ? (
@@ -120,7 +120,7 @@ export function VisitPanel() {
               </div>
             </div>
 
-            <nav className="visit-actions" aria-label="Visit actions">
+            <nav className="visit-actions" aria-label={visit.actionsAria}>
               <a
                 className="visit-action"
                 href={mapsUrl()}
@@ -132,28 +132,28 @@ export function VisitPanel() {
               <a
                 className="visit-action visit-action--takeout"
                 href={telHref()}
-                aria-label={`${service.actions.takeout}: call ${site.telephoneDisplay}`}
+                aria-label={`${service.actions.takeout}: ${service.aria.takeoutCall} ${site.telephoneDisplay}`}
               >
                 <span className="en">{service.actions.takeout}</span>
               </a>
               <a
                 className="visit-action visit-action--table"
                 href={reserveMailto()}
-                aria-label={`${service.actions.table}: email for a reservation`}
+                aria-label={`${service.actions.table}: ${service.aria.tableEmail}`}
               >
                 <span className="en">{service.actions.table}</span>
               </a>
             </nav>
 
-            {site.social.instagram ? (
-              <nav className="visit-social" aria-label="Social">
+            {social.instagram ? (
+              <nav className="visit-social" aria-label={visit.socialAria}>
                 <a
-                  href={site.social.instagram}
+                  href={social.instagram}
                   className="visit-social-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Instagram
+                  {social.instagramLabel}
                 </a>
               </nav>
             ) : null}

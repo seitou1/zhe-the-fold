@@ -12,10 +12,10 @@ export function SiteFooter() {
           <span className="logo-en">{site.name}</span>
         </div>
         <p className="footer-tag">
-          <span className="en">The imperfect pleats are the point</span>
+          <span className="en">{site.ui.footerTag}</span>
         </p>
         <p className="footer-copy">
-          © {year} {site.name}. All rights reserved.
+          © {year} {site.name}. {site.ui.footerRights}
         </p>
       </div>
     </footer>

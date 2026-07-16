@@ -247,9 +247,9 @@ export function MenuPanel() {
         <header className="menu-head">
           <div className="menu-head-title">
             <h2>
-              <span className="en">The Menu</span>
+              <span className="en">{site.sections.menu.en}</span>
               <span className="cn" lang="zh-Hans">
-                菜单
+                {site.sections.menu.cn}
               </span>
             </h2>
           </div>
@@ -260,7 +260,7 @@ export function MenuPanel() {
             ref={listRef}
             className="menu-list-view"
             role="region"
-            aria-label="Dishes"
+            aria-label={site.menu.dishesAria}
           >
             {groups.map((group) => {
               const labelId = `menu-chapter-${group.category}`;
@@ -314,7 +314,7 @@ export function MenuPanel() {
             })}
           </div>
           <p className="menu-note">
-            <span className="en">{site.menuNote}</span>
+            <span className="en">{site.menu.note}</span>
           </p>
         </div>
       </div>

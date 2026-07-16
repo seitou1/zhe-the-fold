@@ -1,11 +1,11 @@
 import { OpenChip } from "@/components/open-chip";
-import { reserveMailto, site } from "@/lib/site";
+import { homeAriaLabel, reserveMailto, site } from "@/lib/site";
 
-/** Original nav grammar: logo · kitchen status · Story Menu Visit · Table */
+/** Logo · kitchen status · Story Menu Visit · Table */
 export function SiteNav() {
   return (
     <header className="nav" id="nav">
-      <a href="#hero" className="nav-logo" aria-label={`${site.name} home`}>
+      <a href="#hero" className="nav-logo" aria-label={homeAriaLabel()}>
         <span className="logo-cn" aria-hidden="true">
           {site.nameCn}
         </span>
@@ -14,7 +14,7 @@ export function SiteNav() {
 
       <OpenChip />
 
-      <nav className="nav-links" id="navLinks" aria-label="Primary">
+      <nav className="nav-links" id="navLinks" aria-label={site.ui.navPrimaryAria}>
         {site.nav.map((item) => (
           <a key={item.href} href={item.href}>
             {item.label}

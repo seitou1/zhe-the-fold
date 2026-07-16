@@ -662,7 +662,7 @@ export function StoryPanel() {
         <nav
           className="story-carousel"
           role="tablist"
-          aria-label="Story chapters"
+          aria-label={site.sections.story.chaptersAria}
         >
           {STORY_CHAPTERS.map((ch, i) => (
             <button

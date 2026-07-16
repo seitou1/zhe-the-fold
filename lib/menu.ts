@@ -1,7 +1,11 @@
 /**
- * Menu SSOT — from Zhe-The-Fold-Website/data.js MENU_ITEMS.
+ * Menu SSOT — dishes, chapters, list meta labels.
  * Paths under /public/assets (craft asset layout).
+ * Chrome titles / menu note live on site.sections.menu + site.menu.
  */
+
+import { site } from "@/lib/site";
+
 
 export type MenuCategory = "classic" | "seasonal" | "plant";
 
@@ -166,8 +170,8 @@ export function listTitle(item: MenuItem): string {
 
 export function listMeta(item: MenuItem): string {
   const bits: string[] = [];
-  if (item.popular) bits.push("House");
-  if (item.tags.includes("shellfish")) bits.push("Shellfish");
+  if (item.popular) bits.push(site.menu.meta.house);
+  if (item.tags.includes("shellfish")) bits.push(site.menu.meta.shellfish);
   return bits.join(" · ");
 }
 

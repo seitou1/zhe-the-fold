@@ -1,22 +1,30 @@
 /**
- * Brand + marketing SSOT — no secrets.
- * Ported from the static demo (Zhe-The-Fold-Website/data.js).
- * Original site is separate and untouched.
+ * Brand + marketing + chrome SSOT — no secrets.
+ * Every guest-facing string, path, and label used by panels should live here
+ * (or in lib/menu · story · hours which read from here). Components only compose.
  */
 
 export const site = {
   name: "Zhe · The Fold",
   nameCn: "褶",
   shortName: "Zhe",
-  /** Meta / SEO description */
-  description:
-    "Handmade Chinese dumplings in New York — a small hybrid room for the table or takeout. Every fold holds the mark of a hand.",
   city: "New York City",
+
+  /** Meta / SEO */
+  description:
+    "Handmade Chinese dumplings in New York. A small hybrid room for the table or takeout. Every fold holds the mark of a hand.",
+  seo: {
+    titleSuffix: "Handmade Dumplings in New York",
+    locale: "en_US",
+    themeColor: "#12100e",
+  },
+
   /**
    * Hero orient line — plain product, not poetry.
    * Answers: what + format (hybrid: sit-in + take home).
    */
   heroLine: "Handmade dumplings · table & takeout",
+
   email: "hello@zhethefold.com",
   reserveSubject: "Table · Zhe",
   telephone: "+12125550100",
@@ -29,16 +37,31 @@ export const site = {
     addressCountry: "US",
   },
   mapsQuery: "200 Sample Street New York NY 10013",
+
   social: {
     instagram: "https://instagram.com/zhe.thefold",
+    instagramLabel: "Instagram",
   },
+
+  /** Media paths + accessible labels (hero / visit walls) */
+  media: {
+    heroPoster: "/assets/hero-dumplings.webp",
+    heroVideo: "/assets/hero-loop.mp4",
+    heroVideoMobile: "/assets/hero-loop-sm.mp4",
+    heroVideoLabel: "Handmade dumplings on worn ceramic at Zhe · The Fold",
+    storefrontPoster: "/assets/storefront.webp",
+    storefrontVideo: "/assets/storefront-loop.mp4",
+    storefrontVideoMobile: "/assets/storefront-loop-sm.mp4",
+    storefrontVideoLabel:
+      "Zhe · The Fold storefront — small dumpling room at street level",
+  },
+
   /**
-   * Hybrid service model — Visit “Here” block + action labels.
-   * SSOT so hero / Visit / nav / menu note stay aligned.
+   * Hybrid service model — Visit Join us + action labels.
+   * SSOT so hero / Visit / nav stay aligned.
    */
   service: {
     format: "hybrid" as const,
-    /** Visit kicker for the service fact (pair with Find us / Hours) */
     kicker: "Join us",
     modes: [
       {
@@ -52,19 +75,52 @@ export const site = {
         detail: "Call ahead or walk up · no delivery",
       },
     ],
-    /** Primary actions (Visit row + nav reserve) */
     actions: {
       directions: "Directions",
       takeout: "Takeout",
       table: "Table",
       reserveNav: "Table",
     },
+    /** Aria suffixes for Visit actions */
+    aria: {
+      takeoutCall: "call",
+      tableEmail: "email for a reservation",
+    },
   },
-  /** Menu colophon — ops, not atmosphere */
-  menuNote:
-    "Steamed or pan-seared · About eight per order · Table or take home · Share allergies",
+
+  /** Visit fact kickers (pair with service.kicker) */
+  visit: {
+    findUs: "Find us",
+    hours: "Hours",
+    actionsAria: "Visit actions",
+    socialAria: "Social",
+  },
+
+  /** Menu panel chrome (titles live in sections.menu; dishes in lib/menu) */
+  menu: {
+    dishesAria: "Dishes",
+    note: "Steamed or pan-seared · About eight per order · Table or take home · Share allergies",
+    meta: {
+      house: "House",
+      shellfish: "Shellfish",
+    },
+  },
+
+  /** Kitchen open-chip + Visit hours copy fragments */
+  kitchen: {
+    open: "Open",
+    until: "until",
+    opens: "opens",
+    seeVisit: "see Visit",
+    closedPrefix: "Closed",
+    daily: "Daily",
+    easternTime: "Eastern time",
+    titleOpenPrefix: "Kitchen open until",
+    titleClosedPrefix: "Kitchen",
+  },
+
   /**
-   * Open badge + Visit hours.
+   * Open badge + Visit hours schedule.
    * Days: Sun Mon Tue Wed Thu Fri Sat (en-US short from Intl).
    * NAP above is sample until launch — site stays noindex.
    */
@@ -85,17 +141,19 @@ export const site = {
       },
     ],
   },
+
   nav: [
     { href: "#story", label: "Story" },
     { href: "#menu", label: "Menu" },
     { href: "#visit", label: "Visit" },
   ],
-  /** Panel titles only — story prose lives in lib/story, ops in menu-note. */
+
+  /** Panel titles — story chapter bodies in lib/story */
   sections: {
     story: {
-      /** Place-first (not genealogy) — room, hands, night */
       en: "The house",
       cn: "小店",
+      chaptersAria: "Story chapters",
     },
     menu: {
       en: "The Menu",
@@ -105,6 +163,16 @@ export const site = {
       en: "Visit",
       cn: "造访",
     },
+  },
+
+  /** Site chrome copy */
+  ui: {
+    skipToMenu: "Skip to menu",
+    skipToMenuHref: "#menu",
+    navPrimaryAria: "Primary",
+    homeAriaSuffix: "home",
+    footerTag: "The imperfect pleats are the point",
+    footerRights: "All rights reserved.",
   },
 } as const;
 
@@ -129,4 +197,17 @@ export function formatAddressLines(): string[] {
     a.streetAddress,
     `${a.addressLocality}, ${a.addressRegion} ${a.postalCode}`,
   ];
+}
+
+export function siteTitleDefault(): string {
+  return `${site.name} | ${site.seo.titleSuffix}`;
+}
+
+export function homeAriaLabel(): string {
+  return `${site.name} ${site.ui.homeAriaSuffix}`;
+}
+
+/** Full-viewport panel ids in scroll order (nav hrefs + hero). */
+export function panelIds(): readonly string[] {
+  return ["hero", ...site.nav.map((item) => item.href.replace(/^#/, ""))];
 }

@@ -8,9 +8,10 @@ import { usePanelVideo } from "@/lib/use-panel-video";
 export function HeroPanel() {
   const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { media } = site;
   const videoReady = usePanelVideo(videoRef, panelRef, {
-    src: "/assets/hero-loop.mp4",
-    srcMobile: "/assets/hero-loop-sm.mp4",
+    src: media.heroVideo,
+    srcMobile: media.heroVideoMobile,
   });
 
   return (
@@ -24,19 +25,19 @@ export function HeroPanel() {
         <video
           ref={videoRef}
           className={`hero-img hero-video${videoReady ? " is-ready" : ""}`}
-          poster="/assets/hero-dumplings.webp"
+          poster={media.heroPoster}
           width={1280}
           height={720}
           muted
           loop
           playsInline
           preload="none"
-          aria-label="Handmade dumplings on worn ceramic at Zhe · The Fold"
+          aria-label={media.heroVideoLabel}
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="hero-img hero-poster"
-          src="/assets/hero-dumplings.webp"
+          src={media.heroPoster}
           alt=""
           width={1280}
           height={704}

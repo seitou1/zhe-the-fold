@@ -10,7 +10,7 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 ## Cold start
 
 1. Design truth = static site `styles.css` + panels — ported as `app/zhe-craft.css` + `public/assets/`  
-2. Content SSOT = `lib/site.ts`, `menu.ts`, `story.ts`, `hours.ts`  
+2. Content SSOT = `lib/site.ts` (brand, chrome, visit, media, kitchen) + `menu.ts` + `story.ts` + `hours.ts` (reads site.hours). **No guest-facing copy hard-coded in components.**
 3. Stack: Next App Router + craft CSS (not Tailwind redesign)  
 4. Ship: `git push origin main` → Vercel auto-deploy  
 5. Phone QA after gesture/shell changes  
