@@ -2864,27 +2864,28 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background: var(--menu-row-mat-active);
 }
 
-/* Fold crease — short, slightly skewed, only on the open row */
+/*
+ * Active mark — one short fold crease only.
+ * No full-height inset bar (reads as a second vertical rule).
+ */
 .menu-list-item.is-active::before {
   content: "";
   position: absolute;
-  left: 0.12rem;
+  left: 0.08rem;
   top: 50%;
-  width: 1.5px;
-  height: 1.4rem;
-  transform: translateY(-52%) rotate(1.2deg);
+  width: 1px;
+  height: 1.15rem;
+  transform: translateY(-50%) rotate(1deg);
   border-radius: 1px;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--wheat) 12%,
+    rgba(235, 207, 160, 0.35) 18%,
     var(--tone-accent) 50%,
-    var(--wheat) 88%,
+    rgba(235, 207, 160, 0.35) 82%,
     transparent 100%
   );
-  box-shadow:
-    1px 0 0 rgba(8, 5, 4, 0.35),
-    0 0 10px rgba(208, 192, 160, 0.28);
+  box-shadow: none;
   pointer-events: none;
 }
 
@@ -4772,10 +4773,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   box-shadow: none;
 }
 
-/* Active: open pleat via left crease + mat — no top/bottom lines */
+/* Active: soft mat + short ::before crease only — no full-height bar */
 .menu .menu-list-item.is-active {
-  /* vertical crease only — never 0 1px 0 hairlines */
-  box-shadow: inset 2px 0 0 var(--tone-accent);
+  box-shadow: none;
   padding-top: 0.85rem;
   padding-bottom: 0.9rem;
   margin-top: 0.15rem;
