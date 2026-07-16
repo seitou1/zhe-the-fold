@@ -40,6 +40,13 @@ export const MENU_FILTERS: { id: "all" | MenuCategory; label: string }[] = [
   ...MENU_CHAPTERS,
 ];
 
+/**
+ * Wall crops: plate sits mid-low so the left ledger keeps quieter pixels
+ * under cream type (legibility without dimming the photo).
+ */
+const WALL_POS = "center 58%";
+const WALL_POS_MOBILE = "center 62%";
+
 export const MENU_ITEMS: MenuItem[] = [
   {
     id: "pork",
@@ -48,13 +55,13 @@ export const MENU_ITEMS: MenuItem[] = [
     en: "Pork & Napa Cabbage",
     rail: "Pork & Cabbage",
     cn: "猪肉白菜褶",
-    desc: "Soft pork, sweet napa—the house classic, familiar as home.",
+    desc: "Soft pork, sweet napa. The house classic, familiar as home.",
     price: "$14",
     popular: true,
     tags: ["pork"],
     image: "/assets/dish-pork.webp",
-    position: "center 68%",
-    positionMobile: "center 72%",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "beef",
@@ -63,10 +70,12 @@ export const MENU_ITEMS: MenuItem[] = [
     en: "Beef & Scallion",
     rail: "Beef & Scallion",
     cn: "牛肉大葱褶",
-    desc: "Northern heartiness in a thin skin—bright scallion, quiet soy.",
+    desc: "Northern heartiness in a thin skin. Bright scallion, quiet soy.",
     price: "$16",
     tags: ["beef"],
     image: "/assets/dish-beef.webp",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "shrimp",
@@ -80,6 +89,8 @@ export const MENU_ITEMS: MenuItem[] = [
     popular: true,
     tags: ["shellfish"],
     image: "/assets/dish-shrimp.webp",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "bamboo",
@@ -92,6 +103,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$17",
     tags: ["pork", "seasonal"],
     image: "/assets/dish-bamboo.webp",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "crab",
@@ -104,6 +117,8 @@ export const MENU_ITEMS: MenuItem[] = [
     price: "$22",
     tags: ["shellfish", "seasonal"],
     image: "/assets/dish-crab.webp",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "chestnut",
@@ -112,10 +127,12 @@ export const MENU_ITEMS: MenuItem[] = [
     en: "Chestnut & Chicken",
     rail: "Chestnut & Chicken",
     cn: "栗子鸡肉褶",
-    desc: "Autumn chestnuts and tender chicken—earth and steam.",
+    desc: "Autumn chestnuts and tender chicken. Earth and steam.",
     price: "$16",
     tags: ["poultry", "seasonal"],
     image: "/assets/dish-chestnut.webp",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "mushroom",
@@ -129,8 +146,8 @@ export const MENU_ITEMS: MenuItem[] = [
     popular: true,
     tags: ["plant"],
     image: "/assets/dish-mushroom.webp",
-    position: "center 62%",
-    positionMobile: "center 70%",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
   {
     id: "tofu",
@@ -139,12 +156,12 @@ export const MENU_ITEMS: MenuItem[] = [
     en: "Tofu & Daikon",
     rail: "Tofu & Daikon",
     cn: "豆腐萝卜褶",
-    desc: "Silken tofu and mild daikon—clean and quiet.",
+    desc: "Silken tofu and mild daikon. Clean and quiet.",
     price: "$12",
     tags: ["plant"],
     image: "/assets/dish-tofu.webp",
-    position: "center 58%",
-    positionMobile: "center 65%",
+    position: WALL_POS,
+    positionMobile: WALL_POS_MOBILE,
   },
 ];
 
