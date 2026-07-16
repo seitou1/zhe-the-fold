@@ -470,41 +470,6 @@ button {
   background-size: 180px;
 }
 
-/* Scroll progress — deep brown track, lighter brown fill */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  width: 100%;
-  z-index: 10000;
-  pointer-events: none;
-  /* Deep clay / espresso track */
-  background: rgba(46, 32, 22, 0.72);
-  overflow: hidden;
-}
-
-.scroll-progress-bar {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* Lighter brown progress — clay → warm wheat-brown */
-  background: linear-gradient(
-    90deg,
-    #a67c52 0%,
-    #c4a06a 50%,
-    #d4b483 100%
-  );
-  /* No CSS transition — rAF drives 1:1 with scroll (transition causes mobile jank) */
-  transform: scale3d(0, 1, 1);
-  transform-origin: left center;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
 /* ── Typography helpers (roles) ── */
 /*
  * Chinese marks (sitewide):
@@ -3942,13 +3907,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-right: max(1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
   }
 
-
-  /* Under notch, thick enough to read on a phone screen */
-  .scroll-progress {
-    top: env(safe-area-inset-top, 0px);
-    height: 3px;
-    background: rgba(46, 32, 22, 0.78);
-  }
 
   /*
    * Phone nav — same 3-column grammar as desktop so hours is

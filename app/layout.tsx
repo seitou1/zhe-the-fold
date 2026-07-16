@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
-import { ScrollProgress } from "@/components/scroll-progress";
 import { ShellChrome } from "@/components/shell-chrome";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -60,7 +59,6 @@ export default function RootLayout({
           Skip to menu
         </a>
         <div className="grain" aria-hidden="true" />
-        <ScrollProgress />
         <ShellChrome />
         <SiteNav />
         {children}
