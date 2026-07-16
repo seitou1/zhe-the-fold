@@ -32,6 +32,12 @@ export function MenuPanel() {
   const listRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Map<string, HTMLLIElement>>(new Map());
   const finePointer = useRef(false);
+  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activeIdRef = useRef(activeId);
+
+  useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [activeId]);
 
   const active =
     allItems.find((i) => i.id === activeId) || allItems[0] || MENU_ITEMS[0];
@@ -76,13 +82,17 @@ export function MenuPanel() {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  /** Keep expanded row fully inside .menu-list-view (not the window). */
+  /**
+   * Keep expanded row inside .menu-list-view.
+   * Instant scroll only — smooth + multi-fire was stacking while folds ran.
+   */
   const ensureRowVisible = useCallback((id: string) => {
     const root = listRef.current;
     const el = rowRefs.current.get(id);
     if (!root || !el) return;
+    if (id !== activeIdRef.current) return;
 
-    const pad = 16;
+    const pad = 12;
     const er = el.getBoundingClientRect();
     const rr = root.getBoundingClientRect();
     let delta = 0;
@@ -91,60 +101,79 @@ export function MenuPanel() {
     } else if (er.top < rr.top + pad) {
       delta = er.top - rr.top - pad;
     }
-    if (delta !== 0) {
-      root.scrollBy({ top: delta, behavior: "smooth" });
+    if (Math.abs(delta) > 1) {
+      root.scrollTop += delta;
     }
   }, []);
 
   const selectDish = useCallback(
     (id: string, opts?: { focus?: boolean }) => {
+      if (settleTimerRef.current) {
+        clearTimeout(settleTimerRef.current);
+        settleTimerRef.current = null;
+      }
+
+      activeIdRef.current = id;
       setActiveId(id);
       setPreviewId(null);
 
-      const settle = () => {
-        const el = rowRefs.current.get(id);
-        if (!el) return;
-        ensureRowVisible(id);
-        if (opts?.focus) el.focus({ preventScroll: true });
-      };
-
-      // Before fold, after layout, and after expand (~280ms) so desc isn’t clipped
+      // Focus now; wait for open fold once, then a single scroll
       requestAnimationFrame(() => {
-        settle();
-        requestAnimationFrame(settle);
+        const el = rowRefs.current.get(id);
+        if (opts?.focus && el) el.focus({ preventScroll: true });
       });
-      window.setTimeout(settle, 320);
+
+      settleTimerRef.current = setTimeout(() => {
+        settleTimerRef.current = null;
+        if (activeIdRef.current !== id) return;
+        ensureRowVisible(id);
+      }, 220);
     },
     [ensureRowVisible]
   );
 
+  useEffect(() => {
+    return () => {
+      if (settleTimerRef.current) clearTimeout(settleTimerRef.current);
+    };
+  }, []);
+
   const moveActive = useCallback(
     (delta: number) => {
-      const idx = allItems.findIndex((i) => i.id === activeId);
+      const idx = allItems.findIndex((i) => i.id === activeIdRef.current);
       if (idx < 0) return;
       const next =
         allItems[Math.max(0, Math.min(allItems.length - 1, idx + delta))];
-      if (next) selectDish(next.id, { focus: true });
+      if (next && next.id !== activeIdRef.current) {
+        selectDish(next.id, { focus: true });
+      }
     },
-    [activeId, allItems, selectDish]
+    [allItems, selectDish]
   );
 
-  const onListKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
+  const onDishKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLElement>) => {
       if (e.key === "ArrowDown" || e.key === "j") {
         e.preventDefault();
+        e.stopPropagation();
         moveActive(1);
       } else if (e.key === "ArrowUp" || e.key === "k") {
         e.preventDefault();
+        e.stopPropagation();
         moveActive(-1);
       } else if (e.key === "Home") {
         e.preventDefault();
+        e.stopPropagation();
         const first = allItems[0];
         if (first) selectDish(first.id, { focus: true });
       } else if (e.key === "End") {
         e.preventDefault();
+        e.stopPropagation();
         const last = allItems[allItems.length - 1];
         if (last) selectDish(last.id, { focus: true });
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        /* already active on focus via select — no-op */
       }
     },
     [allItems, moveActive, selectDish]
@@ -198,8 +227,6 @@ export function MenuPanel() {
             className="menu-list-view"
             role="region"
             aria-label="Dishes"
-            tabIndex={-1}
-            onKeyDown={onListKeyDown}
           >
             {groups.map((group) => {
               const labelId = `menu-chapter-${group.category}`;
@@ -238,6 +265,7 @@ export function MenuPanel() {
                         onPreviewEnd={() => {
                           if (finePointer.current) setPreviewId(null);
                         }}
+                        onKeyDown={onDishKeyDown}
                         rowRef={(el) => {
                           if (el) rowRefs.current.set(item.id, el);
                           else rowRefs.current.delete(item.id);
@@ -267,6 +295,7 @@ function MenuRow({
   onSelect,
   onPreview,
   onPreviewEnd,
+  onKeyDown,
   rowRef,
 }: {
   item: MenuItem;
@@ -275,6 +304,7 @@ function MenuRow({
   onSelect: () => void;
   onPreview: () => void;
   onPreviewEnd: () => void;
+  onKeyDown: (e: KeyboardEvent<HTMLElement>) => void;
   rowRef: (el: HTMLLIElement | null) => void;
 }) {
   const title = listTitle(item);
@@ -298,12 +328,7 @@ function MenuRow({
       onClick={onSelect}
       onMouseEnter={onPreview}
       onMouseLeave={onPreviewEnd}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect();
-        }
-      }}
+      onKeyDown={onKeyDown}
     >
       <span className="list-en">{title}</span>
       <span className="list-price">{item.price}</span>

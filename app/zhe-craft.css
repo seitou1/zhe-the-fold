@@ -2765,9 +2765,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   cursor: pointer;
   color: var(--menu-ink);
   text-shadow: var(--menu-type-halo);
-  transition:
-    background 0.28s var(--ease-soft),
-    padding 0.28s var(--ease-soft);
+  /* Background only — padding changes were thrashing neighbors while folding */
+  transition: background 0.18s var(--ease-soft);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -2835,15 +2834,18 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   text-shadow: var(--menu-type-halo-strong);
 }
 
-/* Fold detail — collapsed via 0fr grid; opens on .is-active */
+/*
+ * Fold detail — open animates; close is quicker so tabbing doesn’t
+ * leave two rows mid-expand (spacing / content overlap).
+ */
 .menu-list-item .list-detail {
   grid-area: detail;
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
   transition:
-    grid-template-rows 0.28s var(--ease-soft),
-    opacity 0.22s var(--ease-soft);
+    grid-template-rows 0.16s var(--ease-soft),
+    opacity 0.12s var(--ease-soft);
 }
 
 .menu-list-item .list-detail-inner {
@@ -2892,11 +2894,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Active = open pleat: fold motion + soft hold mat + rail.
+ * Active = open pleat: soft mat + rail.
+ * Keep outer padding stable vs rest so neighbors don’t jump while folding.
  */
 .menu-list-item.is-active {
-  padding-top: 0.65rem;
-  padding-bottom: 0.7rem;
   border: none;
   background: var(--menu-row-mat-active);
 }
@@ -2904,10 +2905,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .menu-list-item.is-active .list-detail {
   grid-template-rows: 1fr;
   opacity: 1;
+  transition:
+    grid-template-rows 0.22s var(--ease-soft),
+    opacity 0.18s var(--ease-soft) 0.02s;
 }
 
 /*
- * Active rail — continuous soft fold edge (ends dissolve).
+ * Active rail — opacity only (no scaleY) so rapid switches don’t stack transforms.
  */
 .menu-list-item.is-active::before {
   content: "";
@@ -2928,20 +2932,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   );
   box-shadow: 0 0 10px color-mix(in srgb, var(--tone-accent) 18%, transparent);
   pointer-events: none;
-  opacity: 0;
-  transform-origin: center top;
-  animation: menuFoldRailIn 0.32s var(--ease-soft) forwards;
-}
-
-@keyframes menuFoldRailIn {
-  from {
-    opacity: 0;
-    transform: scaleY(0.72);
-  }
-  to {
-    opacity: 1;
-    transform: scaleY(1);
-  }
+  opacity: 1;
+  transition: opacity 0.18s var(--ease-soft);
 }
 
 .menu-list-item.is-active .list-en {
@@ -4728,10 +4720,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   border-bottom: none !important;
 }
 
-/* Rest rows: no horizontal hairlines; pad for rhythm */
+/* Rest + active: same outer padding — detail fold owns height change */
 .menu .menu-list-item {
   padding-top: 0.72rem;
   padding-bottom: 0.72rem;
+  margin: 0;
   background: transparent;
   box-shadow: none;
 }
@@ -4742,13 +4735,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   box-shadow: none;
 }
 
-/* Active: soft mat only — patterned rail lives on ::before */
 .menu .menu-list-item.is-active {
   box-shadow: none;
-  padding-top: 0.85rem;
-  padding-bottom: 0.9rem;
-  margin-top: 0.15rem;
-  margin-bottom: 0.15rem;
+  padding-top: 0.72rem;
+  padding-bottom: 0.72rem;
+  margin: 0;
 }
 
 /* Colophon: space only — no short rule above the note */
@@ -4800,7 +4791,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Desktop hover preview — whisper mat, plate only (no full open) */
+/* Desktop hover preview — soft mat only (no second rail competing with active) */
 @media (hover: hover) and (pointer: fine) {
   .menu-list-item.is-preview:not(.is-active) {
     background: linear-gradient(
@@ -4809,26 +4800,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
       rgba(6, 4, 3, 0.05) 48%,
       transparent 100%
     );
-  }
-
-  .menu-list-item.is-preview:not(.is-active)::before {
-    content: "";
-    position: absolute;
-    left: 0.14rem;
-    top: 0.55rem;
-    bottom: 0.55rem;
-    width: 1px;
-    border-radius: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      color-mix(in srgb, var(--tone-accent) 35%, transparent) 20%,
-      color-mix(in srgb, var(--tone-accent) 45%, transparent) 50%,
-      color-mix(in srgb, var(--tone-accent) 35%, transparent) 80%,
-      transparent 100%
-    );
-    opacity: 0.7;
-    pointer-events: none;
   }
 }
 
@@ -4842,12 +4813,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .menu-list-item.is-active::before {
-    animation: none;
+    transition: none;
     opacity: 1;
-    transform: none;
   }
 
-  .menu-list-item .list-detail {
+  .menu-list-item .list-detail,
+  .menu-list-item.is-active .list-detail {
     transition: none;
   }
 }
