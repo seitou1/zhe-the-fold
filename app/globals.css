@@ -28,7 +28,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Fixed header clearance for in-page jumps (#story, #menu, #visit) */
+/* Fixed header clearance for in-page jumps */
 #hero,
 #story,
 #menu,
@@ -36,13 +36,12 @@ html {
   scroll-margin-top: 4.5rem;
 }
 
-/* Prefer fast taps on interactive controls (iOS) */
+/* Fast taps; avoid 300ms delay without blocking scroll */
 button,
-a,
-[role="tab"],
-[role="option"] {
-  -webkit-tap-highlight-color: rgba(208, 192, 160, 0.2);
+a {
+  -webkit-tap-highlight-color: rgba(208, 192, 160, 0.25);
   touch-action: manipulation;
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

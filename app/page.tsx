@@ -12,13 +12,14 @@ export default function Home() {
     <>
       <Hero />
 
-      <div className="relative z-0 mx-auto w-full max-w-6xl space-y-20 px-[var(--stage-x)] pb-24 pt-8 sm:space-y-28 sm:pb-32 sm:pt-10">
+      {/* Explicit stacking so section controls stay above any media */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl space-y-20 px-[var(--stage-x)] pb-24 pt-10 sm:space-y-28 sm:pb-32 sm:pt-14">
         <StorySection />
 
         <section
           id="menu"
           aria-labelledby="menu-heading"
-          className="scroll-mt-24"
+          className="relative scroll-mt-20"
         >
           <SectionHeading id="menu-heading" en={menu.en} cn={menu.cn} />
           <p className="mb-8 max-w-xl font-ui text-base leading-relaxed text-cream-soft sm:text-lg">
@@ -27,7 +28,9 @@ export default function Home() {
           <MenuList />
         </section>
 
-        <VisitSection />
+        <div className="relative">
+          <VisitSection />
+        </div>
       </div>
     </>
   );

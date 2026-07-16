@@ -1,14 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
 import { STORY_CHAPTERS } from "@/lib/story";
 import { site } from "@/lib/site";
 
 /**
- * Origins — three chapters from the static demo.
- * Tap Village / City / Fold (or prev/next). Photo + copy; no full snap panel yet.
+ * Origins — three chapters. Plain <img> + buttons (no next/image fill overlay).
  */
 export function StorySection() {
   const [index, setIndex] = useState(0);
@@ -20,18 +18,20 @@ export function StorySection() {
   };
 
   return (
-    <section id="story" aria-labelledby="story-heading" className="scroll-mt-24">
+    <section
+      id="story"
+      aria-labelledby="story-heading"
+      className="relative scroll-mt-20"
+    >
       <SectionHeading
         id="story-heading"
         en={site.sections.story.en}
         cn={site.sections.story.cn}
       />
 
-      {/* Chapter pills */}
       <div
-        role="tablist"
+        className="mb-6 flex flex-wrap gap-2"
         aria-label="Story chapters"
-        className="mb-6 flex flex-wrap gap-2 sm:gap-3"
       >
         {STORY_CHAPTERS.map((ch, i) => {
           const on = i === index;
@@ -39,13 +39,12 @@ export function StorySection() {
             <button
               key={ch.id}
               type="button"
-              role="tab"
-              aria-selected={on}
+              aria-pressed={on}
               onClick={() => setIndex(i)}
-              className={`relative z-10 min-h-11 touch-manipulation rounded-sm px-3.5 py-2 font-ui text-[0.82rem] tracking-[0.08em] transition-colors sm:text-[0.85rem] ${
+              className={`min-h-12 rounded-sm px-4 py-3 font-ui text-[0.88rem] tracking-[0.08em] ${
                 on
                   ? "bg-wheat/15 text-wheat"
-                  : "text-cream/55 hover:text-cream/85 active:text-cream"
+                  : "text-cream/60 active:text-cream"
               }`}
             >
               {ch.short}
@@ -55,21 +54,19 @@ export function StorySection() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center lg:gap-10">
-        {/* Still — not a full dual-layer wall; clear and calm */}
-        <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-void sm:aspect-[16/10]">
-          <Image
+        <div className="pointer-events-none relative aspect-[4/3] overflow-hidden rounded-sm bg-void sm:aspect-[16/10]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             key={chapter.id}
             src={chapter.image}
             alt=""
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover"
+            className="h-full w-full object-cover"
             style={{ objectPosition: chapter.position }}
-            priority={index === 0}
+            decoding="async"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-void/50 via-transparent to-void/20"
+            className="absolute inset-0 bg-gradient-to-t from-void/50 via-transparent to-void/20"
           />
         </div>
 
@@ -85,7 +82,7 @@ export function StorySection() {
             <button
               type="button"
               onClick={() => go(-1)}
-              className="relative z-10 min-h-11 touch-manipulation px-3 font-ui text-sm tracking-wide text-cream/60 transition-colors hover:text-wheat active:text-wheat"
+              className="min-h-12 px-4 font-ui text-sm tracking-wide text-cream/70 active:text-wheat"
               aria-label="Previous chapter"
             >
               ← Prev
@@ -96,7 +93,7 @@ export function StorySection() {
             <button
               type="button"
               onClick={() => go(1)}
-              className="relative z-10 min-h-11 touch-manipulation px-3 font-ui text-sm tracking-wide text-cream/60 transition-colors hover:text-wheat active:text-wheat"
+              className="min-h-12 px-4 font-ui text-sm tracking-wide text-cream/70 active:text-wheat"
               aria-label="Next chapter"
             >
               Next →

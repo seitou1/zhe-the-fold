@@ -1,10 +1,8 @@
-import Image from "next/image";
 import { site } from "@/lib/site";
 
 /**
- * Hero aligned to original static demo:
- * full-bleed plate, bottom-left caption, no invented CTAs.
- * Reserve lives in the nav only (same as original).
+ * Hero aligned to original static demo.
+ * Media is pointer-events-none so it can never steal taps on mobile.
  */
 export function Hero() {
   return (
@@ -13,25 +11,20 @@ export function Hero() {
       className="relative flex min-h-[100dvh] flex-col justify-end overflow-hidden"
       aria-labelledby="hero-title"
     >
-      {/* Plate */}
-      <div className="absolute inset-0">
-        <Image
+      {/* Plate — decorative only; never captures pointer/touch */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/media/hero-dumplings.webp"
-          alt="Handmade dumplings on worn ceramic at Zhe · The Fold"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
+          alt=""
+          className="h-full w-full object-cover object-center"
+          fetchPriority="high"
+          decoding="async"
         />
-        {/* Soft hold under type — light, not a mud curtain */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(to_top,rgba(12,10,8,0.82)_0%,rgba(12,10,8,0.35)_32%,transparent_58%),linear-gradient(to_right,rgba(12,10,8,0.45)_0%,transparent_42%)]"
-        />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(12,10,8,0.82)_0%,rgba(12,10,8,0.35)_32%,transparent_58%),linear-gradient(to_right,rgba(12,10,8,0.45)_0%,transparent_42%)]" />
       </div>
 
-      {/* Caption — bottom-left, original hierarchy */}
-      <div className="relative z-10 w-full px-[var(--stage-x)] pb-16 pt-28 sm:pb-20 sm:pt-32">
+      <div className="relative z-10 w-full px-[var(--stage-x)] pb-16 pt-10 sm:pb-20 sm:pt-16">
         <div className="max-w-xl">
           <p className="mb-3 font-ui text-[0.72rem] uppercase tracking-[0.22em] text-cream/85 sm:text-[0.78rem]">
             {site.city}
@@ -59,7 +52,6 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Quiet scroll cue — no buttons */}
       <div
         className="pointer-events-none absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2"
         aria-hidden

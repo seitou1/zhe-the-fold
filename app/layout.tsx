@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Source_Serif_4 } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -29,6 +29,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,11 +43,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sourceSerif.variable} ${outfit.variable} h-full antialiased`}
+      className={`${sourceSerif.variable} ${outfit.variable} antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-void font-ui text-cream">
+      <body className="bg-void font-ui text-cream">
         <SiteHeader />
-        <main className="flex flex-1 flex-col">{children}</main>
+        {/*
+          z-0 + isolate: keep page content in a stacking context BELOW the nav (z-50)
+          but above any accidental full-bleed media, and always receive taps.
+        */}
+        <main className="relative z-0 isolate min-h-dvh pt-14">{children}</main>
         <SiteFooter />
       </body>
     </html>
