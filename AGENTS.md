@@ -22,6 +22,7 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 - Honesty: partial / untested called out  
 - Mobile: no non-passive touch on scroll ancestors; wall-only gestures if added  
 - Keep `robots: noindex` until real NAP  
+- **Legibility:** open photo walls (no panel dim). Type uses panel `--tone-fg` + `--tone-shadow*`. No per-page halo tokens. Nav scrim only; menu open-row mat is the sole layout exception. Details: `app/zhe-craft.css` contract comment.
 
 ## Session end
 
