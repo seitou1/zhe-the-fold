@@ -15,6 +15,18 @@ function isPlaceholderUrl(url: string) {
 }
 
 /**
+ * Project root only — e.g. https://xxxx.supabase.co
+ * Strips trailing slash and accidental /rest/v1 (causes PGRST125).
+ */
+export function normalizeSupabaseUrl(raw: string): string {
+  let url = raw.trim().replace(/\/+$/, "");
+  // People often paste the REST endpoint from the API page
+  url = url.replace(/\/rest\/v1$/i, "");
+  url = url.replace(/\/+$/, "");
+  return url;
+}
+
+/**
  * Server Supabase client when env is configured.
  * Returns null if keys are missing/placeholder so craft fallback can run.
  */
@@ -22,7 +34,9 @@ export function tryCreateServerClient(
   opts: ServerClientOptions = {}
 ): SupabaseClient | null {
   // Trim — Vercel/TextEdit often leave trailing newlines or spaces
-  const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
+  const url = normalizeSupabaseUrl(
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
+  );
   const key = (
     opts.serviceRole
       ? process.env.SUPABASE_SERVICE_ROLE_KEY
