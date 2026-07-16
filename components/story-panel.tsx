@@ -51,7 +51,6 @@ export function StoryPanel() {
   const [index, setIndex] = useState(0);
   const n = STORY_CHAPTERS.length;
   const chapter = STORY_CHAPTERS[index];
-  const panelRef = useRef<HTMLElement>(null);
   const wallRef = useRef<HTMLDivElement>(null);
   const imgA = useRef<HTMLImageElement>(null);
   const imgB = useRef<HTMLImageElement>(null);
@@ -108,24 +107,16 @@ export function StoryPanel() {
   const onPrev = useCallback(() => go(-1), [go]);
   const onNext = useCallback(() => go(1), [go]);
 
-  // Panel-level + axis lock (stage covers wall; wall-only never fires on phone)
   useWallSwipe({
-    rootRef: panelRef,
+    wallRef,
     onPrev,
     onNext,
-    ignoreSelector:
-      "button, a, input, .story-carousel-btn, .story-dot, .nav, .nav-links",
   });
 
   const first = STORY_CHAPTERS[0];
 
   return (
-    <section
-      className="story panel"
-      id="story"
-      data-tone="dark"
-      ref={panelRef}
-    >
+    <section className="story panel" id="story" data-tone="dark">
       <div className="story-wall" ref={wallRef} aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
