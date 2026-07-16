@@ -26,6 +26,11 @@ export const site = {
     addressCountry: "US",
   },
   mapsQuery: "200 Sample Street New York NY 10013",
+  /** Pin for map embed (sample near Canal St — update with real coords at launch) */
+  coordinates: {
+    lat: 40.7185,
+    lng: -73.9992,
+  },
   access: "Walk-ins welcome · near Canal St",
   social: {
     instagram: "https://instagram.com/zhe.thefold",
@@ -88,10 +93,22 @@ export function mapsUrl() {
   )}`;
 }
 
-/** Embeddable map (no API key). Same query as Directions. */
+/**
+ * Embeddable map — OpenStreetMap (no API key).
+ * Google’s free `output=embed` query URLs no longer load in iframes.
+ * “Get directions” still opens Google Maps for navigation.
+ */
 export function mapsEmbedUrl() {
-  const q = encodeURIComponent(site.mapsQuery);
-  return `https://maps.google.com/maps?q=${q}&z=15&output=embed&hl=en`;
+  const { lat, lng } = site.coordinates;
+  const dLat = 0.012;
+  const dLng = 0.016;
+  const bbox = [
+    lng - dLng,
+    lat - dLat,
+    lng + dLng,
+    lat + dLat,
+  ].join("%2C");
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
 }
 
 export function telHref() {
