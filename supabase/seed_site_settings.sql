@@ -1,4 +1,5 @@
 -- Seed from lib/site.ts (sample NAP — keep noindex until real). Safe upsert.
+-- Middle dots via chr(183) so paste encoding cannot produce Â·
 -- Run after 003_site_settings.sql
 
 insert into public.site_settings (
@@ -19,14 +20,14 @@ insert into public.site_settings (
   '10013',
   'US',
   '200 Sample Street New York NY 10013',
-  'Table · Zhe',
-  'Handmade dumplings · table & takeout',
-  'Steamed or pan-seared · About eight per order · Table or take home · Share allergies',
+  'Table ' || chr(183) || ' Zhe',
+  'Handmade dumplings ' || chr(183) || ' table & takeout',
+  'Steamed or pan-seared ' || chr(183) || ' About eight per order ' || chr(183) || ' Table or take home ' || chr(183) || ' Share allergies',
   'https://instagram.com/zhe.thefold',
   'Instagram',
   'Join us',
-  'Walk-ins welcome · reserve for 4+',
-  'Call ahead or walk up · no delivery'
+  'Walk-ins welcome ' || chr(183) || ' reserve for 4+',
+  'Call ahead or walk up ' || chr(183) || ' no delivery'
 )
 on conflict (id) do update set
   email = excluded.email,

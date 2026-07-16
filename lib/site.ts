@@ -23,10 +23,11 @@ export const site = {
    * Hero orient line — plain product, not poetry.
    * Answers: what + format (hybrid: sit-in + take home).
    */
-  heroLine: "Handmade dumplings · table & takeout",
+  // \u00b7 = middle dot (avoids file-encoding mojibake as Â·)
+  heroLine: "Handmade dumplings \u00b7 table & takeout",
 
   email: "hello@zhethefold.com",
-  reserveSubject: "Table · Zhe",
+  reserveSubject: "Table \u00b7 Zhe",
   telephone: "+12125550100",
   telephoneDisplay: "(212) 555-0100",
   address: {
@@ -67,12 +68,12 @@ export const site = {
       {
         id: "table",
         label: "Table",
-        detail: "Walk-ins welcome · reserve for 4+",
+        detail: "Walk-ins welcome \u00b7 reserve for 4+",
       },
       {
         id: "takeout",
         label: "Takeout",
-        detail: "Call ahead or walk up · no delivery",
+        detail: "Call ahead or walk up \u00b7 no delivery",
       },
     ],
     actions: {
@@ -99,7 +100,7 @@ export const site = {
   /** Menu panel chrome (titles live in sections.menu; dishes in lib/menu) */
   menu: {
     dishesAria: "Dishes",
-    note: "Steamed or pan-seared · About eight per order · Table or take home · Share allergies",
+    note: "Steamed or pan-seared \u00b7 About eight per order \u00b7 Table or take home \u00b7 Share allergies",
     meta: {
       house: "House",
       shellfish: "Shellfish",
