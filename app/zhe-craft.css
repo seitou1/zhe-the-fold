@@ -2866,26 +2866,27 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 /*
  * Active mark — one short fold crease only.
- * No full-height inset bar (reads as a second vertical rule).
+ * Sized to read on plate wall; still not a full-height rail.
  */
 .menu-list-item.is-active::before {
   content: "";
   position: absolute;
-  left: 0.08rem;
+  left: 0.1rem;
   top: 50%;
-  width: 1px;
-  height: 1.15rem;
+  width: 2px;
+  height: 1.85rem;
   transform: translateY(-50%) rotate(1deg);
   border-radius: 1px;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(235, 207, 160, 0.35) 18%,
+    rgba(235, 207, 160, 0.55) 14%,
     var(--tone-accent) 50%,
-    rgba(235, 207, 160, 0.35) 82%,
+    rgba(235, 207, 160, 0.55) 86%,
     transparent 100%
   );
-  box-shadow: none;
+  /* Soft hold over steam — no second hard edge */
+  box-shadow: 0 0 8px rgba(208, 192, 160, 0.35);
   pointer-events: none;
 }
 
