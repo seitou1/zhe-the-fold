@@ -2890,29 +2890,27 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Active rail — opacity only (no scaleY) so rapid switches don’t stack transforms.
+ * Active rail — same hairline as nav-link underline:
+ * 1px solid clay, no glow/gradient; scaleY mirrors nav scaleX.
  */
-.menu-list-item.is-active::before {
+.menu-list-item::before {
   content: "";
   position: absolute;
   left: 0.14rem;
   top: 0.45rem;
   bottom: 0.45rem;
-  width: 1.5px;
-  border-radius: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    color-mix(in srgb, var(--tone-accent) 38%, transparent) 12%,
-    color-mix(in srgb, var(--tone-accent) 62%, transparent) 32%,
-    color-mix(in srgb, var(--tone-accent) 62%, transparent) 68%,
-    color-mix(in srgb, var(--tone-accent) 38%, transparent) 88%,
-    transparent 100%
-  );
-  box-shadow: 0 0 10px color-mix(in srgb, var(--tone-accent) 18%, transparent);
+  width: 1px;
+  border-radius: 0;
+  background: var(--clay);
+  box-shadow: none;
   pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.18s var(--ease-soft);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.menu-list-item.is-active::before {
+  transform: scaleY(1);
 }
 
 .menu-list-item.is-active .list-en {
@@ -4854,9 +4852,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     animation: none !important;
   }
 
+  .menu-list-item::before,
   .menu-list-item.is-active::before {
     transition: none;
-    opacity: 1;
+  }
+
+  .menu-list-item.is-active::before {
+    transform: scaleY(1);
   }
 
   .menu-list-item .list-detail,
