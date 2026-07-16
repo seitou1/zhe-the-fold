@@ -4,8 +4,7 @@ import { getStoryChaptersWithSource } from "@/lib/data/story";
 import { normalizeSupabaseUrl } from "@/lib/supabase/server";
 
 /**
- * CMS health — menu, story, site_settings sources (no secrets).
- * Open /api/cms-status on local or live.
+ * CMS health — menu, story, split site tables (no secrets).
  */
 export const dynamic = "force-dynamic";
 
@@ -41,6 +40,7 @@ export async function GET() {
     site: {
       source: siteOps.source,
       reason: siteOps.reason ?? null,
+      slices: siteOps.slices ?? null,
       heroLine: siteOps.ops.heroLine,
       telephoneDisplay: siteOps.ops.telephoneDisplay,
       actions: {
@@ -55,6 +55,13 @@ export async function GET() {
         siteOps.ops.navMenu,
         siteOps.ops.navVisit,
       ],
+      hours: {
+        timeZone: siteOps.ops.hours.timeZone,
+        closedWeekdays: siteOps.ops.hours.closedWeekdays,
+        note: siteOps.ops.hours.note,
+        periodCount: siteOps.ops.hours.periods.length,
+        periods: siteOps.ops.hours.periods,
+      },
     },
     env: {
       hasUrl: Boolean(url),

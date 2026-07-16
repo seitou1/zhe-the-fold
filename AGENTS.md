@@ -18,10 +18,10 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 ## Backend (Content CMS)
 
 - `lib/supabase/{client,server}.ts` + `@supabase/supabase-js`  
-- `lib/data/{menu,story,site}.ts` — Supabase **or** static fallback  
-- Guest chrome via `site_settings` + `SiteOpsProvider` (nav, hero, visit CTAs, hours, footer…)  
+- `lib/data/{menu,story,site}.ts` — merge + static fallback  
+- **Split site tables:** `site_hours` · `site_contact` · `site_copy` (+ legacy `site_settings` fallback)  
 - Dishes `menu_items` · story `story_chapters`  
-- SQL `001`–`005` + seeds — see `supabase/README.md` · health `/api/cms-status`  
+- SQL `007_site_split` + `seed_site_split` — see `supabase/README.md` · `/api/cms-status`  
 - Env: URL **without** `/rest/v1`  
 - Not CMS yet: asset file paths, admin UI, Storage
 

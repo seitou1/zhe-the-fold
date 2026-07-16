@@ -1,58 +1,50 @@
-# Supabase — Full content CMS
+# Supabase — Content CMS (split site tables)
 
-Public **read** for menu, story, and **all guest chrome** via `site_settings`.  
-Static fallbacks in `lib/*` if env/DB fails. Homepage + layout are `force-dynamic`.
+## Tables (edit these)
 
-**URL must be project root only** (no `/rest/v1`):
+| Table | Purpose | Edit for |
+|-------|---------|----------|
+| **`menu_items`** | Dishes | Price, name, desc, published |
+| **`story_chapters`** | Origins | House / Hands / Night |
+| **`site_hours`** | Schedule + open chip | When open, timezone, closed days, chip words |
+| **`site_contact`** | NAP / contact | Phone, email, address, maps, Instagram |
+| **`site_copy`** | Brand & chrome | Name, hero, nav, Call/Reserve, sections, footer |
 
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_REF.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-```
+Legacy **`site_settings`** may still exist (old fat row). The app prefers the three split tables; you can ignore `site_settings` after the split seed.
 
-Health: https://zhe-the-fold.vercel.app/api/cms-status
-
----
-
-## What lives where
-
-| Content | Table / edit |
-|---------|----------------|
-| Dishes, prices, tags | `menu_items` |
-| Origins chapters | `story_chapters` |
-| Brand, NAP, nav, Visit CTAs, hours, footer, section titles, kitchen chip | `site_settings` (row `default`) |
-| Video/image **files** | still `/public/assets` (paths not CMS yet) |
+Each of `site_hours` / `site_contact` / `site_copy` has **one row** with `id = default`.
 
 ---
 
-## Migrations (order)
+## Setup order
 
-1. `001_menu_items.sql` + `seed_menu_items.sql`  
-2. `002_story_chapters.sql` + `seed_story_chapters.sql`  
-3. `003_site_settings.sql` + `seed_site_settings.sql`  
-4. `004_site_action_labels.sql` (optional if 005 covers it)  
-5. **`005_site_full_chrome.sql`** — brand, nav, CTAs, hours, kitchen, footer  
+### Already have menu + story + old site_settings
 
-If menu/story/site already work, run **only 005**.
+1. Run `migrations/007_site_split.sql`  
+2. Run `seed_site_split.sql` (copies phone/address/etc. from old row when possible)  
+3. Deploy latest app code  
+4. Check `/api/cms-status` → `site.slices` all `supabase`
+
+### Fresh project
+
+1. `001` + seed menu  
+2. `002` + seed story  
+3. `007` + `seed_site_split` (skip bloated `003` if you want)  
+4. Env + deploy  
 
 ---
 
-## Key `site_settings` columns (Visit buttons)
+## Where to change hours (open chip)
 
-| Column | UI |
-|--------|-----|
-| `action_directions` | Directions |
-| `action_call` | Call (phone) |
-| `action_reserve` | Reserve (email) |
-| `action_reserve_nav` | Nav chip |
-| `mode_table_label` / `mode_takeout_label` | Join us mode names |
-| `table_detail` / `takeout_detail` | Join us details |
-| `nav_story` / `nav_menu` / `nav_visit` | Top nav |
-| `brand_name` / `brand_name_cn` / `hero_line` / `city` | Hero |
-| `hours_note` / `hours_closed_weekdays` / `hours_periods` | Hours |
-| `section_*_en` / `section_*_cn` | Panel titles |
+**Table Editor → `site_hours` → `default`**
 
-`hours_periods` is JSON, e.g.:
+| Column | Meaning |
+|--------|---------|
+| `timezone` | e.g. `America/New_York` |
+| `closed_weekdays` | e.g. `Mon` |
+| `note` | e.g. `Closed Mondays` |
+| `periods` | JSON open windows (see below) |
+| `kitchen_open` / `kitchen_until` / `kitchen_opens` | Chip wording |
 
 ```json
 [
@@ -63,13 +55,25 @@ If menu/story/site already work, run **only 005**.
 
 ---
 
+## Where to change Call / Reserve
+
+**`site_copy`** → `action_call`, `action_reserve`, `action_directions`, `action_reserve_nav`
+
+## Where to change phone / address
+
+**`site_contact`**
+
+---
+
+## Env
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...   # no /rest/v1 on URL
+```
+
+Health: `/api/cms-status`
+
 ## RLS
 
-- Public **SELECT** only  
-- Writes: Dashboard or service role  
-
-## Not yet CMS
-
-- Admin UI  
-- Dish photo upload (Storage)  
-- Media file paths  
+Public **SELECT** only on all content tables. Writes via Dashboard.

@@ -1,5 +1,7 @@
 /**
- * Full site ops CMS — Supabase site_settings or static lib/site.ts.
+ * Site ops CMS — merges site_hours + site_contact + site_copy.
+ * Falls back to static lib/site.ts per slice if a table is missing/empty.
+ * Legacy site_settings still used only if split tables are all unavailable.
  */
 
 import { cache } from "react";
@@ -7,6 +9,7 @@ import { siteOpsFromStaticFallback } from "@/lib/data/site-static";
 import type {
   HoursConfig,
   HoursPeriod,
+  KitchenCopy,
   SiteOps,
 } from "@/lib/data/site-types";
 import { tryCreateServerClient } from "@/lib/supabase/server";
@@ -17,118 +20,178 @@ export type {
   KitchenCopy,
   SiteOps,
 } from "@/lib/data/site-types";
-export type SiteSource = "supabase" | "static";
+
+export type SiteSource = "supabase" | "static" | "mixed";
+export type SliceSource = "supabase" | "static";
 
 export { siteOpsFromStaticFallback };
 
 type Row = Record<string, unknown>;
 
-function str(row: Row, key: string, fallback: string): string {
+function str(row: Row | null | undefined, key: string, fallback: string): string {
+  if (!row) return fallback;
   const v = row[key];
   if (typeof v === "string" && v.trim()) return v.trim();
   return fallback;
 }
 
-function parseHours(row: Row, fallback: HoursConfig): HoursConfig {
-  const periodsRaw = row.hours_periods;
-  let periods = fallback.periods;
-  if (typeof periodsRaw === "string" && periodsRaw.trim()) {
-    try {
-      const parsed = JSON.parse(periodsRaw) as HoursPeriod[];
-      if (Array.isArray(parsed) && parsed.length) periods = parsed;
-    } catch {
-      /* keep fallback */
-    }
-  } else if (Array.isArray(periodsRaw) && periodsRaw.length) {
-    periods = periodsRaw as HoursPeriod[];
-  }
-
-  const closedRaw = row.hours_closed_weekdays;
-  let closedWeekdays = fallback.closedWeekdays;
-  if (typeof closedRaw === "string" && closedRaw.trim()) {
-    closedWeekdays = closedRaw
+function parseClosedWeekdays(raw: unknown, fallback: string[]): string[] {
+  if (typeof raw === "string" && raw.trim()) {
+    return raw
       .split(/[,|]/)
       .map((s) => s.trim())
       .filter(Boolean);
-  } else if (Array.isArray(closedRaw)) {
-    closedWeekdays = (closedRaw as string[]).map(String);
   }
+  if (Array.isArray(raw)) return raw.map(String);
+  return fallback;
+}
 
+function parsePeriods(raw: unknown, fallback: HoursPeriod[]): HoursPeriod[] {
+  if (typeof raw === "string" && raw.trim()) {
+    try {
+      const parsed = JSON.parse(raw) as HoursPeriod[];
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    } catch {
+      /* keep fallback */
+    }
+  }
+  if (Array.isArray(raw) && raw.length) return raw as HoursPeriod[];
+  return fallback;
+}
+
+function hoursFromRow(row: Row | null, fallback: HoursConfig): HoursConfig {
+  if (!row) return fallback;
   return {
-    timeZone: str(row, "hours_timezone", fallback.timeZone),
-    closedWeekdays,
-    note: str(row, "hours_note", fallback.note),
-    periods,
+    timeZone: str(row, "timezone", fallback.timeZone),
+    closedWeekdays: parseClosedWeekdays(
+      row.closed_weekdays,
+      fallback.closedWeekdays
+    ),
+    note: str(row, "note", fallback.note),
+    periods: parsePeriods(row.periods, fallback.periods),
   };
 }
 
-function rowToOps(row: Row): SiteOps {
-  const f = siteOpsFromStaticFallback();
+function kitchenFromRow(row: Row | null, fallback: KitchenCopy): KitchenCopy {
+  if (!row) return fallback;
   return {
-    name: str(row, "brand_name", f.name),
-    nameCn: str(row, "brand_name_cn", f.nameCn),
-    shortName: str(row, "brand_short", f.shortName),
-    city: str(row, "city", f.city),
-    description: str(row, "seo_description", f.description),
-    titleSuffix: str(row, "seo_title_suffix", f.titleSuffix),
+    open: str(row, "kitchen_open", fallback.open),
+    until: str(row, "kitchen_until", fallback.until),
+    opens: str(row, "kitchen_opens", fallback.opens),
+    seeVisit: str(row, "kitchen_see_visit", fallback.seeVisit),
+    closedPrefix: str(row, "kitchen_closed_prefix", fallback.closedPrefix),
+    daily: str(row, "kitchen_daily", fallback.daily),
+    easternTime: str(row, "kitchen_eastern", fallback.easternTime),
+    titleOpenPrefix: str(row, "kitchen_title_open", fallback.titleOpenPrefix),
+    titleClosedPrefix: str(
+      row,
+      "kitchen_title_closed",
+      fallback.titleClosedPrefix
+    ),
+  };
+}
 
-    email: str(row, "email", f.email),
-    telephone: str(row, "telephone", f.telephone),
-    telephoneDisplay: str(row, "telephone_display", f.telephoneDisplay),
+function mergeOps(
+  fallback: SiteOps,
+  hoursRow: Row | null,
+  contactRow: Row | null,
+  copyRow: Row | null
+): SiteOps {
+  const c = contactRow;
+  const p = copyRow;
+  return {
+    name: str(p, "brand_name", fallback.name),
+    nameCn: str(p, "brand_name_cn", fallback.nameCn),
+    shortName: str(p, "brand_short", fallback.shortName),
+    city: str(p, "city", fallback.city),
+    description: str(p, "seo_description", fallback.description),
+    titleSuffix: str(p, "seo_title_suffix", fallback.titleSuffix),
+
+    email: str(c, "email", fallback.email),
+    telephone: str(c, "telephone", fallback.telephone),
+    telephoneDisplay: str(c, "telephone_display", fallback.telephoneDisplay),
     address: {
-      streetAddress: str(row, "street_address", f.address.streetAddress),
-      addressLocality: str(row, "address_locality", f.address.addressLocality),
-      addressRegion: str(row, "address_region", f.address.addressRegion),
-      postalCode: str(row, "postal_code", f.address.postalCode),
-      addressCountry: str(row, "address_country", f.address.addressCountry),
+      streetAddress: str(c, "street_address", fallback.address.streetAddress),
+      addressLocality: str(
+        c,
+        "address_locality",
+        fallback.address.addressLocality
+      ),
+      addressRegion: str(c, "address_region", fallback.address.addressRegion),
+      postalCode: str(c, "postal_code", fallback.address.postalCode),
+      addressCountry: str(
+        c,
+        "address_country",
+        fallback.address.addressCountry
+      ),
     },
-    mapsQuery: str(row, "maps_query", f.mapsQuery),
-    reserveSubject: str(row, "reserve_subject", f.reserveSubject),
+    mapsQuery: str(c, "maps_query", fallback.mapsQuery),
+    reserveSubject: str(c, "reserve_subject", fallback.reserveSubject),
 
-    heroLine: str(row, "hero_line", f.heroLine),
-    menuNote: str(row, "menu_note", f.menuNote),
+    heroLine: str(p, "hero_line", fallback.heroLine),
+    menuNote: str(p, "menu_note", fallback.menuNote),
 
-    instagram: str(row, "instagram_url", f.instagram),
-    instagramLabel: str(row, "instagram_label", f.instagramLabel),
+    instagram: str(c, "instagram_url", fallback.instagram),
+    instagramLabel: str(c, "instagram_label", fallback.instagramLabel),
 
-    serviceKicker: str(row, "service_kicker", f.serviceKicker),
-    modeTableLabel: str(row, "mode_table_label", f.modeTableLabel),
-    modeTakeoutLabel: str(row, "mode_takeout_label", f.modeTakeoutLabel),
-    tableDetail: str(row, "table_detail", f.tableDetail),
-    takeoutDetail: str(row, "takeout_detail", f.takeoutDetail),
+    serviceKicker: str(p, "service_kicker", fallback.serviceKicker),
+    modeTableLabel: str(p, "mode_table_label", fallback.modeTableLabel),
+    modeTakeoutLabel: str(p, "mode_takeout_label", fallback.modeTakeoutLabel),
+    tableDetail: str(p, "table_detail", fallback.tableDetail),
+    takeoutDetail: str(p, "takeout_detail", fallback.takeoutDetail),
 
-    actionDirections: str(row, "action_directions", f.actionDirections),
-    actionCall: str(row, "action_call", f.actionCall),
-    actionReserve: str(row, "action_reserve", f.actionReserve),
-    actionReserveNav: str(row, "action_reserve_nav", f.actionReserveNav),
+    actionDirections: str(p, "action_directions", fallback.actionDirections),
+    actionCall: str(p, "action_call", fallback.actionCall),
+    actionReserve: str(p, "action_reserve", fallback.actionReserve),
+    actionReserveNav: str(p, "action_reserve_nav", fallback.actionReserveNav),
 
-    visitFindUs: str(row, "visit_find_us", f.visitFindUs),
-    visitHoursLabel: str(row, "visit_hours_label", f.visitHoursLabel),
+    visitFindUs: str(p, "visit_find_us", fallback.visitFindUs),
+    visitHoursLabel: str(p, "visit_hours_label", fallback.visitHoursLabel),
 
-    sectionStoryEn: str(row, "section_story_en", f.sectionStoryEn),
-    sectionStoryCn: str(row, "section_story_cn", f.sectionStoryCn),
-    sectionMenuEn: str(row, "section_menu_en", f.sectionMenuEn),
-    sectionMenuCn: str(row, "section_menu_cn", f.sectionMenuCn),
-    sectionVisitEn: str(row, "section_visit_en", f.sectionVisitEn),
-    sectionVisitCn: str(row, "section_visit_cn", f.sectionVisitCn),
-    storyChaptersAria: str(row, "story_chapters_aria", f.storyChaptersAria),
-    dishesAria: str(row, "dishes_aria", f.dishesAria),
+    sectionStoryEn: str(p, "section_story_en", fallback.sectionStoryEn),
+    sectionStoryCn: str(p, "section_story_cn", fallback.sectionStoryCn),
+    sectionMenuEn: str(p, "section_menu_en", fallback.sectionMenuEn),
+    sectionMenuCn: str(p, "section_menu_cn", fallback.sectionMenuCn),
+    sectionVisitEn: str(p, "section_visit_en", fallback.sectionVisitEn),
+    sectionVisitCn: str(p, "section_visit_cn", fallback.sectionVisitCn),
+    storyChaptersAria: fallback.storyChaptersAria,
+    dishesAria: fallback.dishesAria,
 
-    navStory: str(row, "nav_story", f.navStory),
-    navMenu: str(row, "nav_menu", f.navMenu),
-    navVisit: str(row, "nav_visit", f.navVisit),
-    navPrimaryAria: str(row, "nav_primary_aria", f.navPrimaryAria),
+    navStory: str(p, "nav_story", fallback.navStory),
+    navMenu: str(p, "nav_menu", fallback.navMenu),
+    navVisit: str(p, "nav_visit", fallback.navVisit),
+    navPrimaryAria: fallback.navPrimaryAria,
 
-    menuMetaHouse: str(row, "menu_meta_house", f.menuMetaHouse),
-    menuMetaShellfish: str(row, "menu_meta_shellfish", f.menuMetaShellfish),
+    menuMetaHouse: str(p, "menu_meta_house", fallback.menuMetaHouse),
+    menuMetaShellfish: str(p, "menu_meta_shellfish", fallback.menuMetaShellfish),
 
-    footerTag: str(row, "footer_tag", f.footerTag),
-    footerRights: str(row, "footer_rights", f.footerRights),
-    skipToMenu: str(row, "skip_to_menu", f.skipToMenu),
-    skipToMenuHref: str(row, "skip_to_menu_href", f.skipToMenuHref),
-    homeAriaSuffix: str(row, "home_aria_suffix", f.homeAriaSuffix),
+    footerTag: str(p, "footer_tag", fallback.footerTag),
+    footerRights: str(p, "footer_rights", fallback.footerRights),
+    skipToMenu: str(p, "skip_to_menu", fallback.skipToMenu),
+    skipToMenuHref: fallback.skipToMenuHref,
+    homeAriaSuffix: fallback.homeAriaSuffix,
 
-    hours: parseHours(row, f.hours),
+    hours: hoursFromRow(hoursRow, fallback.hours),
+    kitchen: kitchenFromRow(hoursRow, fallback.kitchen),
+  };
+}
+
+/** Legacy single-row site_settings (pre-split). */
+function legacyRowToOps(row: Row): SiteOps {
+  const f = siteOpsFromStaticFallback();
+  const hoursFallback = f.hours;
+  const hours: HoursConfig = {
+    timeZone: str(row, "hours_timezone", hoursFallback.timeZone),
+    closedWeekdays: parseClosedWeekdays(
+      row.hours_closed_weekdays,
+      hoursFallback.closedWeekdays
+    ),
+    note: str(row, "hours_note", hoursFallback.note),
+    periods: parsePeriods(row.hours_periods, hoursFallback.periods),
+  };
+  return {
+    ...mergeOps(f, null, row, row),
+    hours,
     kitchen: {
       open: str(row, "kitchen_open", f.kitchen.open),
       until: str(row, "kitchen_until", f.kitchen.until),
@@ -147,10 +210,42 @@ function rowToOps(row: Row): SiteOps {
   };
 }
 
+async function fetchSlice(
+  client: NonNullable<ReturnType<typeof tryCreateServerClient>>,
+  table: string
+): Promise<{ row: Row | null; source: SliceSource; reason?: string }> {
+  try {
+    const { data, error } = await client
+      .from(table)
+      .select("*")
+      .eq("id", "default")
+      .maybeSingle();
+    if (error) {
+      return {
+        row: null,
+        source: "static",
+        reason: `${table}: ${error.message}`,
+      };
+    }
+    if (!data) {
+      return { row: null, source: "static", reason: `${table}: empty` };
+    }
+    return { row: data as Row, source: "supabase" };
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    return { row: null, source: "static", reason: `${table}: ${message}` };
+  }
+}
+
 async function fetchSiteOpsUncached(): Promise<{
   ops: SiteOps;
   source: SiteSource;
   reason?: string;
+  slices?: {
+    hours: SliceSource;
+    contact: SliceSource;
+    copy: SliceSource;
+  };
 }> {
   const fallback = siteOpsFromStaticFallback();
   const client = tryCreateServerClient();
@@ -159,33 +254,66 @@ async function fetchSiteOpsUncached(): Promise<{
   }
 
   try {
-    const { data, error } = await client
-      .from("site_settings")
-      .select("*")
-      .eq("id", "default")
-      .maybeSingle();
+    const [hours, contact, copy] = await Promise.all([
+      fetchSlice(client, "site_hours"),
+      fetchSlice(client, "site_contact"),
+      fetchSlice(client, "site_copy"),
+    ]);
 
-    if (error) {
-      console.warn("[site] Supabase read failed:", error.message);
+    const anySplit =
+      hours.source === "supabase" ||
+      contact.source === "supabase" ||
+      copy.source === "supabase";
+
+    if (anySplit) {
+      const ops = mergeOps(fallback, hours.row, contact.row, copy.row);
+      const all =
+        hours.source === "supabase" &&
+        contact.source === "supabase" &&
+        copy.source === "supabase";
       return {
-        ops: fallback,
-        source: "static",
-        reason: `supabase_error: ${error.message}`,
+        ops,
+        source: all ? "supabase" : "mixed",
+        reason: all
+          ? "ok"
+          : [hours.reason, contact.reason, copy.reason]
+              .filter(Boolean)
+              .join("; ") || "partial",
+        slices: {
+          hours: hours.source,
+          contact: contact.source,
+          copy: copy.source,
+        },
       };
     }
 
-    if (!data) {
+    // Split tables missing — try legacy site_settings
+    const legacy = await fetchSlice(client, "site_settings");
+    if (legacy.row) {
       return {
-        ops: fallback,
-        source: "static",
-        reason: "supabase_empty",
+        ops: legacyRowToOps(legacy.row),
+        source: "supabase",
+        reason: "legacy_site_settings",
+        slices: {
+          hours: "static",
+          contact: "supabase",
+          copy: "supabase",
+        },
       };
     }
 
     return {
-      ops: rowToOps(data as Row),
-      source: "supabase",
-      reason: "ok",
+      ops: fallback,
+      source: "static",
+      reason:
+        [hours.reason, contact.reason, copy.reason, legacy.reason]
+          .filter(Boolean)
+          .join("; ") || "empty",
+      slices: {
+        hours: "static",
+        contact: "static",
+        copy: "static",
+      },
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
