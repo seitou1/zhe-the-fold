@@ -66,11 +66,11 @@ Copy `.env.local.example` → `.env.local` when you use Supabase.
 ## Structure
 
 ```
-app/           # routes + layout
-components/    # UI
-lib/           # site, menu, story, hours SSOT
-public/media/  # images
-SHIP.md        # how to put it on the internet
+app/              # routes + layout
+components/       # live panels + chrome only
+lib/              # site, menu, story, hours SSOT
+public/assets/    # craft images + video + fonts
+SHIP.md           # how to put it on the internet
 ```
 
 ## Ship / learn next (after deploy)

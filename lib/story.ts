@@ -49,11 +49,3 @@ export const STORY_CHAPTERS: StoryChapter[] = [
     positionMobile: "center 40%",
   },
 ];
-
-export function storyWallPosition(
-  chapter: Pick<StoryChapter, "position" | "positionMobile">,
-  mobile: boolean
-): string {
-  if (mobile && chapter.positionMobile) return chapter.positionMobile;
-  return chapter.position;
-}

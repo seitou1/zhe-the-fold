@@ -34,12 +34,6 @@ export const MENU_CHAPTERS: { id: MenuCategory; label: string }[] = [
   { id: "plant", label: "Plant-based" },
 ];
 
-/** @deprecated Prefer MENU_CHAPTERS — kept for legacy menu-list links */
-export const MENU_FILTERS: { id: "all" | MenuCategory; label: string }[] = [
-  { id: "all", label: "All" },
-  ...MENU_CHAPTERS,
-];
-
 /**
  * Wall crops for square dish stills under object-fit: cover.
  * Desktop: slight low bias for ledger. Phone: center the plate
@@ -193,12 +187,4 @@ export function groupMenuItems(items: MenuItem[] = MENU_ITEMS): MenuGroup[] {
       items: groupItems,
     };
   }).filter((g) => g.items.length > 0);
-}
-
-export function filterMenuItems(
-  filter: "all" | MenuCategory,
-  items: MenuItem[] = MENU_ITEMS
-): MenuItem[] {
-  if (filter === "all") return items;
-  return items.filter((i) => i.category === filter);
 }
