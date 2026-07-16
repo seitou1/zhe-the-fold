@@ -4728,10 +4728,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   border-bottom: none !important;
 }
 
-/* Rest + active: same outer padding — detail fold owns height change */
+/*
+ * A — space separates dishes (no hairlines).
+ * ~25–30% more vertical pad so rest rows scan as distinct items.
+ * Rest + active share outer pad; open detail still owns extra bottom air.
+ */
 .menu .menu-list-item {
-  padding-top: 0.72rem;
-  padding-bottom: 0.72rem;
+  padding-top: 0.95rem;
+  padding-bottom: 0.95rem;
   margin: 0;
   background: transparent;
   box-shadow: none;
@@ -4745,8 +4749,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu .menu-list-item.is-active {
   box-shadow: none;
-  padding-top: 0.72rem;
-  padding-bottom: 0.72rem;
+  padding-top: 0.95rem;
+  padding-bottom: 0.95rem;
   margin: 0;
 }
 
@@ -4772,8 +4776,17 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 @media (max-width: 900px) {
   .menu .menu-list-item {
-    padding-top: 0.78rem;
-    padding-bottom: 0.78rem;
+    padding-top: 1.05rem;
+    padding-bottom: 1.05rem;
+  }
+
+  .menu .menu-list-item.is-active {
+    padding-top: 1.05rem;
+    padding-bottom: 1.05rem;
+  }
+
+  .menu .menu-list-item.is-active .list-detail-inner {
+    padding-bottom: 1.05rem;
   }
 
   .menu .menu-list-group {
