@@ -2,10 +2,10 @@
 
 | Field | Value |
 |-------|--------|
-| **Phase** | Menu CMS (Supabase read + static fallback) · fiction noindex |
+| **Phase** | Menu CMS — code + revalidate ready; **you** wire Supabase project |
 | **Live** | https://zhe-the-fold.vercel.app |
 | **GitHub** | https://github.com/seitou1/zhe-the-fold |
-| **Commit audited** | `059244d` (tree clean on main) |
+| **Workspace** | `~/Desktop/Code/zhe-the-fold` (only) |
 | **Updated** | 2026-07-16 |
 | **Kit** | `AGENTS.md` + static `QA_SCORECARD` A–J + `BUILD_PLAYBOOK` §13/§14 |
 
@@ -33,8 +33,9 @@
 | ESLint | **0 errors** (1 known warning: manual fonts.css link) |
 | Phone QA (human) | **good** (owner-confirmed 2026-07-16) |
 | Dead menu spotlight/rail/carousel CSS | **removed** |
-| Menu CMS | **code ready** — table SQL + seed + `getMenuItems()`; needs project env + run SQL |
+| Menu CMS | **code ready** — SQL + seed + `getMenuItems()` + force-dynamic; debug `/api/menu-status`; env on Vercel may still be falling back to static |
 | Supabase scaffold | client/server + fallback when env missing |
+| Local workspace | **Desktop only** — Grok worktree removed |
 
 ## Blockers for *live index*
 

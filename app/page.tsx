@@ -6,6 +6,12 @@ import { VisitPanel } from "@/components/visit-panel";
 import { getMenuItems } from "@/lib/data/menu";
 
 /**
+ * Always fetch menu on request so Supabase Table Editor edits
+ * show immediately. Falls back to static MENU_ITEMS if env/DB fails.
+ */
+export const dynamic = "force-dynamic";
+
+/**
  * Four full-viewport panels + footer.
  * Menu dishes: Supabase when configured, else lib/menu.ts.
  */
