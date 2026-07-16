@@ -133,16 +133,19 @@ export function VisitPanel() {
             <div className="visit-cta-block">
               <div className="visit-actions">
                 <a
-                  className="visit-action visit-action--primary"
+                  className="visit-action"
                   href={mapsUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <span className="en">Directions</span>
                 </a>
-                <a className="visit-action" href={telHref()}>
+                <a
+                  className="visit-action"
+                  href={telHref()}
+                  aria-label={`Call ${site.telephoneDisplay}`}
+                >
                   <span className="en">Call</span>
-                  <span className="visit-action-meta">{site.telephoneDisplay}</span>
                 </a>
                 <a className="visit-action" href={reserveMailto()}>
                   <span className="en">Reserve</span>
