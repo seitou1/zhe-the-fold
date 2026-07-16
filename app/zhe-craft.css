@@ -4609,18 +4609,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   /*
-   * Active mark sits under the glyph, not the tall touch box.
-   * min-height: 2.75rem was parking ::after below the bar where it vanished.
+   * Same active grammar as desktop: 1px clay underline, wheat type, weight 400.
+   * Only re-anchor ::after under the centered glyph — the tall touch box
+   * (min-height) would otherwise park the mark below the bar.
    */
   .nav-links a::after {
-    top: calc(50% + 0.42em);
+    top: calc(50% + 0.5em);
     bottom: auto;
-    height: 1.5px;
-  }
-
-  .nav-links a.is-active {
-    color: var(--wheat);
-    font-weight: 500;
+    height: 1px;
   }
 
   /* Story pips — keep even optical spacing (don’t inflate hit boxes) */
