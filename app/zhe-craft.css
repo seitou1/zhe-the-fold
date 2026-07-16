@@ -1576,9 +1576,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Origins chapter pips — hairline marks only (no chevrons).
- * Centered under the panel (carousel sequence chrome, not text-column).
- * Swipe / autoplay / ←→ carry motion; pips show place + jump.
+ * Origins chapter pips — equal-width hairlines, even optical spacing.
+ * Active = wheat + a bit brighter (not a longer bar, which looks uneven).
+ * Touch targets are tall; mark width stays fixed so the row reads balanced.
  */
 .story-carousel {
   flex-shrink: 0;
@@ -1586,11 +1586,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  /* Even gap between hit boxes → even gaps between visible marks */
+  gap: 0.55rem;
   width: 100%;
   max-width: none;
   margin: 0 auto;
-  padding: 0.55rem 0 0.2rem;
+  padding: 0.75rem 0 0.35rem;
 }
 
 .menu-carousel-btn {
@@ -1644,9 +1645,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .story-dot {
   position: relative;
   flex: 0 0 auto;
-  width: 1.85rem;
-  min-width: 1.85rem;
-  height: 2.65rem; /* generous touch target; mark stays thin */
+  /* Hit box ≈ mark + padding so spacing doesn’t look random */
+  width: 1.5rem;
+  min-width: 1.5rem;
+  height: 2.5rem;
   padding: 0;
   margin: 0;
   display: grid;
@@ -1659,8 +1661,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   letter-spacing: 0;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  opacity: 1;
-  transition: opacity 0.25s var(--ease-soft);
 }
 
 /* Labels for screen readers only */
@@ -1676,46 +1676,41 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   border: 0;
 }
 
-/* Quiet hairline pip */
+/* Equal-length mark for rest + active */
 .story-dot::after {
   content: "";
-  position: static;
   display: block;
-  width: 0.9rem;
-  max-width: none;
-  height: 1px;
+  width: 1.15rem;
+  height: 1.5px;
   border-radius: 1px;
-  opacity: 0.32;
-  background: var(--tone-fg, var(--cream));
-  transform: none;
+  background: rgba(250, 248, 244, 0.28);
   pointer-events: none;
   transition:
-    opacity 0.3s var(--ease-out),
-    width 0.35s var(--ease-out),
-    height 0.25s var(--ease-out),
-    background 0.3s var(--ease-out);
+    background 0.28s var(--ease-out),
+    opacity 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out);
 }
 
 .story-dot:hover::after,
 .story-dot:focus-visible::after {
-  opacity: 0.55;
-  width: 1.05rem;
+  background: rgba(250, 248, 244, 0.48);
 }
 
 .story-dot.is-active::after {
-  width: 1.55rem;
+  width: 1.15rem;
   height: 1.5px;
-  opacity: 0.92;
   background: var(--tone-accent, var(--wheat));
+  opacity: 1;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--tone-accent, var(--wheat)) 35%, transparent);
 }
 
 .story[data-tone="light"] .story-dot::after {
-  background: rgba(28, 24, 20, 0.32);
+  background: rgba(28, 24, 20, 0.28);
 }
 
 .story[data-tone="light"] .story-dot.is-active::after {
   background: var(--clay-deep, var(--clay));
-  opacity: 0.9;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--clay) 25%, transparent);
 }
 
 .story-dot:focus-visible {
@@ -1726,10 +1721,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 @media (hover: hover) and (pointer: fine) {
   .story-dot:hover::after {
-    opacity: 0.7;
+    background: rgba(250, 248, 244, 0.5);
   }
+
   .story-dot.is-active:hover::after {
-    opacity: 0.95;
+    background: var(--tone-accent, var(--wheat));
   }
 }
 
@@ -4208,12 +4204,24 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .story-carousel {
-    padding: 0.2rem 0 0.15rem;
-    max-width: 100%;
-    gap: 0.5rem 0.85rem;
+    padding: 0.65rem 0 0.35rem;
+    gap: 0.5rem;
   }
 
-  .story-carousel-btn,
+  .story-dot {
+    width: 1.75rem;
+    min-width: 1.75rem;
+    height: 2.75rem;
+  }
+
+  .story-dot::after {
+    width: 1.2rem;
+  }
+
+  .story-dot.is-active::after {
+    width: 1.2rem;
+  }
+
   .menu-carousel-btn {
     width: 2.5rem;
     min-width: 2.5rem;
@@ -4221,7 +4229,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     min-height: 2.5rem;
   }
 
-  .story-carousel-btn .carousel-chevron,
   .menu-carousel-btn .carousel-chevron {
     width: 0.95rem;
     height: 0.95rem;
