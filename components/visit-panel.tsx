@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getHoursDisplayLines } from "@/lib/hours";
 import {
   formatAddressLines,
+  mapsEmbedUrl,
   mapsUrl,
   reserveMailto,
   site,
@@ -12,7 +13,7 @@ import {
 
 /**
  * Visit — logistics first.
- * Title → quiet lead → address | hours → Directions (primary) → Call · Reserve → social.
+ * Title → quiet lead → address | hours → map → Directions → Call · Reserve → social.
  */
 export function VisitPanel() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -133,6 +134,25 @@ export function VisitPanel() {
                   ) : null}
                 </div>
               </div>
+            </div>
+
+            <div className="visit-map">
+              <iframe
+                className="visit-map-frame"
+                title={`Map — ${site.name}`}
+                src={mapsEmbedUrl()}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+              <a
+                className="visit-map-open"
+                href={mapsUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open in Google Maps
+              </a>
             </div>
 
             <div className="visit-cta-block">

@@ -88,6 +88,12 @@ export function mapsUrl() {
   )}`;
 }
 
+/** Embeddable map (no API key). Same query as Directions. */
+export function mapsEmbedUrl() {
+  const q = encodeURIComponent(site.mapsQuery);
+  return `https://maps.google.com/maps?q=${q}&z=15&output=embed&hl=en`;
+}
+
 export function telHref() {
   return `tel:${site.telephone}`;
 }

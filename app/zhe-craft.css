@@ -3498,6 +3498,52 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-size: var(--type-ui);
 }
 
+/* Quiet map plate — under facts, before CTAs */
+.visit-map {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+}
+
+.visit-map-frame {
+  display: block;
+  width: 100%;
+  height: clamp(9.5rem, 18vh, 12.5rem);
+  border: 1px solid rgba(250, 246, 240, 0.14);
+  border-radius: 0;
+  background: rgba(8, 5, 4, 0.45);
+  filter: grayscale(0.18) contrast(1.02) saturate(0.92);
+  /* Keep map interactive; wall stays non-blocking */
+  pointer-events: auto;
+}
+
+.visit-map-open {
+  align-self: flex-start;
+  font-family: var(--font-ui);
+  font-size: var(--type-ui-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tone-fg);
+  opacity: 0.55;
+  text-decoration: none;
+  padding: 0.1rem 0;
+  transition: opacity 0.22s var(--ease-soft);
+}
+
+.visit-map-open:hover,
+.visit-map-open:focus-visible {
+  opacity: 0.9;
+}
+
+.visit-map-open:focus-visible {
+  outline: 2px solid var(--wheat);
+  outline-offset: 3px;
+}
+
 /* CTA rank: primary Directions, then secondary Call · Reserve */
 .visit-cta-block {
   display: flex;
@@ -4447,6 +4493,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .visit-access {
     margin-top: 0.3rem;
+  }
+
+  .visit-map-frame {
+    height: clamp(8.5rem, 22vh, 11rem);
   }
 
   .visit-cta-block {
