@@ -2864,10 +2864,45 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background: var(--menu-row-mat-active);
 }
 
-/* Short crease retired — open row uses full-height left rail only */
+/*
+ * Active rail — stitched fold edge (not a solid UI bar).
+ * Soft wheat ticks, ends fade: one classy vertical mark.
+ */
 .menu-list-item.is-active::before {
-  content: none;
-  display: none;
+  content: "";
+  position: absolute;
+  left: 0.12rem;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 2px;
+  border-radius: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--tone-accent) 0,
+    var(--tone-accent) 3px,
+    transparent 3px,
+    transparent 6.5px
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 16%,
+    #000 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 16%,
+    #000 84%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px rgba(208, 192, 160, 0.28);
+  pointer-events: none;
+}
+
+.menu[data-tone="light"] .menu-list-item.is-active::before {
+  box-shadow: 0 0 8px rgba(138, 99, 64, 0.22);
 }
 
 .menu-list-item.is-active.has-meta {
@@ -4754,9 +4789,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   box-shadow: none;
 }
 
-/* Active: full-height left rail + soft mat (single indicator) */
+/* Active: soft mat only — patterned rail lives on ::before */
 .menu .menu-list-item.is-active {
-  box-shadow: inset 2px 0 0 var(--tone-accent);
+  box-shadow: none;
   padding-top: 0.85rem;
   padding-bottom: 0.9rem;
   margin-top: 0.15rem;
