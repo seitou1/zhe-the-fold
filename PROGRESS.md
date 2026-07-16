@@ -2,31 +2,37 @@
 
 | Field | Value |
 |-------|--------|
-| **Phase** | Craft parity port (panel system) |
+| **Phase** | Craft parity — dual-buffer walls + wall-only swipe |
 | **Live** | https://zhe-the-fold.vercel.app |
 | **GitHub** | https://github.com/seitou1/zhe-the-fold |
 | **Updated** | 2026-07-16 |
+| **Kit** | `AGENTS.md` + static `BUILD_PLAYBOOK` §15/§16 |
+
+## Session goal (this chunk)
+
+Dual-buffer Story + Menu walls; wall-only swipe; ship to Vercel.
 
 ## Done
 
-- [x] Ship/learn shell, menu data, visit facts, story chapters  
-- [x] Progressive HTML fixes for mobile taps  
+- [x] Four-panel craft port (`zhe-craft.css` + assets)  
 - [x] Vercel + GitHub auto-deploy  
-- [x] **Craft port v1:** `zhe-craft.css` + assets; four panels (Hero video, Story wall, Menu plate+ledger, Visit video); original nav/footer chrome  
+- [x] Dual-buffer Story wall + wall swipe (`use-wall-swipe` on `.story-wall` only)  
+- [x] Dual-buffer Menu wall + wall swipe (`.menu-wall` only; ledger scroll untouched)  
 
-## Partial / known gaps vs static
+## Honesty
 
-- Story wall: single image swap (not dual-layer sweep animation)  
-- Menu wall: single layer crossfade (not dual-buffer swap animation)  
-- Adaptive luminance tone for nav light/dark plates not fully ported  
-- Wall swipe gestures not re-added yet (filters/rows use click — safer on mobile)  
-- Scroll-progress + snap depend on craft CSS mobile shell  
+| Item | Status |
+|------|--------|
+| Dual-buffer Story | **done** (opacity crossfade layers; not full leave/enter sweep) |
+| Dual-buffer Menu | **done** (A/B buffer swap) |
+| Wall swipe | **done** (wall-only; agent untested on device — **human phone QA**) |
+| Adaptive nav tone | **deferred** (frozen/out of session) |
+| Static repo | **untouched** |
 
 ## Next
 
-- Phone QA on live URL  
-- Gesture parity if needed (wall-only swipe)  
-- Dual-buffer wall animation if gap is obvious  
+- Human phone QA: Story/Menu swipe + list scroll + filters  
+- Optional full sweep classes if crossfade feels thin  
 - Real NAP only at launch  
 
 ## Blockers

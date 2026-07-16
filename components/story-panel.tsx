@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { STORY_CHAPTERS } from "@/lib/story";
+import { useWallSwipe } from "@/components/use-wall-swipe";
 
 const ChevronLeft = () => (
   <svg
@@ -43,11 +44,58 @@ const ChevronRight = () => (
   </svg>
 );
 
-/** Origins panel — full-bleed wall + one chapter at a time */
+/**
+ * Origins — dual-buffer wall + wall-only swipe (kit: no section-level touch).
+ */
 export function StoryPanel() {
   const [index, setIndex] = useState(0);
   const n = STORY_CHAPTERS.length;
   const chapter = STORY_CHAPTERS[index];
+  const wallRef = useRef<HTMLDivElement>(null);
+  const imgA = useRef<HTMLImageElement>(null);
+  const imgB = useRef<HTMLImageElement>(null);
+  const activeIsA = useRef(true);
+  const indexRef = useRef(index);
+  indexRef.current = index;
+
+  const paintWall = useCallback((i: number, animate: boolean) => {
+    const next = STORY_CHAPTERS[i];
+    if (!next || !imgA.current || !imgB.current) return;
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const active = activeIsA.current ? imgA.current : imgB.current;
+    const idle = activeIsA.current ? imgB.current : imgA.current;
+
+    if (!animate || reduced) {
+      active.className = "story-wall-img is-active";
+      idle.className = "story-wall-img is-park-right";
+      active.src = next.image;
+      active.style.objectPosition = next.position;
+      return;
+    }
+
+    // Crossfade via dual layer: load idle, then flip active
+    idle.onload = () => {
+      idle.className = "story-wall-img is-active";
+      active.className = "story-wall-img is-park-right";
+      activeIsA.current = !activeIsA.current;
+      idle.onload = null;
+    };
+    idle.style.objectPosition = next.position;
+    if (idle.src.endsWith(next.image) || idle.getAttribute("src") === next.image) {
+      idle.className = "story-wall-img is-active";
+      active.className = "story-wall-img is-park-right";
+      activeIsA.current = !activeIsA.current;
+    } else {
+      idle.src = next.image;
+    }
+  }, []);
+
+  useEffect(() => {
+    paintWall(index, true);
+  }, [index, paintWall]);
 
   const go = useCallback(
     (dir: number) => {
@@ -56,18 +104,40 @@ export function StoryPanel() {
     [n]
   );
 
+  const onPrev = useCallback(() => go(-1), [go]);
+  const onNext = useCallback(() => go(1), [go]);
+
+  useWallSwipe({
+    wallRef,
+    onPrev,
+    onNext,
+  });
+
+  const first = STORY_CHAPTERS[0];
+
   return (
     <section className="story panel" id="story" data-tone="dark">
-      <div className="story-wall" aria-hidden="true">
+      <div className="story-wall" ref={wallRef} aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          key={chapter.id}
+          ref={imgA}
           className="story-wall-img is-active"
-          src={chapter.image}
+          src={first.image}
           alt=""
           width={1400}
           height={787}
-          style={{ objectPosition: chapter.position }}
+          style={{ objectPosition: first.position }}
+          decoding="async"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          ref={imgB}
+          className="story-wall-img is-park-right"
+          src={first.image}
+          alt=""
+          width={1400}
+          height={787}
+          style={{ objectPosition: first.position }}
           decoding="async"
         />
         <div className="story-wall-veil" />
@@ -113,7 +183,7 @@ export function StoryPanel() {
                 role="tab"
                 aria-selected={i === index}
                 aria-label={ch.short}
-                className={i === index ? "is-active" : undefined}
+                className={`story-dot${i === index ? " is-active" : ""}`}
                 onClick={() => setIndex(i)}
               />
             ))}
