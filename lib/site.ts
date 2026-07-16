@@ -11,8 +11,6 @@ export const site = {
   /** Meta / SEO description */
   description:
     "Handmade Chinese dumplings in New York. Every fold holds the mark of a hand.",
-  /** Hero tagline — matches original, not the long SEO line */
-  heroTagline: "Folded by hand. Served without hurry.",
   city: "New York City",
   email: "hello@zhethefold.com",
   reserveSubject: "Reservation · Zhe",

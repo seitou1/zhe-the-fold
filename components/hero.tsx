@@ -45,10 +45,6 @@ export function Hero() {
               {site.name}
             </span>
           </h1>
-
-          <p className="mt-5 max-w-sm font-ui text-base leading-relaxed text-cream/88 sm:text-lg">
-            {site.heroTagline}
-          </p>
         </div>
       </div>
 
