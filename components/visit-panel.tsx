@@ -13,7 +13,7 @@ import { usePanelVideo } from "@/lib/use-panel-video";
 
 /**
  * Visit — logistics hierarchy (scan order):
- * Title → quiet lead → Find us | Hours → Directions · Call · Reserve → social.
+ * Title → Find us | Hours → Directions · Call · Reserve → social.
  * Storefront loop only while panel is in view (balanced resources).
  */
 export function VisitPanel() {
@@ -71,9 +71,6 @@ export function VisitPanel() {
                 </span>
               </h2>
             </div>
-            <p className="visit-head-lead">
-              <span className="en">{site.sections.visit.body}</span>
-            </p>
           </header>
 
           <div className="visit-spotlight">
@@ -89,14 +86,6 @@ export function VisitPanel() {
                     </span>
                   ))}
                 </p>
-                {site.access ? (
-                  <p className="visit-access">{site.access}</p>
-                ) : null}
-                {site.demoMode ? (
-                  <p className="visit-access visit-access--demo">
-                    Sample address — replace before launch.
-                  </p>
-                ) : null}
               </div>
 
               <div className="visit-fact visit-fact--hours">

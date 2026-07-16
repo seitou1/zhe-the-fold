@@ -26,15 +26,13 @@ export const site = {
     addressCountry: "US",
   },
   mapsQuery: "200 Sample Street New York NY 10013",
-  access: "Walk-ins welcome · near Canal St",
   social: {
     instagram: "https://instagram.com/zhe.thefold",
   },
-  /** Demo honesty — sample NAP until launch */
-  demoMode: true,
   /**
    * Open badge + Visit hours.
    * Days: Sun Mon Tue Wed Thu Fri Sat (en-US short from Intl).
+   * NAP above is sample until launch — site stays noindex.
    */
   hours: {
     timeZone: "America/New_York",
@@ -58,21 +56,19 @@ export const site = {
     { href: "#menu", label: "Menu" },
     { href: "#visit", label: "Visit" },
   ],
+  /** Panel titles only — story prose lives in lib/story, ops in menu-note. */
   sections: {
     story: {
       en: "Origins",
       cn: "起源",
-      body: "Third-generation hands. A quiet shop in the city. Each dumpling keeps a small imperfection—the mark of the fold.",
     },
     menu: {
       en: "The Menu",
       cn: "菜单",
-      body: "Classic, seasonal, and plant folds. Steamed or pan-seared. About eight per order.",
     },
     visit: {
       en: "Visit",
       cn: "造访",
-      body: "A quiet table and a warm fold.",
     },
   },
 } as const;

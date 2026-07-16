@@ -503,14 +503,12 @@ button {
 /* Readable prose + chrome — Outfit (UI role) */
 .menu-spotlight-desc,
 .story-head-lead .en,
-.visit-head-lead .en,
 .story-spotlight .en,
 .hero-tagline .en,
 .hero-eyebrow .en,
 .hero-scroll,
 .visit-address,
 .visit-hours p,
-.visit-access,
 .visit-kicker,
 .visit-action .en,
 .visit-social-link,
@@ -3317,7 +3315,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.45rem;
+  gap: 0;
   width: 100%;
   margin: 0;
   padding: 0 0 0.85rem;
@@ -3352,24 +3350,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /* .visit-head-title .cn — shared panel CN mark rule */
-
-.visit-head-lead {
-  display: block;
-  max-width: 24rem;
-  margin: 0;
-  min-width: 0;
-}
-
-.visit-head-lead .en {
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-weight: 400;
-  font-size: var(--type-body);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-track);
-  color: var(--tone-fg);
-  opacity: 0.78;
-}
 
 /*
  * Logistics sit at the bottom of the band (storefront caption),
@@ -3432,7 +3412,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: block;
 }
 
-.visit-access,
 .visit-hours p {
   margin: 0;
   font-family: var(--font-ui);
@@ -3442,23 +3421,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   line-height: var(--type-body-lh);
   letter-spacing: var(--type-body-track);
   color: var(--tone-fg);
-}
-
-.visit-access {
-  display: block;
-  margin-top: 0.4rem;
-  opacity: 0.8;
-  font-size: var(--type-ui);
-  line-height: 1.4;
-}
-
-.visit-access--demo {
-  opacity: 0.48;
-  font-size: var(--type-ui-sm);
-}
-
-.visit-access[hidden] {
-  display: none !important;
 }
 
 .visit-hours {
@@ -4376,15 +4338,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .visit-head {
-    gap: 0.35rem;
+    gap: 0;
     flex-shrink: 0;
     padding-bottom: 0.7rem;
     border-bottom-color: rgba(242, 235, 224, 0.22);
-  }
-
-  .visit-head-lead {
-    max-width: none;
-    width: 100%;
   }
 
   .visit-spotlight {
@@ -4401,10 +4358,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .visit-kicker {
     margin-bottom: 0.35rem;
-  }
-
-  .visit-access {
-    margin-top: 0.3rem;
   }
 
   .visit-actions {

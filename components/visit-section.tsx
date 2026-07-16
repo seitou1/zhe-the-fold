@@ -9,8 +9,7 @@ import {
 } from "@/lib/site";
 
 /**
- * Visit — what matters after the menu: where, when, how to act.
- * Same facts as the static demo; sample NAP stays honest while demoMode.
+ * Visit — where, when, how to act. Facts only (no atmospheric lead).
  */
 export function VisitSection() {
   const { visit } = site.sections;
@@ -20,11 +19,8 @@ export function VisitSection() {
   return (
     <section id="visit" aria-labelledby="visit-heading" className="scroll-mt-24">
       <SectionHeading id="visit-heading" en={visit.en} cn={visit.cn} />
-      <p className="mb-10 max-w-xl font-ui text-base leading-relaxed text-cream-soft sm:text-lg">
-        {visit.body}
-      </p>
 
-      <div className="grid max-w-2xl gap-10 sm:grid-cols-2 sm:gap-12">
+      <div className="mt-8 grid max-w-2xl gap-10 sm:grid-cols-2 sm:gap-12">
         {/* Find us */}
         <div>
           <p className="mb-3 font-ui text-[0.72rem] uppercase tracking-[0.14em] text-wheat">
@@ -40,14 +36,6 @@ export function VisitSection() {
               </p>
             ))}
           </address>
-          {site.access ? (
-            <p className="mt-2 font-ui text-sm text-cream/55">{site.access}</p>
-          ) : null}
-          {site.demoMode ? (
-            <p className="mt-3 font-ui text-xs tracking-wide text-cream/40">
-              Sample address — replace before launch.
-            </p>
-          ) : null}
         </div>
 
         {/* Hours */}
