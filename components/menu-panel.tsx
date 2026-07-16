@@ -26,10 +26,8 @@ export function MenuPanel() {
   const groups = useMemo(() => groupMenuItems(MENU_ITEMS), []);
   const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
 
-  /** null = all rows closed; re-tap open row collapses it */
-  const [activeId, setActiveId] = useState<string | null>(
-    MENU_ITEMS[0]?.id ?? "pork"
-  );
+  /** null = all rows closed (default on first visit); re-tap collapses open row */
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
 
   const listRef = useRef<HTMLDivElement>(null);
