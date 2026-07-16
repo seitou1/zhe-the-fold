@@ -1577,6 +1577,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 /*
  * Origins chapter pips — hairline marks only (no chevrons).
+ * Centered under the panel (carousel sequence chrome, not text-column).
  * Swipe / autoplay / ←→ carry motion; pips show place + jump.
  */
 .story-carousel {
@@ -1584,13 +1585,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0.35rem;
-  width: min(var(--content-col), 100%);
-  max-width: min(var(--content-col), 100%);
-  margin: 0;
-  margin-right: auto;
-  padding: 0.55rem 0 0.15rem;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 0.55rem 0 0.2rem;
 }
 
 .menu-carousel-btn {
