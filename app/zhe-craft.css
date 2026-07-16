@@ -2736,16 +2736,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   padding: 0.55rem 0.15rem 0.55rem 0.65rem;
   margin: 0;
   border: none;
-  border-bottom: 1px solid rgba(242, 235, 224, 0.12);
   border-radius: 0;
-  /* Rest: no mat; active holds soft whisper */
+  /* Rest: no mat; active holds soft whisper. Space separates rows — no rules. */
   background: var(--menu-row-mat);
   cursor: pointer;
   color: var(--menu-ink);
   text-shadow: var(--menu-type-halo);
   transition:
-    background 0.2s var(--ease-soft),
-    border-color 0.2s var(--ease-soft);
+    background 0.2s var(--ease-soft);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -2862,7 +2860,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     "desc desc";
   padding-top: 0.65rem;
   padding-bottom: 0.7rem;
-  border-bottom-color: rgba(201, 184, 150, 0.38);
+  border: none;
   background: var(--menu-row-mat-active);
 }
 
@@ -2929,7 +2927,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-list-item:hover:not(.is-active),
 .menu-list-item:focus-visible:not(.is-active) {
-  border-bottom-color: rgba(242, 235, 224, 0.3);
+  border: none;
   /* Whisper only — no heavy rest mat */
   background: linear-gradient(
     90deg,
@@ -4741,68 +4739,59 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /* ═══════════════════════════════════════════
-   Menu dividers — taste (research: space > lines)
-   High-end menus use breathing room, not a line
-   under every dish. One quiet rule at the head;
-   rows separate by padding only.
+   Menu rows — no horizontal separators
+   Rhythm is padding only. No border-top/bottom,
+   no hairline box-shadow between dishes.
    ═══════════════════════════════════════════ */
-.menu .menu-head {
-  border-bottom-color: rgba(250, 246, 240, 0.12);
-  padding-bottom: 0.65rem;
-}
-
 .menu .menu-list-group-label {
   border-bottom: none;
   opacity: 0.75;
   padding-bottom: 0.2rem;
 }
 
-/* Rest rows: no horizontal rules — rhythm via padding */
+.menu .menu-list-item,
+.menu .menu-list-item:hover:not(.is-active),
+.menu .menu-list-item:focus-visible:not(.is-active),
+.menu .menu-list-item.is-active {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Rest rows: no horizontal hairlines; pad for rhythm */
 .menu .menu-list-item {
-  border-bottom: none;
   padding-top: 0.72rem;
   padding-bottom: 0.72rem;
   background: transparent;
+  box-shadow: none;
 }
 
 .menu .menu-list-item:hover:not(.is-active),
 .menu .menu-list-item:focus-visible:not(.is-active) {
-  border-bottom: none;
   background: rgba(250, 246, 240, 0.03);
+  box-shadow: none;
 }
 
-/* Active: soft top/bottom whisper instead of hard rules */
+/* Active: open pleat via left crease + mat — no top/bottom lines */
 .menu .menu-list-item.is-active {
-  border-bottom: none;
-  border-top: 1px solid rgba(201, 184, 150, 0.14);
-  box-shadow:
-    inset 2px 0 0 var(--tone-accent),
-    0 1px 0 rgba(201, 184, 150, 0.12);
+  /* vertical crease only — never 0 1px 0 hairlines */
+  box-shadow: inset 2px 0 0 var(--tone-accent);
   padding-top: 0.85rem;
   padding-bottom: 0.9rem;
   margin-top: 0.15rem;
   margin-bottom: 0.15rem;
 }
 
-/* Colophon: short rule only (already short); quiet */
+/* Colophon: space only — no short rule above the note */
 .menu .menu-note {
   border-top: none;
   margin-top: 0.85rem;
   padding-top: 0.75rem;
-  position: relative;
 }
 
 .menu .menu-note::before {
-  content: "";
-  display: block;
-  width: 2.4rem;
-  height: 1px;
-  margin: 0 0 0.55rem;
-  background: linear-gradient(
-    90deg,
-    rgba(250, 246, 240, 0.35) 0%,
-    transparent 100%
-  );
+  content: none;
+  display: none;
 }
 
 /* Filters: underline only on selected (already ::after) — no extra strip */
@@ -4812,22 +4801,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 @media (max-width: 900px) {
   .menu .menu-list-item {
-    border-bottom: none;
     padding-top: 0.78rem;
     padding-bottom: 0.78rem;
-  }
-
-  .menu .menu-list-item.is-active {
-    border-bottom: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .menu .menu-list-item {
-    border-bottom: none !important;
-  }
-
-  .menu .menu-list-item.is-active {
-    border-bottom: none !important;
   }
 }
