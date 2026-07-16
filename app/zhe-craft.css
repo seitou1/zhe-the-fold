@@ -2864,30 +2864,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   background: var(--menu-row-mat-active);
 }
 
-/*
- * Active mark — one short fold crease only.
- * Sized to read on plate wall; still not a full-height rail.
- */
+/* Short crease retired — open row uses full-height left rail only */
 .menu-list-item.is-active::before {
-  content: "";
-  position: absolute;
-  left: 0.1rem;
-  top: 50%;
-  width: 2px;
-  height: 1.85rem;
-  transform: translateY(-50%) rotate(1deg);
-  border-radius: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(235, 207, 160, 0.55) 14%,
-    var(--tone-accent) 50%,
-    rgba(235, 207, 160, 0.55) 86%,
-    transparent 100%
-  );
-  /* Soft hold over steam — no second hard edge */
-  box-shadow: 0 0 8px rgba(208, 192, 160, 0.35);
-  pointer-events: none;
+  content: none;
+  display: none;
 }
 
 .menu-list-item.is-active.has-meta {
@@ -4774,9 +4754,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   box-shadow: none;
 }
 
-/* Active: soft mat + short ::before crease only — no full-height bar */
+/* Active: full-height left rail + soft mat (single indicator) */
 .menu .menu-list-item.is-active {
-  box-shadow: none;
+  box-shadow: inset 2px 0 0 var(--tone-accent);
   padding-top: 0.85rem;
   padding-bottom: 0.9rem;
   margin-top: 0.15rem;
