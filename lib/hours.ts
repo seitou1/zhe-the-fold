@@ -1,3 +1,4 @@
+import type { HoursConfig, KitchenCopy } from "@/lib/data/site-types";
 import { site } from "@/lib/site";
 
 /** Weekday short labels matching Intl en-US + static site data.js */
@@ -12,8 +13,21 @@ export type KitchenStatus = {
   title: string;
 };
 
-function getHoursConfig() {
-  return site.hours;
+function defaultHours(): HoursConfig {
+  return {
+    timeZone: site.hours.timeZone,
+    closedWeekdays: [...site.hours.closedWeekdays],
+    note: site.hours.note,
+    periods: site.hours.periods.map((p) => ({
+      days: [...p.days],
+      open: p.open,
+      close: p.close,
+    })),
+  };
+}
+
+function defaultKitchen(): KitchenCopy {
+  return { ...site.kitchen };
 }
 
 function parseHM(hm: string): number {
@@ -32,9 +46,9 @@ function formatTimeEn(minutes: number): string {
   }).format(d);
 }
 
-/** Kitchen clock in SITE.hours.timeZone (NYC Eastern by default). */
-function getKitchenParts(date = new Date()) {
-  const { timeZone } = getHoursConfig();
+/** Kitchen clock in hours.timeZone (NYC Eastern by default). */
+function getKitchenParts(hours: HoursConfig, date = new Date()) {
+  const { timeZone } = hours;
   const fmt = new Intl.DateTimeFormat("en-US", {
     timeZone,
     weekday: "short",
@@ -51,8 +65,12 @@ function getKitchenParts(date = new Date()) {
   };
 }
 
-function getOpenPeriod(weekday: string, minutes: number) {
-  const { closedWeekdays, periods } = getHoursConfig();
+function getOpenPeriod(
+  hours: HoursConfig,
+  weekday: string,
+  minutes: number
+) {
+  const { closedWeekdays, periods } = hours;
   if (closedWeekdays.includes(weekday)) return null;
   for (const p of periods) {
     if (!(p.days as readonly string[]).includes(weekday)) continue;
@@ -65,9 +83,14 @@ function getOpenPeriod(weekday: string, minutes: number) {
   return null;
 }
 
-function getNextService(weekday: string, minutes: number) {
-  const { closedWeekdays, periods, note } = getHoursConfig();
-  const k = site.kitchen;
+function getNextService(
+  hours: HoursConfig,
+  kitchen: KitchenCopy,
+  weekday: string,
+  minutes: number
+) {
+  const { closedWeekdays, periods, note } = hours;
+  const k = kitchen;
   if (!periods.length) {
     return { state: note || k.seeVisit, meta: "" };
   }
@@ -116,18 +139,21 @@ function formatTimeDisplay(hm: string, compact = false): string {
 }
 
 /** Static Visit panel lines (not live open/closed — chip handles that). */
-export function getHoursDisplayLines(): {
+export function getHoursDisplayLines(
+  hours: HoursConfig = defaultHours(),
+  kitchen: KitchenCopy = defaultKitchen()
+): {
   days: string;
   times: string;
   note: string;
 } {
-  const { periods, note, closedWeekdays } = getHoursConfig();
+  const { periods, note, closedWeekdays } = hours;
   if (!periods.length) {
     return { days: "", times: "", note: note || "" };
   }
   const daysList = [...(periods[0].days || [])];
   const dayCount = daysList.length;
-  const k = site.kitchen;
+  const k = kitchen;
   const days =
     dayCount === 7
       ? k.daily
@@ -139,7 +165,7 @@ export function getHoursDisplayLines(): {
       (p) =>
         `${formatTimeDisplay(p.open, true)}–${formatTimeDisplay(p.close, true)}`
     )
-    .join(" · ");
+    .join(" \u00b7 ");
   const closedNote =
     note ||
     (closedWeekdays?.length
@@ -149,12 +175,16 @@ export function getHoursDisplayLines(): {
 }
 
 /** Pure: compute open/closed chip copy from hours SSOT + “now”. */
-export function getKitchenStatus(date = new Date()): KitchenStatus {
-  const parts = getKitchenParts(date);
-  const period = getOpenPeriod(parts.weekday, parts.minutes);
+export function getKitchenStatus(
+  date = new Date(),
+  hours: HoursConfig = defaultHours(),
+  kitchen: KitchenCopy = defaultKitchen()
+): KitchenStatus {
+  const parts = getKitchenParts(hours, date);
+  const period = getOpenPeriod(hours, parts.weekday, parts.minutes);
   const open = Boolean(period);
 
-  const k = site.kitchen;
+  const k = kitchen;
   if (open && period) {
     const end = formatTimeEn(period.end);
     return {
@@ -165,7 +195,7 @@ export function getKitchenStatus(date = new Date()): KitchenStatus {
     };
   }
 
-  const next = getNextService(parts.weekday, parts.minutes);
+  const next = getNextService(hours, kitchen, parts.weekday, parts.minutes);
   return {
     open: false,
     state: next.state,

@@ -76,11 +76,12 @@ export const site = {
         detail: "Call ahead or walk up \u00b7 no delivery",
       },
     ],
+    /** Bottom Visit CTAs + nav reserve chip — also editable via site_settings */
     actions: {
       directions: "Directions",
-      takeout: "Takeout",
-      table: "Table",
-      reserveNav: "Table",
+      takeout: "Call",
+      table: "Reserve",
+      reserveNav: "Reserve",
     },
     /** Aria suffixes for Visit actions */
     aria: {

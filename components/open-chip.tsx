@@ -1,8 +1,12 @@
+"use client";
+
+import { useSiteOps } from "@/components/site-ops-provider";
 import { getKitchenStatus } from "@/lib/hours";
 
 /** Original .nav-hours open/closed chip */
 export function OpenChip() {
-  const status = getKitchenStatus();
+  const ops = useSiteOps();
+  const status = getKitchenStatus(new Date(), ops.hours, ops.kitchen);
 
   return (
     <span

@@ -1,6 +1,6 @@
 -- Seed from lib/site.ts (sample NAP — keep noindex until real). Safe upsert.
--- Middle dots via chr(183) so paste encoding cannot produce Â·
--- Run after 003_site_settings.sql
+-- Middle dots via chr(183). Action CTAs: Directions / Call / Reserve.
+-- Run after 003 + 004 (action columns).
 
 insert into public.site_settings (
   id,
@@ -8,7 +8,8 @@ insert into public.site_settings (
   street_address, address_locality, address_region, postal_code, address_country,
   maps_query, reserve_subject, hero_line, menu_note,
   instagram_url, instagram_label,
-  service_kicker, table_detail, takeout_detail
+  service_kicker, table_detail, takeout_detail,
+  action_directions, action_call, action_reserve
 ) values (
   'default',
   'hello@zhethefold.com',
@@ -27,7 +28,10 @@ insert into public.site_settings (
   'Instagram',
   'Join us',
   'Walk-ins welcome ' || chr(183) || ' reserve for 4+',
-  'Call ahead or walk up ' || chr(183) || ' no delivery'
+  'Call ahead or walk up ' || chr(183) || ' no delivery',
+  'Directions',
+  'Call',
+  'Reserve'
 )
 on conflict (id) do update set
   email = excluded.email,
@@ -47,4 +51,7 @@ on conflict (id) do update set
   service_kicker = excluded.service_kicker,
   table_detail = excluded.table_detail,
   takeout_detail = excluded.takeout_detail,
+  action_directions = excluded.action_directions,
+  action_call = excluded.action_call,
+  action_reserve = excluded.action_reserve,
   updated_at = now();

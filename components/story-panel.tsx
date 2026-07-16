@@ -7,8 +7,8 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { useSiteOps } from "@/components/site-ops-provider";
 import { STORY_CHAPTERS, type StoryChapter } from "@/lib/story";
-import { site } from "@/lib/site";
 
 const SWEEP_MS = 650;
 const COPY_FADE_MS = 220;
@@ -51,6 +51,7 @@ export function StoryPanel({
 }: {
   chapters: StoryChapter[];
 }) {
+  const ops = useSiteOps();
   const chapters =
     chaptersProp.length > 0 ? chaptersProp : STORY_CHAPTERS;
   const n = chapters.length;
@@ -643,9 +644,9 @@ export function StoryPanel({
         <header className="story-head">
           <div className="story-head-title">
             <h2>
-              <span className="en">{site.sections.story.en}</span>
+              <span className="en">{ops.sectionStoryEn}</span>
               <span className="cn" lang="zh-Hans">
-                {site.sections.story.cn}
+                {ops.sectionStoryCn}
               </span>
             </h2>
           </div>
@@ -666,7 +667,7 @@ export function StoryPanel({
         <nav
           className="story-carousel"
           role="tablist"
-          aria-label={site.sections.story.chaptersAria}
+          aria-label={ops.storyChaptersAria}
         >
           {chapters.map((ch, i) => (
             <button

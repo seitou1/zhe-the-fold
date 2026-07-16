@@ -1,140 +1,167 @@
 /**
- * Site ops (contact / NAP / visit hybrid strings).
- * Supabase site_settings row, else lib/site.ts.
+ * Full site ops CMS — Supabase site_settings or static lib/site.ts.
  */
 
-import { site } from "@/lib/site";
+import { cache } from "react";
+import {
+  siteOpsFromStaticFallback,
+  type HoursConfig,
+  type HoursPeriod,
+  type SiteOps,
+} from "@/lib/data/site-static";
 import { tryCreateServerClient } from "@/lib/supabase/server";
 
+export type {
+  HoursConfig,
+  HoursPeriod,
+  KitchenCopy,
+  SiteOps,
+} from "@/lib/data/site-types";
 export type SiteSource = "supabase" | "static";
 
-/** Guest-facing ops fields that Table Editor can change. */
-export type SiteOps = {
-  email: string;
-  telephone: string;
-  telephoneDisplay: string;
-  address: {
-    streetAddress: string;
-    addressLocality: string;
-    addressRegion: string;
-    postalCode: string;
-    addressCountry: string;
-  };
-  mapsQuery: string;
-  reserveSubject: string;
-  heroLine: string;
-  menuNote: string;
-  instagram: string;
-  instagramLabel: string;
-  serviceKicker: string;
-  tableDetail: string;
-  takeoutDetail: string;
-};
+export { siteOpsFromStaticFallback };
+export {
+  opsAddressLines,
+  opsHomeAriaLabel,
+  opsMapsUrl,
+  opsNavItems,
+  opsReserveMailto,
+  opsSiteTitle,
+  opsTelHref,
+} from "@/lib/data/site-helpers";
 
-type SiteSettingsRow = {
-  email: string;
-  telephone: string;
-  telephone_display: string;
-  street_address: string;
-  address_locality: string;
-  address_region: string;
-  postal_code: string;
-  address_country: string;
-  maps_query: string;
-  reserve_subject: string;
-  hero_line: string;
-  menu_note: string;
-  instagram_url: string;
-  instagram_label: string;
-  service_kicker: string;
-  table_detail: string;
-  takeout_detail: string;
-};
+type Row = Record<string, unknown>;
 
-export function siteOpsFromStatic(): SiteOps {
-  const table = site.service.modes.find((m) => m.id === "table");
-  const takeout = site.service.modes.find((m) => m.id === "takeout");
+function str(row: Row, key: string, fallback: string): string {
+  const v = row[key];
+  if (typeof v === "string" && v.trim()) return v.trim();
+  return fallback;
+}
+
+function parseHours(row: Row, fallback: HoursConfig): HoursConfig {
+  const periodsRaw = row.hours_periods;
+  let periods = fallback.periods;
+  if (typeof periodsRaw === "string" && periodsRaw.trim()) {
+    try {
+      const parsed = JSON.parse(periodsRaw) as HoursPeriod[];
+      if (Array.isArray(parsed) && parsed.length) periods = parsed;
+    } catch {
+      /* keep fallback */
+    }
+  } else if (Array.isArray(periodsRaw) && periodsRaw.length) {
+    periods = periodsRaw as HoursPeriod[];
+  }
+
+  const closedRaw = row.hours_closed_weekdays;
+  let closedWeekdays = fallback.closedWeekdays;
+  if (typeof closedRaw === "string" && closedRaw.trim()) {
+    closedWeekdays = closedRaw
+      .split(/[,|]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  } else if (Array.isArray(closedRaw)) {
+    closedWeekdays = (closedRaw as string[]).map(String);
+  }
+
   return {
-    email: site.email,
-    telephone: site.telephone,
-    telephoneDisplay: site.telephoneDisplay,
-    address: {
-      streetAddress: site.address.streetAddress,
-      addressLocality: site.address.addressLocality,
-      addressRegion: site.address.addressRegion,
-      postalCode: site.address.postalCode,
-      addressCountry: site.address.addressCountry,
-    },
-    mapsQuery: site.mapsQuery,
-    reserveSubject: site.reserveSubject,
-    heroLine: site.heroLine,
-    menuNote: site.menu.note,
-    instagram: site.social.instagram,
-    instagramLabel: site.social.instagramLabel,
-    serviceKicker: site.service.kicker,
-    tableDetail: table?.detail ?? "",
-    takeoutDetail: takeout?.detail ?? "",
+    timeZone: str(row, "hours_timezone", fallback.timeZone),
+    closedWeekdays,
+    note: str(row, "hours_note", fallback.note),
+    periods,
   };
 }
 
-function rowToOps(row: SiteSettingsRow): SiteOps {
+function rowToOps(row: Row): SiteOps {
+  const f = siteOpsFromStaticFallback();
   return {
-    email: row.email,
-    telephone: row.telephone,
-    telephoneDisplay: row.telephone_display,
+    name: str(row, "brand_name", f.name),
+    nameCn: str(row, "brand_name_cn", f.nameCn),
+    shortName: str(row, "brand_short", f.shortName),
+    city: str(row, "city", f.city),
+    description: str(row, "seo_description", f.description),
+    titleSuffix: str(row, "seo_title_suffix", f.titleSuffix),
+
+    email: str(row, "email", f.email),
+    telephone: str(row, "telephone", f.telephone),
+    telephoneDisplay: str(row, "telephone_display", f.telephoneDisplay),
     address: {
-      streetAddress: row.street_address,
-      addressLocality: row.address_locality,
-      addressRegion: row.address_region,
-      postalCode: row.postal_code,
-      addressCountry: row.address_country,
+      streetAddress: str(row, "street_address", f.address.streetAddress),
+      addressLocality: str(row, "address_locality", f.address.addressLocality),
+      addressRegion: str(row, "address_region", f.address.addressRegion),
+      postalCode: str(row, "postal_code", f.address.postalCode),
+      addressCountry: str(row, "address_country", f.address.addressCountry),
     },
-    mapsQuery: row.maps_query,
-    reserveSubject: row.reserve_subject,
-    heroLine: row.hero_line,
-    menuNote: row.menu_note,
-    instagram: row.instagram_url,
-    instagramLabel: row.instagram_label,
-    serviceKicker: row.service_kicker,
-    tableDetail: row.table_detail,
-    takeoutDetail: row.takeout_detail,
+    mapsQuery: str(row, "maps_query", f.mapsQuery),
+    reserveSubject: str(row, "reserve_subject", f.reserveSubject),
+
+    heroLine: str(row, "hero_line", f.heroLine),
+    menuNote: str(row, "menu_note", f.menuNote),
+
+    instagram: str(row, "instagram_url", f.instagram),
+    instagramLabel: str(row, "instagram_label", f.instagramLabel),
+
+    serviceKicker: str(row, "service_kicker", f.serviceKicker),
+    modeTableLabel: str(row, "mode_table_label", f.modeTableLabel),
+    modeTakeoutLabel: str(row, "mode_takeout_label", f.modeTakeoutLabel),
+    tableDetail: str(row, "table_detail", f.tableDetail),
+    takeoutDetail: str(row, "takeout_detail", f.takeoutDetail),
+
+    actionDirections: str(row, "action_directions", f.actionDirections),
+    actionCall: str(row, "action_call", f.actionCall),
+    actionReserve: str(row, "action_reserve", f.actionReserve),
+    actionReserveNav: str(row, "action_reserve_nav", f.actionReserveNav),
+
+    visitFindUs: str(row, "visit_find_us", f.visitFindUs),
+    visitHoursLabel: str(row, "visit_hours_label", f.visitHoursLabel),
+
+    sectionStoryEn: str(row, "section_story_en", f.sectionStoryEn),
+    sectionStoryCn: str(row, "section_story_cn", f.sectionStoryCn),
+    sectionMenuEn: str(row, "section_menu_en", f.sectionMenuEn),
+    sectionMenuCn: str(row, "section_menu_cn", f.sectionMenuCn),
+    sectionVisitEn: str(row, "section_visit_en", f.sectionVisitEn),
+    sectionVisitCn: str(row, "section_visit_cn", f.sectionVisitCn),
+    storyChaptersAria: str(row, "story_chapters_aria", f.storyChaptersAria),
+    dishesAria: str(row, "dishes_aria", f.dishesAria),
+
+    navStory: str(row, "nav_story", f.navStory),
+    navMenu: str(row, "nav_menu", f.navMenu),
+    navVisit: str(row, "nav_visit", f.navVisit),
+    navPrimaryAria: str(row, "nav_primary_aria", f.navPrimaryAria),
+
+    menuMetaHouse: str(row, "menu_meta_house", f.menuMetaHouse),
+    menuMetaShellfish: str(row, "menu_meta_shellfish", f.menuMetaShellfish),
+
+    footerTag: str(row, "footer_tag", f.footerTag),
+    footerRights: str(row, "footer_rights", f.footerRights),
+    skipToMenu: str(row, "skip_to_menu", f.skipToMenu),
+    skipToMenuHref: str(row, "skip_to_menu_href", f.skipToMenuHref),
+    homeAriaSuffix: str(row, "home_aria_suffix", f.homeAriaSuffix),
+
+    hours: parseHours(row, f.hours),
+    kitchen: {
+      open: str(row, "kitchen_open", f.kitchen.open),
+      until: str(row, "kitchen_until", f.kitchen.until),
+      opens: str(row, "kitchen_opens", f.kitchen.opens),
+      seeVisit: str(row, "kitchen_see_visit", f.kitchen.seeVisit),
+      closedPrefix: str(row, "kitchen_closed_prefix", f.kitchen.closedPrefix),
+      daily: str(row, "kitchen_daily", f.kitchen.daily),
+      easternTime: str(row, "kitchen_eastern", f.kitchen.easternTime),
+      titleOpenPrefix: str(row, "kitchen_title_open", f.kitchen.titleOpenPrefix),
+      titleClosedPrefix: str(
+        row,
+        "kitchen_title_closed",
+        f.kitchen.titleClosedPrefix
+      ),
+    },
   };
 }
 
-export function opsAddressLines(ops: SiteOps): string[] {
-  const a = ops.address;
-  return [
-    a.streetAddress,
-    `${a.addressLocality}, ${a.addressRegion} ${a.postalCode}`,
-  ];
-}
-
-export function opsMapsUrl(ops: SiteOps): string {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    ops.mapsQuery
-  )}`;
-}
-
-export function opsTelHref(ops: SiteOps): string {
-  return `tel:${ops.telephone}`;
-}
-
-export function opsReserveMailto(ops: SiteOps): string {
-  const subject = encodeURIComponent(ops.reserveSubject);
-  return `mailto:${ops.email}?subject=${subject}`;
-}
-
-export async function getSiteOps(): Promise<SiteOps> {
-  const { ops } = await getSiteOpsWithSource();
-  return ops;
-}
-
-export async function getSiteOpsWithSource(): Promise<{
+async function fetchSiteOpsUncached(): Promise<{
   ops: SiteOps;
   source: SiteSource;
   reason?: string;
 }> {
-  const fallback = siteOpsFromStatic();
+  const fallback = siteOpsFromStaticFallback();
   const client = tryCreateServerClient();
   if (!client) {
     return { ops: fallback, source: "static", reason: "no_client" };
@@ -143,9 +170,7 @@ export async function getSiteOpsWithSource(): Promise<{
   try {
     const { data, error } = await client
       .from("site_settings")
-      .select(
-        "email, telephone, telephone_display, street_address, address_locality, address_region, postal_code, address_country, maps_query, reserve_subject, hero_line, menu_note, instagram_url, instagram_label, service_kicker, table_detail, takeout_detail"
-      )
+      .select("*")
       .eq("id", "default")
       .maybeSingle();
 
@@ -167,7 +192,7 @@ export async function getSiteOpsWithSource(): Promise<{
     }
 
     return {
-      ops: rowToOps(data as SiteSettingsRow),
+      ops: rowToOps(data as Row),
       source: "supabase",
       reason: "ok",
     };
@@ -181,3 +206,10 @@ export async function getSiteOpsWithSource(): Promise<{
     };
   }
 }
+
+export const getSiteOpsWithSource = cache(fetchSiteOpsUncached);
+
+export const getSiteOps = cache(async (): Promise<SiteOps> => {
+  const { ops } = await getSiteOpsWithSource();
+  return ops;
+});

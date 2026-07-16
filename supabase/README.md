@@ -1,81 +1,75 @@
-# Supabase — Content CMS
+# Supabase — Full content CMS
 
-Public **read** for menu, story, and site settings with static fallbacks in `lib/*`.  
-No admin UI yet — edit in **Table Editor** (or re-run seed SQL).  
-Homepage is `force-dynamic` so edits show on the next request.
+Public **read** for menu, story, and **all guest chrome** via `site_settings`.  
+Static fallbacks in `lib/*` if env/DB fails. Homepage + layout are `force-dynamic`.
 
 **URL must be project root only** (no `/rest/v1`):
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_REF.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...   # or sb_publishable_...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
-Health check: https://zhe-the-fold.vercel.app/api/cms-status  
-(legacy: `/api/menu-status`)
+Health: https://zhe-the-fold.vercel.app/api/cms-status
 
 ---
 
-## Tables
+## What lives where
 
-| Table | Static fallback | Edit for |
-|-------|-----------------|----------|
-| `menu_items` | `lib/menu.ts` | Dishes, prices, published |
-| `story_chapters` | `lib/story.ts` | Origins House/Hands/Night |
-| `site_settings` | `lib/site.ts` | Phone, address, hero line, menu note, Instagram, hybrid copy |
-
----
-
-## Setup (new project — full)
-
-1. Create Healthy project at [supabase.com](https://supabase.com).
-2. Run SQL **in order**:
-
-| # | File |
-|---|------|
-| 1 | `migrations/001_menu_items.sql` |
-| 2 | `seed_menu_items.sql` |
-| 3 | `migrations/002_story_chapters.sql` |
-| 4 | `seed_story_chapters.sql` |
-| 5 | `migrations/003_site_settings.sql` |
-| 6 | `seed_site_settings.sql` |
-
-3. Env: local `.env.local` + Vercel Production (URL **without** `/rest/v1`).
-4. Redeploy once after env.
-5. Check `/api/cms-status` → all three `"source":"supabase"`.
+| Content | Table / edit |
+|---------|----------------|
+| Dishes, prices, tags | `menu_items` |
+| Origins chapters | `story_chapters` |
+| Brand, NAP, nav, Visit CTAs, hours, footer, section titles, kitchen chip | `site_settings` (row `default`) |
+| Video/image **files** | still `/public/assets` (paths not CMS yet) |
 
 ---
 
-## If menu already works (this project)
+## Migrations (order)
 
-Run only the **new** SQL (story + site), then hard-refresh.
+1. `001_menu_items.sql` + `seed_menu_items.sql`  
+2. `002_story_chapters.sql` + `seed_story_chapters.sql`  
+3. `003_site_settings.sql` + `seed_site_settings.sql`  
+4. `004_site_action_labels.sql` (optional if 005 covers it)  
+5. **`005_site_full_chrome.sql`** — brand, nav, CTAs, hours, kitchen, footer  
 
-1. SQL Editor → paste `migrations/002_story_chapters.sql` → Run  
-2. Paste `seed_story_chapters.sql` → Run  
-3. Paste `migrations/003_site_settings.sql` → Run  
-4. Paste `seed_site_settings.sql` → Run  
-5. Table Editor: `story_chapters` (3 rows), `site_settings` (1 row)  
-6. Deploy latest code from GitHub, then open `/api/cms-status`
+If menu/story/site already work, run **only 005**.
 
 ---
 
-## Day-to-day
+## Key `site_settings` columns (Visit buttons)
 
-| Goal | Table |
-|------|--------|
-| Dish price / desc | `menu_items` |
-| Hide dish | `menu_items.published = false` |
-| Story body / labels | `story_chapters` |
-| Real phone / address | `site_settings` (still keep noindex until real NAP) |
-| Hero line / menu note | `site_settings` |
+| Column | UI |
+|--------|-----|
+| `action_directions` | Directions |
+| `action_call` | Call (phone) |
+| `action_reserve` | Reserve (email) |
+| `action_reserve_nav` | Nav chip |
+| `mode_table_label` / `mode_takeout_label` | Join us mode names |
+| `table_detail` / `takeout_detail` | Join us details |
+| `nav_story` / `nav_menu` / `nav_visit` | Top nav |
+| `brand_name` / `brand_name_cn` / `hero_line` / `city` | Hero |
+| `hours_note` / `hours_closed_weekdays` / `hours_periods` | Hours |
+| `section_*_en` / `section_*_cn` | Panel titles |
+
+`hours_periods` is JSON, e.g.:
+
+```json
+[
+  {"days":["Tue","Wed","Thu","Fri","Sat","Sun"],"open":"11:30","close":"14:30"},
+  {"days":["Tue","Wed","Thu","Fri","Sat","Sun"],"open":"17:00","close":"21:00"}
+]
+```
+
+---
 
 ## RLS
 
-- Public **SELECT** only (`published` for menu/story; site_settings always readable)
-- Writes: Dashboard or service role only
+- Public **SELECT** only  
+- Writes: Dashboard or service role  
 
-## Later
+## Not yet CMS
 
-- Password admin UI  
-- Dish image Storage  
-- Hours in CMS  
+- Admin UI  
+- Dish photo upload (Storage)  
+- Media file paths  

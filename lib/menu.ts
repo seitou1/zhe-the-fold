@@ -168,11 +168,17 @@ export function listTitle(item: MenuItem): string {
   return (item.rail || item.en).trim();
 }
 
-export function listMeta(item: MenuItem): string {
+export function listMeta(
+  item: MenuItem,
+  labels: { house: string; shellfish: string } = {
+    house: site.menu.meta.house,
+    shellfish: site.menu.meta.shellfish,
+  }
+): string {
   const bits: string[] = [];
-  if (item.popular) bits.push(site.menu.meta.house);
-  if (item.tags.includes("shellfish")) bits.push(site.menu.meta.shellfish);
-  return bits.join(" · ");
+  if (item.popular) bits.push(labels.house);
+  if (item.tags.includes("shellfish")) bits.push(labels.shellfish);
+  return bits.join(" \u00b7 ");
 }
 
 export type MenuGroup = {

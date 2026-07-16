@@ -9,27 +9,21 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from "react";
-import type { SiteOps } from "@/lib/data/site";
+import { useSiteOps } from "@/components/site-ops-provider";
 import {
   groupMenuItems,
   listMeta,
   listTitle,
   type MenuItem,
 } from "@/lib/menu";
-import { site } from "@/lib/site";
 
 /**
  * Menu panel — full-bleed dish plate + calm hybrid ledger.
  * Dishes come from getMenuItems() (Supabase or static fallback).
  * Rest: EN · price. Active expands CN / meta / desc (fold motion).
  */
-export function MenuPanel({
-  items,
-  ops,
-}: {
-  items: MenuItem[];
-  ops: SiteOps;
-}) {
+export function MenuPanel({ items }: { items: MenuItem[] }) {
+  const ops = useSiteOps();
   const groups = useMemo(() => groupMenuItems(items), [items]);
   const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
   const defaultId = items[0]?.id ?? "pork";
@@ -253,9 +247,9 @@ export function MenuPanel({
         <header className="menu-head">
           <div className="menu-head-title">
             <h2>
-              <span className="en">{site.sections.menu.en}</span>
+              <span className="en">{ops.sectionMenuEn}</span>
               <span className="cn" lang="zh-Hans">
-                {site.sections.menu.cn}
+                {ops.sectionMenuCn}
               </span>
             </h2>
           </div>
@@ -266,7 +260,7 @@ export function MenuPanel({
             ref={listRef}
             className="menu-list-view"
             role="region"
-            aria-label={site.menu.dishesAria}
+            aria-label={ops.dishesAria}
           >
             {groups.map((group) => {
               const labelId = `menu-chapter-${group.category}`;
@@ -312,6 +306,10 @@ export function MenuPanel({
                           if (el) rowRefs.current.set(item.id, el);
                           else rowRefs.current.delete(item.id);
                         }}
+                        metaLabels={{
+                          house: ops.menuMetaHouse,
+                          shellfish: ops.menuMetaShellfish,
+                        }}
                       />
                     ))}
                   </ul>
@@ -337,6 +335,7 @@ function MenuRow({
   onPreviewEnd,
   onKeyDown,
   rowRef,
+  metaLabels,
 }: {
   item: MenuItem;
   active: boolean;
@@ -346,9 +345,10 @@ function MenuRow({
   onPreviewEnd: () => void;
   onKeyDown: (e: KeyboardEvent<HTMLElement>) => void;
   rowRef: (el: HTMLLIElement | null) => void;
+  metaLabels: { house: string; shellfish: string };
 }) {
   const title = listTitle(item);
-  const meta = listMeta(item);
+  const meta = listMeta(item, metaLabels);
 
   return (
     <li

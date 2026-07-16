@@ -1,35 +1,43 @@
 "use client";
 
 import { useRef } from "react";
+import { useSiteOps } from "@/components/site-ops-provider";
 import {
   opsAddressLines,
   opsMapsUrl,
   opsReserveMailto,
   opsTelHref,
-  type SiteOps,
-} from "@/lib/data/site";
+} from "@/lib/data/site-helpers";
 import { getHoursDisplayLines } from "@/lib/hours";
 import { site } from "@/lib/site";
 import { usePanelVideo } from "@/lib/use-panel-video";
 
 /**
- * Visit — logistics hierarchy (scan order):
- * Title → Find us | Hours → Join us → Directions · Takeout · Table → social.
- * Ops (NAP/contact/hybrid details) from getSiteOps(); chrome from site.*.
+ * Visit — logistics hierarchy.
+ * All guest copy from SiteOps CMS (or static fallback).
  */
-export function VisitPanel({ ops }: { ops: SiteOps }) {
+export function VisitPanel() {
+  const ops = useSiteOps();
   const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { media, service, visit, sections } = site;
+  const { media, service, visit } = site;
   const videoReady = usePanelVideo(videoRef, panelRef, {
     src: media.storefrontVideo,
     srcMobile: media.storefrontVideoMobile,
   });
   const addressLines = opsAddressLines(ops);
-  const hours = getHoursDisplayLines();
+  const hours = getHoursDisplayLines(ops.hours, ops.kitchen);
   const modes = [
-    { id: "table", label: "Table", detail: ops.tableDetail },
-    { id: "takeout", label: "Takeout", detail: ops.takeoutDetail },
+    {
+      id: "table",
+      label: ops.modeTableLabel,
+      detail: ops.tableDetail,
+    },
+    {
+      id: "takeout",
+      label: ops.modeTakeoutLabel,
+      detail: ops.takeoutDetail,
+    },
   ];
 
   return (
@@ -70,9 +78,9 @@ export function VisitPanel({ ops }: { ops: SiteOps }) {
           <header className="visit-head">
             <div className="visit-head-title">
               <h2>
-                <span className="en">{sections.visit.en}</span>
+                <span className="en">{ops.sectionVisitEn}</span>
                 <span className="cn" lang="zh-Hans">
-                  {sections.visit.cn}
+                  {ops.sectionVisitCn}
                 </span>
               </h2>
             </div>
@@ -82,7 +90,7 @@ export function VisitPanel({ ops }: { ops: SiteOps }) {
             <div className="visit-facts">
               <div className="visit-fact visit-fact--find">
                 <p className="visit-kicker">
-                  <span className="en">{visit.findUs}</span>
+                  <span className="en">{ops.visitFindUs}</span>
                 </p>
                 <p className="visit-address">
                   {addressLines.map((line) => (
@@ -95,7 +103,7 @@ export function VisitPanel({ ops }: { ops: SiteOps }) {
 
               <div className="visit-fact visit-fact--hours">
                 <p className="visit-kicker">
-                  <span className="en">{visit.hours}</span>
+                  <span className="en">{ops.visitHoursLabel}</span>
                 </p>
                 <div className="visit-hours">
                   {hours.days ? (
@@ -132,21 +140,21 @@ export function VisitPanel({ ops }: { ops: SiteOps }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="en">{service.actions.directions}</span>
+                <span className="en">{ops.actionDirections}</span>
               </a>
               <a
                 className="visit-action visit-action--takeout"
                 href={opsTelHref(ops)}
-                aria-label={`${service.actions.takeout}: ${service.aria.takeoutCall} ${ops.telephoneDisplay}`}
+                aria-label={`${ops.actionCall}: ${service.aria.takeoutCall} ${ops.telephoneDisplay}`}
               >
-                <span className="en">{service.actions.takeout}</span>
+                <span className="en">{ops.actionCall}</span>
               </a>
               <a
                 className="visit-action visit-action--table"
                 href={opsReserveMailto(ops)}
-                aria-label={`${service.actions.table}: ${service.aria.tableEmail}`}
+                aria-label={`${ops.actionReserve}: ${service.aria.tableEmail}`}
               >
-                <span className="en">{service.actions.table}</span>
+                <span className="en">{ops.actionReserve}</span>
               </a>
             </nav>
 

@@ -43,6 +43,18 @@ export async function GET() {
       reason: siteOps.reason ?? null,
       heroLine: siteOps.ops.heroLine,
       telephoneDisplay: siteOps.ops.telephoneDisplay,
+      actions: {
+        directions: siteOps.ops.actionDirections,
+        call: siteOps.ops.actionCall,
+        reserve: siteOps.ops.actionReserve,
+        reserveNav: siteOps.ops.actionReserveNav,
+      },
+      brand: siteOps.ops.name,
+      nav: [
+        siteOps.ops.navStory,
+        siteOps.ops.navMenu,
+        siteOps.ops.navVisit,
+      ],
     },
     env: {
       hasUrl: Boolean(url),

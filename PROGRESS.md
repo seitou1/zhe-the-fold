@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|--------|
-| **Phase** | Content CMS (menu live; story + site_settings code ready) |
+| **Phase** | Full chrome CMS (menu/story/site_settings + migration 005) |
 | **Live** | https://zhe-the-fold.vercel.app |
 | **GitHub** | https://github.com/seitou1/zhe-the-fold |
 | **Workspace** | `~/Desktop/Code/zhe-the-fold` |
@@ -20,9 +20,10 @@
 
 | Item | Status |
 |------|--------|
-| Menu CMS | **live** on Supabase when env correct |
-| Story CMS | **code ready** — needs `002` + seed on project |
-| Site settings CMS | **code ready** — needs `003` + seed on project |
+| Menu CMS | **live** |
+| Story CMS | **live** (after 002+seed) |
+| Site settings CMS | **live** + full chrome cols via **005** (run SQL) |
+| Visit Call/Reserve | CMS `action_call` / `action_reserve` |
 | Sample NAP | **fiction** — noindex held |
 | Admin write UI | **not built** — Table Editor only |
 | Phone QA | **good** (prior human confirm) |

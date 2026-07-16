@@ -18,11 +18,12 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 ## Backend (Content CMS)
 
 - `lib/supabase/{client,server}.ts` + `@supabase/supabase-js`  
-- `lib/data/{menu,story,site}.ts` — Supabase **or** static `lib/*` fallback  
-- SQL: `supabase/migrations/001_menu_items.sql`, `002_story_chapters.sql`, `003_site_settings.sql` + seeds  
-- Setup + Table Editor: `supabase/README.md` · health: `/api/cms-status`  
-- Env: `.env.local.example` — URL **without** `/rest/v1`  
-- Do **not** delete scaffold; next: admin UI / Storage
+- `lib/data/{menu,story,site}.ts` — Supabase **or** static fallback  
+- Guest chrome via `site_settings` + `SiteOpsProvider` (nav, hero, visit CTAs, hours, footer…)  
+- Dishes `menu_items` · story `story_chapters`  
+- SQL `001`–`005` + seeds — see `supabase/README.md` · health `/api/cms-status`  
+- Env: URL **without** `/rest/v1`  
+- Not CMS yet: asset file paths, admin UI, Storage
 
 ## Non-negotiables
 
