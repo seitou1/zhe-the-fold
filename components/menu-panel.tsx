@@ -76,22 +76,46 @@ export function MenuPanel() {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
+  /** Keep expanded row fully inside .menu-list-view (not the window). */
+  const ensureRowVisible = useCallback((id: string) => {
+    const root = listRef.current;
+    const el = rowRefs.current.get(id);
+    if (!root || !el) return;
+
+    const pad = 16;
+    const er = el.getBoundingClientRect();
+    const rr = root.getBoundingClientRect();
+    let delta = 0;
+    if (er.bottom > rr.bottom - pad) {
+      delta = er.bottom - rr.bottom + pad;
+    } else if (er.top < rr.top + pad) {
+      delta = er.top - rr.top - pad;
+    }
+    if (delta !== 0) {
+      root.scrollBy({ top: delta, behavior: "smooth" });
+    }
+  }, []);
+
   const selectDish = useCallback(
-    (id: string, opts?: { scroll?: boolean; focus?: boolean }) => {
+    (id: string, opts?: { focus?: boolean }) => {
       setActiveId(id);
       setPreviewId(null);
-      if (opts?.scroll || opts?.focus) {
-        requestAnimationFrame(() => {
-          const el = rowRefs.current.get(id);
-          if (!el) return;
-          if (opts.scroll) {
-            el.scrollIntoView({ block: "nearest", behavior: "smooth" });
-          }
-          if (opts.focus) el.focus({ preventScroll: true });
-        });
-      }
+
+      const settle = () => {
+        const el = rowRefs.current.get(id);
+        if (!el) return;
+        ensureRowVisible(id);
+        if (opts?.focus) el.focus({ preventScroll: true });
+      };
+
+      // Before fold, after layout, and after expand (~280ms) so desc isn’t clipped
+      requestAnimationFrame(() => {
+        settle();
+        requestAnimationFrame(settle);
+      });
+      window.setTimeout(settle, 320);
     },
-    []
+    [ensureRowVisible]
   );
 
   const moveActive = useCallback(
@@ -100,7 +124,7 @@ export function MenuPanel() {
       if (idx < 0) return;
       const next =
         allItems[Math.max(0, Math.min(allItems.length - 1, idx + delta))];
-      if (next) selectDish(next.id, { scroll: true, focus: true });
+      if (next) selectDish(next.id, { focus: true });
     },
     [activeId, allItems, selectDish]
   );
@@ -116,11 +140,11 @@ export function MenuPanel() {
       } else if (e.key === "Home") {
         e.preventDefault();
         const first = allItems[0];
-        if (first) selectDish(first.id, { scroll: true, focus: true });
+        if (first) selectDish(first.id, { focus: true });
       } else if (e.key === "End") {
         e.preventDefault();
         const last = allItems[allItems.length - 1];
-        if (last) selectDish(last.id, { scroll: true, focus: true });
+        if (last) selectDish(last.id, { focus: true });
       }
     },
     [allItems, moveActive, selectDish]
@@ -205,7 +229,9 @@ export function MenuPanel() {
                         item={item}
                         active={item.id === activeId}
                         preview={item.id === previewId && item.id !== activeId}
-                        onSelect={() => selectDish(item.id, { focus: true })}
+                        onSelect={() =>
+                          selectDish(item.id, { focus: true })
+                        }
                         onPreview={() => {
                           if (finePointer.current) setPreviewId(item.id);
                         }}

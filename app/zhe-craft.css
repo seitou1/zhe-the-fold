@@ -4769,3 +4769,141 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════
+   Menu list — fill vertical stage (desktop + mobile)
+   Expanded row must not clip CN / desc at scroller edge.
+   ═══════════════════════════════════════════ */
+.menu.panel > .stage.menu-stage,
+.menu .stage.menu-stage {
+  /* Use full panel height under nav; tighter floor than global stage */
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  flex: 1 1 auto;
+  gap: 0.4rem;
+  justify-content: flex-start;
+  padding-bottom: max(
+    0.45rem,
+    calc(var(--dock-h, 0px) + clamp(0.4rem, 1vh, 0.75rem))
+  );
+  overflow: hidden;
+}
+
+.menu .menu-head {
+  flex-shrink: 0;
+  padding-bottom: 0.45rem;
+  margin: 0;
+}
+
+.menu .menu-ledger {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  /* Claim remaining stage under head */
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow: hidden;
+  padding-top: 0.15rem;
+  padding-bottom: 0;
+}
+
+.menu .menu-list-view {
+  flex: 1 1 0%;
+  min-height: 0;
+  max-height: none;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Room so last expanded dish can scroll fully into view */
+  padding-bottom: clamp(2.25rem, 6vh, 3.5rem);
+  scroll-padding-top: 0.5rem;
+  scroll-padding-bottom: 1.25rem;
+}
+
+.menu .menu-note {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  padding-top: 0.45rem;
+  padding-bottom: 0.15rem;
+  max-width: none;
+}
+
+/* Names + body never ellipsis-clip; wrap cleanly */
+.menu .menu-list-item .list-en {
+  white-space: normal;
+  overflow: visible;
+  min-width: 0;
+}
+
+.menu .menu-list-item .list-desc,
+.menu .menu-list-item .list-cn,
+.menu .menu-list-item .list-meta {
+  overflow: visible;
+  text-overflow: unset;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  display: block;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.menu .menu-list-item .list-detail-inner {
+  overflow: hidden; /* only for 0fr collapse; content still measures full height */
+}
+
+.menu .menu-list-item.is-active .list-detail-inner {
+  overflow: visible;
+}
+
+@media (max-width: 900px) {
+  .menu.panel > .stage.menu-stage,
+  .menu .stage.menu-stage {
+    gap: 0.28rem;
+    padding-bottom: max(
+      0.35rem,
+      calc(var(--dock-h, 0px) + 0.35rem)
+    );
+  }
+
+  .menu .menu-head {
+    padding-bottom: 0.3rem;
+  }
+
+  .menu .menu-ledger {
+    width: 100%;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    gap: 0.15rem;
+  }
+
+  .menu .menu-list-view {
+    /* Extra bottom inset on phone so open desc clears home indicator zone */
+    padding-bottom: max(2.75rem, calc(env(safe-area-inset-bottom, 0px) + 2rem));
+    scroll-padding-bottom: 1.5rem;
+  }
+
+  .menu .menu-note {
+    padding-top: 0.35rem;
+    padding-bottom: max(0.2rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .menu .menu-list-item .list-desc {
+    max-width: none;
+  }
+}
+
+@media (min-width: 901px) {
+  .menu .menu-ledger {
+    /* Taller column — still left-anchored, slightly wider if space */
+    width: min(28rem, 42vw);
+    max-height: none;
+  }
+
+  .menu .menu-list-view {
+    padding-bottom: clamp(2.5rem, 5vh, 4rem);
+  }
+}
