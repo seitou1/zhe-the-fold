@@ -4,22 +4,17 @@ import { useEffect } from "react";
 
 /**
  * Mobile shell: --shell-h for iOS URL bar, past-hero nav, active section.
- * Soft snap-assist after fling so proximity snap still settles cleanly.
+ * Section snap is CSS (mandatory + always) — no JS snap fight.
  */
 export function ShellChrome() {
   useEffect(() => {
     let lastShellH = 0;
     let pastHeroLatch = false;
     let scrolling = false;
-    let snapping = false;
     let scrollIdleTimer: ReturnType<typeof setTimeout> | null = null;
-    const hasScrollEnd =
-      typeof window !== "undefined" && "onscrollend" in window;
 
     const isMobile = () =>
       Boolean(window.matchMedia("(max-width: 768px)").matches);
-
-    const mainEl = () => document.getElementById("top");
 
     const syncMobileShell = () => {
       if (!isMobile()) {
@@ -29,8 +24,8 @@ export function ShellChrome() {
         }
         return;
       }
-      /* Avoid reflow mid-swipe — height thrash feels like janky snap */
-      if (scrolling || snapping) return;
+      /* Avoid reflow mid-swipe — height thrash fights mandatory snap */
+      if (scrolling) return;
 
       const vv = window.visualViewport;
       const vvH = (vv && vv.height) || 0;
@@ -79,65 +74,19 @@ export function ShellChrome() {
       });
     };
 
-    /** Settle to nearest full panel after a fling (proximity snap assist). */
-    const snapToNearestPanel = () => {
-      if (!isMobile() || snapping) return;
-      const main = mainEl();
-      if (!main) return;
-
-      const list = Array.from(
-        main.querySelectorAll<HTMLElement>(":scope > .panel")
-      );
-      if (!list.length) return;
-
-      const top = main.scrollTop;
-      const viewH = main.clientHeight || 1;
-      let best: HTMLElement | null = null;
-      let bestDist = Infinity;
-
-      for (const p of list) {
-        const dist = Math.abs(p.offsetTop - top);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = p;
-        }
-      }
-
-      if (!best) return;
-      if (bestDist < 6) return;
-      if (bestDist > viewH * 0.4) return;
-
-      snapping = true;
-      /* Instant settle — smooth + snap fights the finger trail on iOS */
-      main.scrollTo({ top: best.offsetTop, behavior: "auto" });
-      window.requestAnimationFrame(() => {
-        snapping = false;
-        updateNav();
-      });
-    };
-
     const onScroll = () => {
-      if (snapping) return;
       scrolling = true;
       updateNav();
-
       if (scrollIdleTimer) clearTimeout(scrollIdleTimer);
       scrollIdleTimer = setTimeout(() => {
         scrolling = false;
         syncMobileShell();
-        /* Safari < 17: no scrollend — settle after idle */
-        if (!hasScrollEnd) {
-          snapToNearestPanel();
-          updateNav();
-        }
       }, 160);
     };
 
     const onScrollEnd = () => {
-      if (snapping) return;
       scrolling = false;
       if (scrollIdleTimer) clearTimeout(scrollIdleTimer);
-      snapToNearestPanel();
       syncMobileShell();
       updateNav();
     };
@@ -154,7 +103,7 @@ export function ShellChrome() {
       passive: true,
     });
 
-    const main = mainEl();
+    const main = document.getElementById("top");
     main?.addEventListener("scroll", onScroll, { passive: true });
     main?.addEventListener("scrollend", onScrollEnd, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });

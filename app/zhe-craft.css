@@ -3894,11 +3894,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    /*
-     * proximity + normal stop: less fight with finger flings than
-     * mandatory + always (was sticky/janky between sections on iOS).
-     */
-    scroll-snap-type: y proximity;
+    /* Full section snap — same grammar as original craft shell */
+    scroll-snap-type: y mandatory;
     scroll-padding: 0;
     scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
@@ -3920,12 +3917,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     max-width: none;
     overflow: hidden;
     scroll-snap-align: start;
-    scroll-snap-stop: normal;
+    scroll-snap-stop: always;
   }
 
   /*
-   * Nested vertical scrollers (menu list, visit band): chain to main
-   * at edges so a continued swipe can change section instead of dead-ending.
+   * Nested lists still pan internally; at edges allow chain so a committed
+   * section swipe can leave Menu/Visit without feeling trapped.
    */
   .menu-list-view,
   .visit-band {
