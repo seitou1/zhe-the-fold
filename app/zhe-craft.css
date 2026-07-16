@@ -79,7 +79,15 @@
   --type-ui-track: 0.04em;
   --type-body-track: 0.01em;
 
-  /* One halo recipe for type on photos (panels inherit via --tone-shadow*) */
+  /*
+   * Legibility contract (all panels share this):
+   *   • Photo walls stay open — no full-bleed dim / veil
+   *   • Editorial type: --tone-fg + --tone-shadow | --tone-shadow-soft
+   *   • Tone switch only: data-tone="dark" | "light" on the panel
+   *   • Chrome exception: nav uses --read-scrim-nav* only
+   *   • Allowed layout exception: menu open-row mat (--menu-row-mat*)
+   * Do not invent per-page shadow tokens (no --menu-type-halo, etc.).
+   */
   --type-halo:
     0 1px 1px rgba(0, 0, 0, 0.75),
     0 2px 12px rgba(0, 0, 0, 0.45);
@@ -88,13 +96,7 @@
     0 2px 14px rgba(0, 0, 0, 0.5),
     0 6px 24px rgba(0, 0, 0, 0.35);
 
-  /*
-   * Photo dimming: none on panels (type uses text-shadow only).
-   * Sole remaining scrim is the fixed nav fade below.
-   */
-  --read-scrim-top: none;
-  --read-scrim-top-light: none;
-  --read-scrim-menu-copy: none;
+  /* Fixed nav fade only — never use these on panel walls */
   --read-scrim-nav: linear-gradient(
     to bottom,
     rgba(6, 4, 3, 0.55) 0%,
@@ -114,13 +116,6 @@
   /* Shared tempo — steam, not bounce */
   --motion: 0.42s var(--ease-out);
   --motion-slow: 0.55s var(--ease-out);
-
-  /* No full-bleed plate veils — photos paint open */
-  --panel-veil: none;
-  --panel-veil-light: none;
-  --panel-veil-mobile: none;
-  --panel-veil-mobile-light: none;
-  --panel-veil-grain: none;
   /* Fixed chrome — stages clear these, never sit under them */
   --nav-h: 4.5rem;
   --dock-h: 0px; /* mobile: safe-area bottom only (dock removed) */
@@ -803,8 +798,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours-meta {
 .menu,
 .visit {
   /*
-   * Legibility: primary copy + links share one full ink.
-   * soft = same as fg (no accidental dim on CN/desc vs links)
+   * Panel tone SSOT — dark plate default.
+   * Type on photo: color var(--tone-fg); text-shadow var(--tone-shadow*).
    */
   --tone-fg: #faf8f4;
   --tone-fg-soft: #faf8f4;
@@ -854,10 +849,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav .nav-hours-meta {
     rgba(28, 24, 20, 0.88) 0%,
     rgba(28, 24, 20, 0.28) 100%
   );
-}
-
-.visit[data-tone="light"] .visit-wall-veil {
-  background: none;
 }
 
 /* Nav logo on hero when the plate is light */
@@ -1077,10 +1068,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  /* No dim pad — plate open; halo holds the type */
+  /* No dim pad — plate open; panel tone halo holds the type */
   padding: 0;
   background: none;
-  text-shadow: var(--type-halo-strong);
+  text-shadow: var(--tone-shadow);
   transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft);
 }
 
@@ -1122,7 +1113,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   line-height: 0.88;
   letter-spacing: var(--type-cn-track);
   color: var(--tone-fg);
-  text-shadow: var(--type-halo-strong);
+  text-shadow: var(--tone-shadow);
 }
 
 .hero-title .title-en {
@@ -1137,7 +1128,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   margin-top: 0.38rem;
   color: var(--tone-fg);
   opacity: 1;
-  text-shadow: var(--type-halo-strong);
+  text-shadow: var(--tone-shadow);
 }
 
 /* Thin edge cue only — no floating arrow glyph */
@@ -1240,26 +1231,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .story-wall-img.is-leave-right {
   transform: translate3d(100%, 0, 0);
   z-index: 1;
-}
-
-.story-wall-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: none;
-  pointer-events: none;
-}
-
-.story-wall-veil::before,
-.story-wall-veil::after,
-.visit-wall-veil::before,
-.visit-wall-veil::after {
-  content: none;
-  display: none;
-}
-
-.story[data-tone="light"] .story-wall-veil {
-  background: none;
 }
 
 .story-stage {
@@ -1579,29 +1550,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   animation: none;
 }
 
-.menu-wall-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: none;
-  pointer-events: none;
-}
-
-.menu-wall-veil::before,
-.menu-wall-veil::after {
-  content: none;
-  display: none;
-}
-
-.menu[data-tone="light"] .menu-wall-veil,
-.menu.is-list-view .menu-wall-veil {
-  background: none;
-}
-
-.menu-wall-grain {
-  display: none;
-}
-
 .menu-stage {
   justify-content: space-between;
   gap: 0.75rem;
@@ -1632,7 +1580,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--tone-line);
   color: var(--tone-fg);
-  text-shadow: var(--tone-shadow-soft);
+  text-shadow: var(--tone-shadow);
   transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft),
     border-color 0.45s var(--ease-soft);
 }
@@ -2272,11 +2220,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   transform-origin: var(--menu-wall-origin, center center);
 }
 
-.menu.is-list-view .menu-wall-veil {
-  transition: none;
-  background: none;
-}
-
 /* Legacy list-row rules removed — see Menu ledger hybrid block */
 
 .menu-rail-item.is-active {
@@ -2440,7 +2383,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   padding: 0.2rem 0.1rem 0.35rem;
   border: none;
   border-bottom: none;
-  text-shadow: var(--menu-type-halo);
+  text-shadow: var(--tone-shadow-soft);
 }
 
 .menu-list-group-items {
@@ -2450,13 +2393,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Menu type — same sitewide halo/ink as other panels.
- * No stroke, no special price pad. Rest mat transparent; open row soft only.
+ * Menu type uses panel --tone-fg / --tone-shadow* (same as Story / Visit).
+ * Only extra: open-row mat under the active dish (layout, not wall dim).
  */
 .menu {
-  --menu-ink: var(--tone-fg, var(--cream));
-  --menu-type-halo: var(--type-halo);
-  --menu-type-halo-strong: var(--type-halo-strong);
   --menu-row-mat: transparent;
   --menu-row-mat-active: linear-gradient(
     90deg,
@@ -2485,8 +2425,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   /* Rest: no mat; active holds soft whisper. Space separates rows — no rules. */
   background: var(--menu-row-mat);
   cursor: pointer;
-  color: var(--menu-ink);
-  text-shadow: var(--menu-type-halo);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow-soft);
   /* Background only — padding changes were thrashing neighbors while folding */
   transition: background 0.18s var(--ease-soft);
   -webkit-tap-highlight-color: transparent;
@@ -2511,8 +2451,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-weight: 400;
   letter-spacing: var(--type-title-track);
   line-height: var(--type-lh-ui);
-  color: var(--menu-ink);
-  text-shadow: var(--menu-type-halo-strong);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow);
   margin: 0;
   padding: 0;
 }
@@ -2581,9 +2521,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   line-height: var(--type-lh-ui);
   letter-spacing: var(--type-cn-track);
   min-width: 0;
-  color: var(--menu-ink);
+  color: var(--tone-fg);
   opacity: 0.88;
-  text-shadow: var(--menu-type-halo);
+  text-shadow: var(--tone-shadow-soft);
   margin-top: 0.12rem;
 }
 
@@ -2600,7 +2540,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   opacity: 0.92;
   line-height: var(--type-lh-ui);
   margin-top: 0.06rem;
-  text-shadow: var(--menu-type-halo);
+  text-shadow: var(--tone-shadow-soft);
 }
 
 .menu-list-item .list-desc {
@@ -2611,11 +2551,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-size: var(--type-body);
   line-height: var(--type-lh-body);
   letter-spacing: var(--type-body-track);
-  color: var(--menu-ink);
+  color: var(--tone-fg);
   opacity: 0.92;
   margin: 0.2rem 0 0;
   max-width: 32rem;
-  text-shadow: var(--menu-type-halo);
+  text-shadow: var(--tone-shadow-soft);
 }
 
 /*
@@ -2667,8 +2607,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-list-item.is-active .list-en,
 .menu-list-item.is-active .list-price {
-  color: var(--menu-ink);
-  text-shadow: var(--menu-type-halo-strong);
+  color: var(--tone-fg);
+  text-shadow: var(--tone-shadow);
 }
 
 .menu-list-item.is-active .list-en::after {
@@ -2706,17 +2646,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-list-group-label {
-  text-shadow: var(--menu-type-halo);
-}
-
-.menu-head {
-  text-shadow: var(--menu-type-halo-strong);
+  text-shadow: var(--tone-shadow-soft);
 }
 
 .menu-head .filter-btn {
-  text-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.75),
-    0 2px 8px rgba(0, 0, 0, 0.45);
+  text-shadow: var(--tone-shadow-soft);
 }
 
 /* Colophon — short rule, not full-bleed chrome */
@@ -2730,9 +2664,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   max-width: 22rem;
   border-top: none;
   font-size: var(--type-micro);
-  color: var(--menu-ink, var(--tone-fg));
+  color: var(--tone-fg);
   opacity: 0.78;
-  text-shadow: var(--menu-type-halo, var(--tone-shadow-soft));
+  text-shadow: var(--tone-shadow-soft);
 }
 
 .menu-note::before {
@@ -2756,11 +2690,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-size: var(--type-body);
   letter-spacing: var(--type-body-track);
   line-height: var(--type-lh-body);
-  color: var(--menu-ink);
+  color: var(--tone-fg);
   opacity: 0.88;
 }
 
-/* Menu plate: open — no veil/scrim/grain */
+/* Menu plate: open — type uses panel --tone-shadow* only */
 
 /* Wide: nudge plate into the open right half beside the list */
 @media (min-width: 901px) {
@@ -2829,10 +2763,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overscroll-behavior-y: contain;
     touch-action: pan-y;
     padding-right: 0.15rem;
-  }
-
-  .menu-wall-veil {
-    background: none;
   }
 
   .menu-list-item {
@@ -2944,20 +2874,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   .visit-wall-poster {
     opacity: 1 !important;
   }
-}
-
-.visit-wall-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: none;
-  pointer-events: none;
-}
-
-.visit-wall-veil::before,
-.visit-wall-veil::after {
-  content: none;
-  display: none;
 }
 
 /*
@@ -3752,11 +3668,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     align-items: stretch;
   }
 
-  .story-wall-veil,
-  .story[data-tone="light"] .story-wall-veil {
-    background: none;
-  }
-
   .story-head {
     flex-shrink: 0;
     padding-bottom: 0.55rem;
@@ -3845,13 +3756,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     display: none;
   }
 
-  .story-wall-veil::before,
-  .visit-wall-veil::before,
-  .menu-wall-veil::before {
-    content: none;
-    display: none;
-  }
-
   .nav::before {
     height: calc(var(--nav-h) + 2.1rem);
   }
@@ -3930,11 +3834,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     letter-spacing: var(--type-cn-track);
   }
 
-  .visit-wall-veil,
-  .visit[data-tone="light"] .visit-wall-veil {
-    background: none;
-  }
-
   /* ── Visit mobile — same hierarchy, stacked facts, full content band ── */
   .visit {
     overflow: hidden;
@@ -3959,11 +3858,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     object-position: center 34%;
   }
 
-  .visit-wall-veil,
-  .visit[data-tone="light"] .visit-wall-veil {
-    background: none;
-  }
-
   .visit-band {
     flex: 1 1 auto;
     height: 100%;
@@ -3975,9 +3869,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    text-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.75),
-      0 2px 12px rgba(0, 0, 0, 0.5);
+    text-shadow: var(--tone-shadow-soft);
   }
 
   .visit-head {
@@ -4245,12 +4137,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   }
 
-  /* Same halo tokens as desktop — no heavier phone stack */
+  /* Same panel tone halo as desktop — no heavier phone stack */
   .menu-list-item .list-en,
+  .menu-list-item .list-price {
+    text-shadow: var(--tone-shadow);
+  }
+
   .menu-list-item .list-cn,
-  .menu-list-item .list-price,
   .menu-list-item .list-desc {
-    text-shadow: var(--menu-type-halo-strong);
+    text-shadow: var(--tone-shadow-soft);
   }
 
   /* Phone polish: same detail fold as desktop */
@@ -4265,18 +4160,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
    Calm hybrid menu — progressive disclosure
    ═══════════════════════════════════════════
    Rest: EN · price (detail 0fr). Active: fold-open detail.
-   Soft mat only on open row; plate wall stays open.
+   Soft mat only on open row (--menu-row-mat*); plate wall stays open.
+   Type halo: panel --tone-shadow* only (no menu-local shadow tokens).
 */
-.menu {
-  --menu-row-mat: transparent;
-  --menu-row-mat-active: linear-gradient(
-    90deg,
-    rgba(6, 4, 3, 0.22) 0%,
-    rgba(6, 4, 3, 0.1) 38%,
-    rgba(235, 207, 160, 0.05) 62%,
-    transparent 100%
-  );
-}
 
 .menu-list-item {
   grid-template-areas:

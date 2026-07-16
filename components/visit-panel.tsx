@@ -57,7 +57,6 @@ export function VisitPanel() {
           decoding="async"
           aria-hidden="true"
         />
-        <div className="visit-wall-veil" />
       </div>
 
       <div className="stage visit-stage">

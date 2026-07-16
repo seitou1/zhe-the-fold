@@ -238,8 +238,6 @@ export function MenuPanel() {
           style={{ objectPosition: posB }}
           decoding="async"
         />
-        <div className="menu-wall-veil" />
-        <div className="menu-wall-grain" />
       </div>
 
       <div className="stage menu-stage">

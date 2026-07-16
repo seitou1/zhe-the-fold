@@ -607,7 +607,6 @@ export function StoryPanel() {
           decoding="async"
           draggable={false}
         />
-        <div className="story-wall-veil" />
       </div>
 
       <div className="stage story-stage">
