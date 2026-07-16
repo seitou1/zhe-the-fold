@@ -13,28 +13,25 @@ import {
   groupMenuItems,
   listMeta,
   listTitle,
-  MENU_ITEMS,
   type MenuItem,
 } from "@/lib/menu";
 import { site } from "@/lib/site";
 
 /**
  * Menu panel — full-bleed dish plate + calm hybrid ledger.
- * Full menu with quiet in-list chapter heads only (no filter / jump pills).
+ * Dishes come from getMenuItems() (Supabase or static fallback).
  * Rest: EN · price. Active expands CN / meta / desc (fold motion).
- * Re-tap / Enter / Esc collapses the open row. Hover previews the plate.
  */
-export function MenuPanel() {
-  const groups = useMemo(() => groupMenuItems(MENU_ITEMS), []);
+export function MenuPanel({ items }: { items: MenuItem[] }) {
+  const groups = useMemo(() => groupMenuItems(items), [items]);
   const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
+  const defaultId = items[0]?.id ?? "pork";
 
   /** null = all rows closed (default on first visit); re-tap collapses open row */
   const [activeId, setActiveId] = useState<string | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
   /** Last open dish — keeps the plate when the list is fully collapsed */
-  const [lastOpenId, setLastOpenId] = useState<string>(
-    MENU_ITEMS[0]?.id ?? "pork"
-  );
+  const [lastOpenId, setLastOpenId] = useState<string>(defaultId);
 
   const listRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Map<string, HTMLLIElement>>(new Map());
@@ -48,18 +45,16 @@ export function MenuPanel() {
 
   const wallId = previewId ?? activeId ?? lastOpenId;
   const wallItem =
-    allItems.find((i) => i.id === wallId) ||
-    allItems[0] ||
-    MENU_ITEMS[0];
+    allItems.find((i) => i.id === wallId) || allItems[0] || null;
 
   /*
    * Plate crossfade — dual permanent layers; only is-active toggles
    * so opacity transitions (remounting with key skips the fade).
    */
-  const [slotA, setSlotA] = useState(wallItem);
-  const [slotB, setSlotB] = useState(wallItem);
+  const [slotA, setSlotA] = useState<MenuItem | null>(wallItem);
+  const [slotB, setSlotB] = useState<MenuItem | null>(wallItem);
   const [aActive, setAActive] = useState(true);
-  const shownIdRef = useRef(wallItem.id);
+  const shownIdRef = useRef(wallItem?.id ?? "");
   const aActiveRef = useRef(true);
 
   useEffect(() => {
@@ -221,26 +216,30 @@ export function MenuPanel() {
   return (
     <section className="menu panel is-list-view" id="menu" data-tone="dark">
       <div className="menu-wall" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={`menu-wall-img${aActive ? " is-active" : ""}`}
-          src={slotA.image}
-          alt=""
-          width={1000}
-          height={1000}
-          style={wallVars(slotA)}
-          decoding="async"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={`menu-wall-img${!aActive ? " is-active" : ""}`}
-          src={slotB.image}
-          alt=""
-          width={1000}
-          height={1000}
-          style={wallVars(slotB)}
-          decoding="async"
-        />
+        {slotA ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            className={`menu-wall-img${aActive ? " is-active" : ""}`}
+            src={slotA.image}
+            alt=""
+            width={1000}
+            height={1000}
+            style={wallVars(slotA)}
+            decoding="async"
+          />
+        ) : null}
+        {slotB ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            className={`menu-wall-img${!aActive ? " is-active" : ""}`}
+            src={slotB.image}
+            alt=""
+            width={1000}
+            height={1000}
+            style={wallVars(slotB)}
+            decoding="async"
+          />
+        ) : null}
       </div>
 
       <div className="stage menu-stage">

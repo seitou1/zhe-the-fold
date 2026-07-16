@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|--------|
-| **Phase** | Craft demo / fiction preview (not live index) |
+| **Phase** | Menu CMS (Supabase read + static fallback) · fiction noindex |
 | **Live** | https://zhe-the-fold.vercel.app |
 | **GitHub** | https://github.com/seitou1/zhe-the-fold |
 | **Commit audited** | `059244d` (tree clean on main) |
@@ -33,12 +33,13 @@
 | ESLint | **0 errors** (1 known warning: manual fonts.css link) |
 | Phone QA (human) | **good** (owner-confirmed 2026-07-16) |
 | Dead menu spotlight/rail/carousel CSS | **removed** |
-| Supabase scaffold | **kept** for backend next (`lib/supabase/*`, env example) |
+| Menu CMS | **code ready** — table SQL + seed + `getMenuItems()`; needs project env + run SQL |
+| Supabase scaffold | client/server + fallback when env missing |
 
 ## Blockers for *live index*
 
 1. Real NAP + booking  
-2. Backend / CMS (Supabase) when ready  
+2. Apply menu SQL + env on Supabase/Vercel to leave static fallback
 
 ## Blockers for *craft demo*
 

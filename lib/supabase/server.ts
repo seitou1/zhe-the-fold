@@ -5,25 +5,28 @@ type ServerClientOptions = {
   serviceRole?: boolean;
 };
 
+function isPlaceholderUrl(url: string) {
+  return (
+    !url ||
+    url.includes("YOUR_PROJECT") ||
+    url.includes("placeholder") ||
+    url === "https://YOUR_PROJECT.supabase.co"
+  );
+}
+
 /**
- * Server Supabase client (RSC, Route Handlers, Server Actions).
- * Prefer the anon key for public reads; service role only for admin paths.
+ * Server Supabase client when env is configured.
+ * Returns null if keys are missing/placeholder so craft fallback can run.
  */
-export function createServerClient(
+export function tryCreateServerClient(
   opts: ServerClientOptions = {}
-): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+): SupabaseClient | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const key = opts.serviceRole
     ? process.env.SUPABASE_SERVICE_ROLE_KEY
     : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!url || !key) {
-    throw new Error(
-      opts.serviceRole
-        ? "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"
-        : "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY"
-    );
-  }
+  if (!url || !key || isPlaceholderUrl(url)) return null;
 
   return createClient(url, key, {
     auth: {
@@ -31,4 +34,23 @@ export function createServerClient(
       autoRefreshToken: false,
     },
   });
+}
+
+/**
+ * Server Supabase client (RSC, Route Handlers, Server Actions).
+ * Prefer the anon key for public reads; service role only for admin paths.
+ * @throws if env is missing — use tryCreateServerClient for optional reads.
+ */
+export function createServerClient(
+  opts: ServerClientOptions = {}
+): SupabaseClient {
+  const client = tryCreateServerClient(opts);
+  if (!client) {
+    throw new Error(
+      opts.serviceRole
+        ? "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"
+        : "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY"
+    );
+  }
+  return client;
 }

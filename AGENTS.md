@@ -15,11 +15,13 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 4. Ship: `git push origin main` → Vercel auto-deploy  
 5. Phone QA after gesture/shell changes  
 
-## Backend scaffold (keep — next work)
+## Backend (Menu CMS started)
 
 - `lib/supabase/{client,server}.ts` + `@supabase/supabase-js`  
-- `.env.local.example` (`NEXT_PUBLIC_SUPABASE_*`, `SUPABASE_SERVICE_ROLE_KEY`)  
-- Do **not** delete these as “unused”; wire CMS/ops when backend starts  
+- `lib/data/menu.ts` — `getMenuItems()` Supabase **or** static `MENU_ITEMS` fallback  
+- `supabase/migrations/001_menu_items.sql` + `seed_menu_items.sql` — see `supabase/README.md`  
+- Env: `.env.local.example` (`NEXT_PUBLIC_SUPABASE_*`, `SUPABASE_SERVICE_ROLE_KEY`)  
+- Do **not** delete scaffold; extend for story/site next
 
 ## Non-negotiables
 
