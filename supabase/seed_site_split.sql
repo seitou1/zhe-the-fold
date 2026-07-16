@@ -40,7 +40,7 @@ select
   coalesce(nullif(trim(s.postal_code), ''), '10013'),
   coalesce(nullif(trim(s.address_country), ''), 'US'),
   coalesce(nullif(trim(s.maps_query), ''), '200 Sample Street New York NY 10013'),
-  coalesce(nullif(trim(s.reserve_subject), ''), 'Table · Zhe'),
+  coalesce(nullif(trim(s.reserve_subject), ''), 'Table ' || chr(183) || ' Zhe'),
   coalesce(nullif(trim(s.instagram_url), ''), 'https://instagram.com/zhe.thefold'),
   coalesce(nullif(trim(s.instagram_label), ''), 'Instagram')
 from public.site_settings s
@@ -69,7 +69,7 @@ insert into public.site_contact (
   'hello@zhethefold.com', '+12125550100', '(212) 555-0100',
   '200 Sample Street, Floor 1', 'New York', 'NY', '10013', 'US',
   '200 Sample Street New York NY 10013',
-  'Table · Zhe',
+  'Table ' || chr(183) || ' Zhe',
   'https://instagram.com/zhe.thefold', 'Instagram'
 )
 on conflict (id) do nothing;
@@ -89,19 +89,19 @@ insert into public.site_copy (
 )
 select
   'default',
-  'Zhe · The Fold', '褶', 'Zhe', 'New York City',
-  coalesce(nullif(trim(s.hero_line), ''), 'Handmade dumplings · table & takeout'),
+  'Zhe ' || chr(183) || ' The Fold', '褶', 'Zhe', 'New York City',
+  coalesce(nullif(trim(s.hero_line), ''), 'Handmade dumplings ' || chr(183) || ' table & takeout'),
   'Handmade Chinese dumplings in New York. A small hybrid room for the table or takeout. Every fold holds the mark of a hand.',
   'Handmade Dumplings in New York',
   'Story', 'Menu', 'Visit',
   'Directions', 'Call', 'Reserve', 'Reserve',
   coalesce(nullif(trim(s.service_kicker), ''), 'Join us'),
   'Table', 'Takeout',
-  coalesce(nullif(trim(s.table_detail), ''), 'Walk-ins welcome · reserve for 4+'),
-  coalesce(nullif(trim(s.takeout_detail), ''), 'Call ahead or walk up · no delivery'),
+  coalesce(nullif(trim(s.table_detail), ''), 'Walk-ins welcome ' || chr(183) || ' reserve for 4+'),
+  coalesce(nullif(trim(s.takeout_detail), ''), 'Call ahead or walk up ' || chr(183) || ' no delivery'),
   'Find us', 'Hours',
   'The house', '小店', 'The Menu', '菜单', 'Visit', '造访',
-  coalesce(nullif(trim(s.menu_note), ''), 'Steamed or pan-seared · About eight per order · Table or take home · Share allergies'),
+  coalesce(nullif(trim(s.menu_note), ''), 'Steamed or pan-seared ' || chr(183) || ' About eight per order ' || chr(183) || ' Table or take home ' || chr(183) || ' Share allergies'),
   'House', 'Shellfish',
   'The imperfect pleats are the point',
   'All rights reserved.',
@@ -122,13 +122,13 @@ insert into public.site_copy (
   table_detail, takeout_detail, menu_note, footer_tag
 ) values (
   'default',
-  'Zhe · The Fold', '褶', 'Zhe', 'New York City',
-  'Handmade dumplings · table & takeout',
+  'Zhe ' || chr(183) || ' The Fold', '褶', 'Zhe', 'New York City',
+  'Handmade dumplings ' || chr(183) || ' table & takeout',
   'Handmade Chinese dumplings in New York. A small hybrid room for the table or takeout. Every fold holds the mark of a hand.',
   'Handmade Dumplings in New York',
-  'Walk-ins welcome · reserve for 4+',
-  'Call ahead or walk up · no delivery',
-  'Steamed or pan-seared · About eight per order · Table or take home · Share allergies',
+  'Walk-ins welcome ' || chr(183) || ' reserve for 4+',
+  'Call ahead or walk up ' || chr(183) || ' no delivery',
+  'Steamed or pan-seared ' || chr(183) || ' About eight per order ' || chr(183) || ' Table or take home ' || chr(183) || ' Share allergies',
   'The imperfect pleats are the point'
 )
 on conflict (id) do nothing;

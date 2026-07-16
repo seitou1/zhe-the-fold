@@ -5,7 +5,7 @@
  */
 
 export const site = {
-  name: "Zhe · The Fold",
+  name: "Zhe \u00b7 The Fold",
   nameCn: "褶",
   shortName: "Zhe",
   city: "New York City",
