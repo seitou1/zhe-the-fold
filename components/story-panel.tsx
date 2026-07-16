@@ -7,7 +7,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { STORY_CHAPTERS } from "@/lib/story";
+import { STORY_CHAPTERS, type StoryChapter } from "@/lib/story";
 import { site } from "@/lib/site";
 
 const SWEEP_MS = 650;
@@ -24,10 +24,7 @@ type Layer = {
   cls: string;
 };
 
-function layerFromChapter(
-  chapter: (typeof STORY_CHAPTERS)[number],
-  cls: string
-): Layer {
+function layerFromChapter(chapter: StoryChapter, cls: string): Layer {
   return {
     src: chapter.image,
     position: chapter.position,
@@ -47,10 +44,17 @@ function wallStyle(layer: Layer): CSSProperties {
  * The house — place-first carousel (House → Hands → Night):
  * dual-layer wall sweep, copy soft-fade, pips / swipe / ←→,
  * autoplay while in view (pauses after user input).
+ * Chapters from getStoryChapters() (Supabase or static fallback).
  */
-export function StoryPanel() {
-  const n = STORY_CHAPTERS.length;
-  const first = STORY_CHAPTERS[0];
+export function StoryPanel({
+  chapters: chaptersProp,
+}: {
+  chapters: StoryChapter[];
+}) {
+  const chapters =
+    chaptersProp.length > 0 ? chaptersProp : STORY_CHAPTERS;
+  const n = chapters.length;
+  const first = chapters[0];
 
   const sectionRef = useRef<HTMLElement>(null);
   const indexRef = useRef(0);
@@ -249,7 +253,7 @@ export function StoryPanel() {
 
   const applyChapter = useCallback(
     (i: number, opts: { animate?: boolean; dir?: number } = {}) => {
-      const chapter = STORY_CHAPTERS[i];
+      const chapter = chapters[i];
       if (!chapter) return;
       const from = indexRef.current;
       const animate = opts.animate !== false;
@@ -302,7 +306,7 @@ export function StoryPanel() {
       fadeTimerRef.current = setTimeout(() => {
         fadeTimerRef.current = null;
         if (gen !== fadeGenRef.current) return;
-        const ch = STORY_CHAPTERS[indexRef.current];
+        const ch = chapters[indexRef.current];
         if (!ch) return;
         setLabel(ch.label);
         setBody(ch.body);
@@ -312,7 +316,7 @@ export function StoryPanel() {
         });
       }, COPY_FADE_MS);
     },
-    [n, setWall]
+    [chapters, n, setWall]
   );
 
   const step = useCallback(
@@ -664,7 +668,7 @@ export function StoryPanel() {
           role="tablist"
           aria-label={site.sections.story.chaptersAria}
         >
-          {STORY_CHAPTERS.map((ch, i) => (
+          {chapters.map((ch, i) => (
             <button
               key={ch.id}
               type="button"

@@ -1,31 +1,36 @@
 "use client";
 
 import { useRef } from "react";
-import { getHoursDisplayLines } from "@/lib/hours";
 import {
-  formatAddressLines,
-  mapsUrl,
-  reserveMailto,
-  site,
-  telHref,
-} from "@/lib/site";
+  opsAddressLines,
+  opsMapsUrl,
+  opsReserveMailto,
+  opsTelHref,
+  type SiteOps,
+} from "@/lib/data/site";
+import { getHoursDisplayLines } from "@/lib/hours";
+import { site } from "@/lib/site";
 import { usePanelVideo } from "@/lib/use-panel-video";
 
 /**
  * Visit — logistics hierarchy (scan order):
  * Title → Find us | Hours → Join us → Directions · Takeout · Table → social.
- * Storefront wall = space cue; copy SSOT = site.visit / site.service.
+ * Ops (NAP/contact/hybrid details) from getSiteOps(); chrome from site.*.
  */
-export function VisitPanel() {
+export function VisitPanel({ ops }: { ops: SiteOps }) {
   const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { media, service, visit, sections, social } = site;
+  const { media, service, visit, sections } = site;
   const videoReady = usePanelVideo(videoRef, panelRef, {
     src: media.storefrontVideo,
     srcMobile: media.storefrontVideoMobile,
   });
-  const addressLines = formatAddressLines();
+  const addressLines = opsAddressLines(ops);
   const hours = getHoursDisplayLines();
+  const modes = [
+    { id: "table", label: "Table", detail: ops.tableDetail },
+    { id: "takeout", label: "Takeout", detail: ops.takeoutDetail },
+  ];
 
   return (
     <section
@@ -107,10 +112,10 @@ export function VisitPanel() {
 
               <div className="visit-fact visit-fact--serve">
                 <p className="visit-kicker">
-                  <span className="en">{service.kicker}</span>
+                  <span className="en">{ops.serviceKicker}</span>
                 </p>
                 <ul className="visit-serve">
-                  {service.modes.map((mode) => (
+                  {modes.map((mode) => (
                     <li key={mode.id} className="visit-serve-row">
                       <span className="visit-serve-mode">{mode.label}</span>
                       <span className="visit-serve-detail">{mode.detail}</span>
@@ -123,7 +128,7 @@ export function VisitPanel() {
             <nav className="visit-actions" aria-label={visit.actionsAria}>
               <a
                 className="visit-action"
-                href={mapsUrl()}
+                href={opsMapsUrl(ops)}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -131,29 +136,29 @@ export function VisitPanel() {
               </a>
               <a
                 className="visit-action visit-action--takeout"
-                href={telHref()}
-                aria-label={`${service.actions.takeout}: ${service.aria.takeoutCall} ${site.telephoneDisplay}`}
+                href={opsTelHref(ops)}
+                aria-label={`${service.actions.takeout}: ${service.aria.takeoutCall} ${ops.telephoneDisplay}`}
               >
                 <span className="en">{service.actions.takeout}</span>
               </a>
               <a
                 className="visit-action visit-action--table"
-                href={reserveMailto()}
+                href={opsReserveMailto(ops)}
                 aria-label={`${service.actions.table}: ${service.aria.tableEmail}`}
               >
                 <span className="en">{service.actions.table}</span>
               </a>
             </nav>
 
-            {social.instagram ? (
+            {ops.instagram ? (
               <nav className="visit-social" aria-label={visit.socialAria}>
                 <a
-                  href={social.instagram}
+                  href={ops.instagram}
                   className="visit-social-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {social.instagramLabel}
+                  {ops.instagramLabel}
                 </a>
               </nav>
             ) : null}

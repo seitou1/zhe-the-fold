@@ -4,26 +4,31 @@ import { SiteFooter } from "@/components/site-footer";
 import { StoryPanel } from "@/components/story-panel";
 import { VisitPanel } from "@/components/visit-panel";
 import { getMenuItems } from "@/lib/data/menu";
+import { getSiteOps } from "@/lib/data/site";
+import { getStoryChapters } from "@/lib/data/story";
 
 /**
- * Always fetch menu on request so Supabase Table Editor edits
- * show immediately. Falls back to static MENU_ITEMS if env/DB fails.
+ * Always fetch CMS content on request. Static lib/* fallback if env/DB fails.
  */
 export const dynamic = "force-dynamic";
 
 /**
  * Four full-viewport panels + footer.
- * Menu dishes: Supabase when configured, else lib/menu.ts.
+ * Menu / story / visit ops: Supabase when configured, else static SSOT.
  */
 export default async function Home() {
-  const menuItems = await getMenuItems();
+  const [menuItems, storyChapters, siteOps] = await Promise.all([
+    getMenuItems(),
+    getStoryChapters(),
+    getSiteOps(),
+  ]);
 
   return (
     <main id="top">
-      <HeroPanel />
-      <StoryPanel />
-      <MenuPanel items={menuItems} />
-      <VisitPanel />
+      <HeroPanel ops={siteOps} />
+      <StoryPanel chapters={storyChapters} />
+      <MenuPanel items={menuItems} ops={siteOps} />
+      <VisitPanel ops={siteOps} />
       <SiteFooter />
     </main>
   );

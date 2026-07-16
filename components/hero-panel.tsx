@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef } from "react";
+import type { SiteOps } from "@/lib/data/site";
 import { site } from "@/lib/site";
 import { usePanelVideo } from "@/lib/use-panel-video";
 
 /** Full-bleed hero — poster LCP + in-view muted loop (balanced load) */
-export function HeroPanel() {
+export function HeroPanel({ ops }: { ops: SiteOps }) {
   const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { media } = site;
@@ -69,7 +70,7 @@ export function HeroPanel() {
             <span className="title-en">{site.name}</span>
           </h1>
           <p className="hero-line">
-            <span className="en">{site.heroLine}</span>
+            <span className="en">{ops.heroLine}</span>
           </p>
         </div>
       </div>

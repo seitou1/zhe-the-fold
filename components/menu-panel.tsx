@@ -9,6 +9,7 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from "react";
+import type { SiteOps } from "@/lib/data/site";
 import {
   groupMenuItems,
   listMeta,
@@ -22,7 +23,13 @@ import { site } from "@/lib/site";
  * Dishes come from getMenuItems() (Supabase or static fallback).
  * Rest: EN · price. Active expands CN / meta / desc (fold motion).
  */
-export function MenuPanel({ items }: { items: MenuItem[] }) {
+export function MenuPanel({
+  items,
+  ops,
+}: {
+  items: MenuItem[];
+  ops: SiteOps;
+}) {
   const groups = useMemo(() => groupMenuItems(items), [items]);
   const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
   const defaultId = items[0]?.id ?? "pork";
@@ -313,7 +320,7 @@ export function MenuPanel({ items }: { items: MenuItem[] }) {
             })}
           </div>
           <p className="menu-note">
-            <span className="en">{site.menu.note}</span>
+            <span className="en">{ops.menuNote}</span>
           </p>
         </div>
       </div>
