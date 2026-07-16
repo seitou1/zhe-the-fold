@@ -3324,13 +3324,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
  * 2) Find us | Hours (grouped facts)
  * 3) Directions · Call · Reserve (equal body links)
  * 4) Instagram (tertiary)
- * Storefront fills the open field to the right / behind.
+ * Band sits bottom-left over the storefront (caption grammar).
  */
 .visit-stage {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: flex-start;
   gap: 0;
   height: 100%;
@@ -4371,7 +4371,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: stretch;
     gap: 0;
   }
