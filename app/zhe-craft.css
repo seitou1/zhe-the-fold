@@ -502,7 +502,6 @@ button {
 
 /* Readable prose + chrome — Outfit (UI role) */
 .menu-spotlight-desc,
-.story-head-lead .en,
 .story-spotlight .en,
 .hero-tagline .en,
 .hero-eyebrow .en,
@@ -1443,10 +1442,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .story-head {
   flex-shrink: 0;
-  display: grid;
-  grid-template-columns: minmax(7rem, 0.85fr) minmax(0, 1.2fr);
-  gap: 0.65rem 1.25rem;
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--tone-line);
   transition: border-color var(--motion), color var(--motion);
@@ -1456,6 +1455,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  margin: 0;
   color: var(--tone-fg);
 }
 
@@ -1470,27 +1470,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /* Panel CN mark uses shared .story-head-title .cn / .menu-head-title .cn rule */
-
-.story-head-lead {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  max-width: none;
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-}
-
-.story-head-lead .en {
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-weight: 400;
-  font-size: var(--type-lead);
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-body-track);
-  color: var(--tone-fg);
-  text-shadow: var(--tone-shadow-soft);
-}
 
 /* One chapter at a time — shared content column */
 .story-spotlight {
@@ -3686,11 +3665,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 /* Tablet */
 @media (max-width: 960px) {
-  .story-head {
-    grid-template-columns: 1fr;
-    gap: 0.55rem;
-  }
-
   .menu-head {
     flex-direction: column;
     align-items: flex-start;
@@ -4088,23 +4062,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   }
 
   .story-head {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-    align-items: start;
     flex-shrink: 0;
     padding-bottom: 0.55rem;
-  }
-
-  .story-head-lead {
-    max-width: none;
-    width: 100%;
-  }
-
-  .story-head-lead .en {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
   .story-spotlight {
@@ -4428,10 +4387,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
   .story-spotlight .en {
     -webkit-line-clamp: 4;
-  }
-
-  .story-head-lead .en {
-    -webkit-line-clamp: 2;
   }
 
   .filter-btn {

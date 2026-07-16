@@ -620,12 +620,6 @@ export function StoryPanel() {
               </span>
             </h2>
           </div>
-          <p className="story-head-lead">
-            <span className="en">
-              We don’t chase perfection—we honor the quiet beauty of dough that
-              remembers who shaped it.
-            </span>
-          </p>
         </header>
 
         <div
