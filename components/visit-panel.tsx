@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { getHoursDisplayLines } from "@/lib/hours";
 import {
   formatAddressLines,
-  mapsEmbedUrl,
   mapsUrl,
   reserveMailto,
   site,
@@ -12,9 +11,8 @@ import {
 } from "@/lib/site";
 
 /**
- * Visit — logistics first.
- * Title → quiet lead → address | hours → map + Get directions → Call · Reserve → social.
- * One maps path (map plate); Call/Reserve are different intents.
+ * Visit — logistics first, no map embed.
+ * Title → quiet lead → address | hours → Directions · Call · Reserve → social.
  */
 export function VisitPanel() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -132,37 +130,21 @@ export function VisitPanel() {
               </div>
             </div>
 
-            <div className="visit-map">
-              <div className="visit-map-plate">
-                <iframe
-                  className="visit-map-frame"
-                  title={`Map — ${site.name}`}
-                  src={mapsEmbedUrl()}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  allowFullScreen
-                />
-              </div>
-              <a
-                className="visit-map-directions"
-                href={mapsUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="en">Get directions</span>
-              </a>
-            </div>
-
             <div className="visit-cta-block">
-              <div className="visit-actions-secondary">
-                <a className="visit-action visit-action--secondary" href={telHref()}>
+              <div className="visit-actions">
+                <a
+                  className="visit-action visit-action--primary"
+                  href={mapsUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="en">Directions</span>
+                </a>
+                <a className="visit-action" href={telHref()}>
                   <span className="en">Call</span>
                   <span className="visit-action-meta">{site.telephoneDisplay}</span>
                 </a>
-                <a
-                  className="visit-action visit-action--secondary"
-                  href={reserveMailto()}
-                >
+                <a className="visit-action" href={reserveMailto()}>
                   <span className="en">Reserve</span>
                 </a>
               </div>
