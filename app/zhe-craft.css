@@ -4650,15 +4650,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-right: 0.2rem;
   }
 
-  /* Story chapter controls */
-  .story-carousel-btn {
-    min-width: 2.85rem;
-    min-height: 2.85rem;
-  }
-
+  /* Story pips — keep even optical spacing (don’t inflate hit boxes) */
   .story-dot {
-    min-width: 2.65rem;
-    min-height: 2.65rem;
+    width: 1.85rem;
+    min-width: 1.85rem;
+    height: 2.85rem;
   }
 
   /* Menu filters already min-height; ensure list rows are easy taps */
