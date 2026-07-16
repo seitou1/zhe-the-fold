@@ -10,7 +10,10 @@ import {
   telHref,
 } from "@/lib/site";
 
-/** Visit panel — storefront wall + facts / CTAs (original grammar) */
+/**
+ * Visit — logistics first.
+ * Title → quiet lead → address | hours → Directions (primary) → Call · Reserve → social.
+ */
 export function VisitPanel() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
@@ -71,89 +74,103 @@ export function VisitPanel() {
       </div>
 
       <div className="stage visit-stage">
-        <header className="visit-head">
-          <div className="visit-head-title">
-            <h2>
-              <span className="en">Visit</span>
-              <span className="cn" lang="zh-Hans">
-                造访
-              </span>
-            </h2>
-          </div>
-          <p className="visit-head-lead">
-            <span className="en">{site.sections.visit.body}</span>
-          </p>
-        </header>
-
-        <div className="visit-spotlight">
-          <div className="visit-facts">
-            <div className="visit-fact">
-              <p className="visit-kicker">
-                <span className="en">Find us</span>
-              </p>
-              <p className="visit-address">
-                {addressLines.map((line) => (
-                  <span key={line} style={{ display: "block" }}>
-                    {line}
-                  </span>
-                ))}
-              </p>
-              {site.access ? (
-                <p className="visit-access">{site.access}</p>
-              ) : null}
-              {site.demoMode ? (
-                <p className="visit-access" style={{ opacity: 0.55 }}>
-                  Sample address — replace before launch.
-                </p>
-              ) : null}
+        <div className="visit-band">
+          <header className="visit-head">
+            <div className="visit-head-title">
+              <h2>
+                <span className="en">Visit</span>
+                <span className="cn" lang="zh-Hans">
+                  造访
+                </span>
+              </h2>
             </div>
-            <div className="visit-fact">
-              <p className="visit-kicker">
-                <span className="en">Hours</span>
-              </p>
-              <div className="visit-hours">
-                {hours.days ? (
-                  <p className="visit-hours-days">{hours.days}</p>
+            <p className="visit-head-lead">
+              <span className="en">{site.sections.visit.body}</span>
+            </p>
+          </header>
+
+          <div className="visit-spotlight">
+            <div className="visit-facts">
+              <div className="visit-fact visit-fact--find">
+                <p className="visit-kicker">
+                  <span className="en">Find us</span>
+                </p>
+                <a
+                  className="visit-address"
+                  href={mapsUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {addressLines.map((line) => (
+                    <span key={line} className="visit-address-line">
+                      {line}
+                    </span>
+                  ))}
+                </a>
+                {site.access ? (
+                  <p className="visit-access">{site.access}</p>
                 ) : null}
-                {hours.times ? (
-                  <p className="visit-hours-times">{hours.times}</p>
-                ) : null}
-                {hours.note ? (
-                  <p className="visit-hours-note">{hours.note}</p>
+                {site.demoMode ? (
+                  <p className="visit-access visit-access--demo">
+                    Sample address — replace before launch.
+                  </p>
                 ) : null}
               </div>
+
+              <div className="visit-fact visit-fact--hours">
+                <p className="visit-kicker">
+                  <span className="en">Hours</span>
+                </p>
+                <div className="visit-hours">
+                  {hours.days ? (
+                    <p className="visit-hours-days">{hours.days}</p>
+                  ) : null}
+                  {hours.times ? (
+                    <p className="visit-hours-times">{hours.times}</p>
+                  ) : null}
+                  {hours.note ? (
+                    <p className="visit-hours-note">{hours.note}</p>
+                  ) : null}
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="visit-actions">
-            <a
-              className="visit-action"
-              href={mapsUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="en">Directions</span>
-            </a>
-            <a className="visit-action" href={reserveMailto()}>
-              <span className="en">Reserve</span>
-            </a>
-            <a className="visit-action" href={telHref()}>
-              <span className="en">Call</span>
-            </a>
-          </div>
-
-          <nav className="visit-social" aria-label="Social">
-            {site.social.instagram ? (
+            <div className="visit-cta-block">
               <a
-                href={site.social.instagram}
-                className="visit-social-link"
+                className="visit-action visit-action--primary"
+                href={mapsUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Instagram
+                <span className="en">Directions</span>
               </a>
+              <div className="visit-actions-secondary">
+                <a className="visit-action visit-action--secondary" href={telHref()}>
+                  <span className="en">Call</span>
+                  <span className="visit-action-meta">{site.telephoneDisplay}</span>
+                </a>
+                <a
+                  className="visit-action visit-action--secondary"
+                  href={reserveMailto()}
+                >
+                  <span className="en">Reserve</span>
+                </a>
+              </div>
+            </div>
+
+            {site.social.instagram ? (
+              <nav className="visit-social" aria-label="Social">
+                <a
+                  href={site.social.instagram}
+                  className="visit-social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Instagram
+                </a>
+              </nav>
             ) : null}
-          </nav>
+          </div>
         </div>
       </div>
     </section>

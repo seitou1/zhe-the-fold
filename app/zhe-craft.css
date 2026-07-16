@@ -3303,36 +3303,62 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Full-bleed stage like Story/Menu:
- * head top · photo breathes · spotlight bottom-left
+ * Visit — logistics hierarchy (research):
+ * title → quiet lead → address | hours → Directions → Call · Reserve → social
+ * One left reading band; storefront keeps the open right.
  */
 .visit-stage {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 0.85rem;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0;
+  height: 100%;
+  min-height: 0;
   color: var(--tone-fg);
   text-shadow: var(--tone-shadow-soft);
 }
 
+.visit-band {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.15rem;
+  width: min(32rem, 100%);
+  max-width: 100%;
+  margin: 0;
+  margin-right: auto;
+  padding: 0.15rem 0.25rem 0.2rem 0;
+  box-sizing: border-box;
+}
+
 .visit-head {
   flex-shrink: 0;
-  display: grid;
-  grid-template-columns: minmax(8rem, 0.75fr) minmax(0, 1.4fr);
-  gap: 0.75rem 1.5rem;
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.4rem;
   width: 100%;
-  padding-bottom: 0.75rem;
+  padding-bottom: 0.65rem;
   border-bottom: 1px solid var(--tone-line);
   transition: border-color var(--motion), color var(--motion);
+  text-align: left;
+}
+
+.visit-head-title {
+  min-width: 0;
+  text-align: left;
 }
 
 .visit-head-title h2 {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 0.1rem;
   color: var(--tone-fg);
+  text-align: left;
 }
 
 .visit-head-title .en {
@@ -3348,10 +3374,8 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 /* .visit-head-title .cn — shared panel CN mark rule */
 
 .visit-head-lead {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  max-width: 32rem;
+  display: block;
+  max-width: 22rem;
   margin: 0;
   min-width: 0;
 }
@@ -3360,46 +3384,41 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-family: var(--font-ui);
   font-style: normal;
   font-weight: 400;
-  font-size: var(--type-lead);
-  line-height: var(--type-lead-lh);
+  font-size: var(--type-body);
+  line-height: var(--type-body-lh);
   letter-spacing: var(--type-body-track);
   color: var(--tone-fg);
+  opacity: 0.78;
   text-shadow: var(--tone-shadow-soft);
 }
 
-/*
- * Visit spotlight — Story/Menu caption grammar:
- * single reading column, kicker + body, text links (not a form / icon dock).
- */
 .visit-spotlight {
   flex: 0 0 auto;
-  align-self: flex-start;
+  align-self: stretch;
   width: 100%;
-  max-width: min(36rem, 100%);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.15rem;
   min-width: 0;
   color: var(--tone-fg);
   text-shadow: var(--tone-shadow-soft);
 }
 
-/* One column of facts — not a two-up directory card */
+/* Desktop: Find us | Hours as one grouped region */
 .visit-facts {
-  display: flex;
-  flex-direction: column;
-  gap: 0.95rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1rem 1.75rem;
   width: 100%;
-  max-width: min(34rem, 100%);
+  align-items: start;
 }
 
 .visit-fact {
   min-width: 0;
 }
 
-/* Same kicker language as story-label / menu-spotlight-cat */
 .visit-kicker {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.4rem;
   font-family: var(--font-ui);
   font-style: normal;
   font-weight: 400;
@@ -3409,7 +3428,34 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   color: var(--tone-accent);
 }
 
-.visit-address,
+.visit-address {
+  display: block;
+  margin: 0;
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--type-body);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-track);
+  color: var(--tone-fg);
+  text-decoration: none;
+  transition: opacity 0.22s var(--ease-soft);
+}
+
+.visit-address:hover,
+.visit-address:focus-visible {
+  opacity: 0.88;
+}
+
+.visit-address:focus-visible {
+  outline: 2px solid var(--wheat);
+  outline-offset: 3px;
+}
+
+.visit-address-line {
+  display: block;
+}
+
 .visit-access,
 .visit-hours p {
   margin: 0;
@@ -3424,7 +3470,14 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .visit-access {
   display: block;
-  margin-top: 0.35rem;
+  margin-top: 0.4rem;
+  opacity: 0.82;
+  font-size: var(--type-ui);
+}
+
+.visit-access--demo {
+  opacity: 0.5;
+  font-size: var(--type-ui-sm);
 }
 
 .visit-access[hidden] {
@@ -3436,15 +3489,26 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .visit-hours p + p {
-  margin-top: 0.2rem;
+  margin-top: 0.22rem;
 }
 
 .visit-hours-note {
-  margin-top: 0.35rem !important;
+  margin-top: 0.4rem !important;
+  opacity: 0.78;
+  font-size: var(--type-ui);
 }
 
-/* CTAs — filter/tool hairline grammar (full ink, body tracking) */
-.visit-actions {
+/* CTA rank: primary Directions, then secondary Call · Reserve */
+.visit-cta-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+  width: 100%;
+  padding-top: 0.15rem;
+}
+
+.visit-actions-secondary {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -3458,14 +3522,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   align-items: flex-start;
   flex: 0 1 auto;
   min-width: 0;
-  padding: 0.35rem 0.1rem 0.4rem;
+  padding: 0.35rem 0.1rem 0.45rem;
   border: none;
   border-radius: 0;
   background: transparent;
   color: var(--tone-fg);
   box-shadow: none;
+  text-decoration: none;
   position: relative;
-  transition: color 0.3s var(--ease-soft);
+  transition: color 0.3s var(--ease-soft), opacity 0.22s var(--ease-soft);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -3473,59 +3538,101 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .visit-action::after {
   content: "";
   position: absolute;
-  left: 50%;
+  left: 0;
   bottom: 0.05rem;
   width: 100%;
   max-width: 1.65rem;
   height: 1px;
   background: currentColor;
-  opacity: 0.45;
-  transform: translateX(-50%);
-  transition: opacity 0.28s var(--ease-out);
+  opacity: 0.4;
+  transition: opacity 0.28s var(--ease-out), max-width 0.28s var(--ease-out);
   pointer-events: none;
+}
+
+.visit-action--primary {
+  padding-top: 0.45rem;
+  padding-bottom: 0.55rem;
+}
+
+.visit-action--primary .en {
+  font-size: var(--type-title-sm);
+  letter-spacing: 0.04em;
+}
+
+.visit-action--primary::after {
+  max-width: 2.4rem;
+  opacity: 0.75;
+  height: 1.5px;
+  background: var(--tone-accent, var(--wheat));
+}
+
+.visit-action--secondary {
+  opacity: 0.88;
+}
+
+.visit-action--secondary .en {
+  font-size: var(--type-body);
 }
 
 .visit-action .en {
   font-family: var(--font-ui);
   font-style: normal;
-  font-size: var(--type-body);
   letter-spacing: var(--type-body-track);
   font-weight: 400;
   line-height: var(--type-lh-ui);
   color: inherit;
 }
 
+.visit-action-meta {
+  display: block;
+  margin-top: 0.12rem;
+  font-family: var(--font-ui);
+  font-size: var(--type-ui-sm);
+  letter-spacing: 0.04em;
+  color: var(--tone-fg);
+  opacity: 0.62;
+  font-variant-numeric: tabular-nums;
+}
+
 .visit-action:hover,
 .visit-action:focus-visible {
   color: var(--tone-fg);
+  opacity: 1;
 }
 
 .visit-action:hover::after,
 .visit-action:focus-visible::after {
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-/* Social — text links, same strip as actions (no icon pills) */
+.visit-action:focus-visible {
+  outline: 2px solid var(--wheat);
+  outline-offset: 3px;
+}
+
+/* Social — tertiary */
 .visit-social {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.15rem 1.15rem;
   width: 100%;
-  padding-top: 0.05rem;
+  padding-top: 0.1rem;
+  margin-top: -0.15rem;
 }
 
 .visit-social-link {
   font-family: var(--font-ui);
   font-style: normal;
   font-weight: 400;
-  font-size: var(--type-body);
+  font-size: var(--type-ui);
   letter-spacing: var(--type-body-track);
   line-height: var(--type-lh-ui);
   color: var(--tone-fg);
   text-decoration: none;
-  padding: 0.35rem 0.05rem 0.4rem;
+  padding: 0.3rem 0.05rem 0.35rem;
   position: relative;
+  opacity: 0.62;
   transition: color 0.3s var(--ease-soft), opacity 0.25s;
   -webkit-tap-highlight-color: transparent;
 }
@@ -3537,14 +3644,13 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .visit-social-link::after {
   content: "";
   position: absolute;
-  left: 50%;
+  left: 0;
   bottom: 0.05rem;
   width: 100%;
-  max-width: 1.45rem;
+  max-width: 1.2rem;
   height: 1px;
   background: currentColor;
-  opacity: 0.35;
-  transform: translateX(-50%);
+  opacity: 0.3;
   transition: opacity 0.28s var(--ease-out);
   pointer-events: none;
 }
@@ -3552,7 +3658,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 .visit-social-link:hover,
 .visit-social-link:focus-visible {
   color: var(--tone-fg);
-  opacity: 1;
+  opacity: 0.92;
 }
 
 .visit-social-link:hover::after,
@@ -3718,9 +3824,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     gap: 0.15rem;
   }
 
-  /* Tablet: keep full-bleed stage; slightly tighter spotlight */
-  .visit-spotlight {
-    max-width: min(30rem, 100%);
+  /* Tablet: left logistics band stays compact */
+  .visit-band {
+    width: min(30rem, 100%);
   }
 
   .menu-spotlight-copy {
@@ -4274,7 +4380,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     background: var(--panel-veil-mobile-light);
   }
 
-  /* ── Visit mobile — Origins rhythm: head top, photo mid, caption bottom ── */
+  /* ── Visit mobile — band at bottom; storefront mid ── */
   .visit {
     overflow: hidden;
   }
@@ -4285,8 +4391,9 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 0.45rem;
+    justify-content: flex-end;
+    align-items: stretch;
+    gap: 0;
   }
 
   .visit-wall-img {
@@ -4301,16 +4408,21 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     background: var(--panel-veil-mobile);
   }
 
-  .visit-head {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-    align-items: start;
-    flex-shrink: 0;
-    padding-bottom: 0.4rem;
-    border-bottom-color: rgba(242, 235, 224, 0.22);
+  .visit-band {
+    width: 100%;
+    max-width: none;
+    gap: 0.85rem;
+    padding: 0.1rem 0.05rem 0.15rem;
     text-shadow:
       0 1px 1px rgba(0, 0, 0, 0.75),
-      0 2px 10px rgba(0, 0, 0, 0.5);
+      0 2px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .visit-head {
+    gap: 0.28rem;
+    flex-shrink: 0;
+    padding-bottom: 0.45rem;
+    border-bottom-color: rgba(242, 235, 224, 0.22);
   }
 
   .visit-head-lead {
@@ -4318,21 +4430,15 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     width: 100%;
   }
 
-  /* Pin caption to the bottom — storefront owns the middle */
   .visit-spotlight {
     flex: 0 0 auto;
-    margin-top: auto;
-    max-width: none;
     width: 100%;
-    gap: 0.85rem;
-    text-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.75),
-      0 2px 12px rgba(0, 0, 0, 0.5);
+    gap: 0.9rem;
   }
 
   .visit-facts {
-    gap: 0.8rem;
-    max-width: none;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 
   .visit-kicker {
@@ -4343,8 +4449,25 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     margin-top: 0.3rem;
   }
 
-  .visit-actions {
-    gap: 0.1rem 1.1rem;
+  .visit-cta-block {
+    gap: 0.45rem;
+  }
+
+  .visit-action--primary {
+    min-height: 2.75rem;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+
+  .visit-actions-secondary {
+    gap: 0.15rem 1.25rem;
+    width: 100%;
+  }
+
+  .visit-action--secondary {
+    min-height: 2.5rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.45rem;
   }
 
   .visit-social {
@@ -4550,20 +4673,16 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
     padding-bottom: 0.85rem;
   }
 
-  /* Visit CTAs full-width stack on phone */
-  .visit-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.55rem;
+  /* Visit: primary Directions full-width; secondary stay in a row */
+  .visit-action--primary {
     width: 100%;
+    box-sizing: border-box;
   }
 
-  .visit-action {
+  .visit-actions-secondary {
     width: 100%;
-    min-height: 2.9rem;
-    justify-content: center;
-    box-sizing: border-box;
+    justify-content: flex-start;
+    gap: 0.75rem 1.35rem;
   }
 
   .visit-social {
