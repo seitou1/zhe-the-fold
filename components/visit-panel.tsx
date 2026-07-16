@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { getHoursDisplayLines } from "@/lib/hours";
 import {
   formatAddressLines,
@@ -9,42 +9,30 @@ import {
   site,
   telHref,
 } from "@/lib/site";
+import { usePanelVideo } from "@/lib/use-panel-video";
 
 /**
  * Visit — logistics hierarchy (scan order):
  * Title → quiet lead → Find us | Hours → Directions · Call · Reserve → social.
- * Left band over storefront; no map embed.
+ * Storefront loop only while panel is in view (balanced resources).
  */
 export function VisitPanel() {
+  const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
+  const videoReady = usePanelVideo(videoRef, panelRef, {
+    src: "/assets/storefront-loop.mp4",
+    srcMobile: "/assets/storefront-loop-sm.mp4",
+  });
   const addressLines = formatAddressLines();
   const hours = getHoursDisplayLines();
 
-  useEffect(() => {
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const v = videoRef.current;
-    if (!v || reduced) return;
-
-    const onReady = () => {
-      setVideoReady(true);
-      void v.play().catch(() => {});
-    };
-    if (v.readyState >= 2) onReady();
-    else {
-      v.addEventListener("loadeddata", onReady, { once: true });
-      v.addEventListener("canplay", onReady, { once: true });
-    }
-    return () => {
-      v.removeEventListener("loadeddata", onReady);
-      v.removeEventListener("canplay", onReady);
-    };
-  }, []);
-
   return (
-    <section className="visit panel" id="visit" data-tone="dark">
+    <section
+      ref={panelRef}
+      className="visit panel"
+      id="visit"
+      data-tone="dark"
+    >
       <div className="visit-wall" aria-hidden="true">
         <video
           ref={videoRef}
@@ -55,11 +43,9 @@ export function VisitPanel() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           aria-label="Zhe · The Fold storefront at dusk"
-        >
-          <source src="/assets/storefront-loop.mp4" type="video/mp4" />
-        </video>
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="visit-wall-img visit-wall-poster"

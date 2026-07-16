@@ -1,38 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { site } from "@/lib/site";
+import { usePanelVideo } from "@/lib/use-panel-video";
 
-/** Full-bleed hero panel — poster LCP + muted loop (original grammar) */
+/** Full-bleed hero — poster LCP + in-view muted loop (balanced load) */
 export function HeroPanel() {
+  const panelRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
-
-  useEffect(() => {
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const v = videoRef.current;
-    if (!v || reduced) return;
-
-    const onReady = () => {
-      setVideoReady(true);
-      void v.play().catch(() => {});
-    };
-
-    if (v.readyState >= 2) onReady();
-    else {
-      v.addEventListener("loadeddata", onReady, { once: true });
-      v.addEventListener("canplay", onReady, { once: true });
-    }
-    return () => {
-      v.removeEventListener("loadeddata", onReady);
-      v.removeEventListener("canplay", onReady);
-    };
-  }, []);
+  const videoReady = usePanelVideo(videoRef, panelRef, {
+    src: "/assets/hero-loop.mp4",
+    srcMobile: "/assets/hero-loop-sm.mp4",
+  });
 
   return (
-    <section className="hero panel" id="hero" data-tone="dark">
+    <section
+      ref={panelRef}
+      className="hero panel"
+      id="hero"
+      data-tone="dark"
+    >
       <div className="hero-bg">
         <video
           ref={videoRef}
@@ -43,11 +30,10 @@ export function HeroPanel() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           aria-label="Handmade dumplings on worn ceramic at Zhe · The Fold"
-        >
-          <source src="/assets/hero-loop.mp4" type="video/mp4" />
-        </video>
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="hero-img hero-poster"
           src="/assets/hero-dumplings.webp"
