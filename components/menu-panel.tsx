@@ -2,40 +2,29 @@
 
 import { useMemo, useState } from "react";
 import {
-  filterMenuItems,
+  groupMenuItems,
   listMeta,
   listTitle,
-  MENU_CATEGORY_ORDER,
-  MENU_FILTERS,
   MENU_ITEMS,
-  type MenuCategory,
   type MenuItem,
 } from "@/lib/menu";
 
-type FilterId = "all" | MenuCategory;
-
 /**
  * Menu panel — full-bleed dish plate + calm hybrid ledger.
- * Rest rows: English name + price. Active row reveals CN, meta, description.
- * Chapter filters only — never group headers in the list.
+ * Full menu with quiet chapter heads (Classic · Seasonal · Plant-based).
+ * Rest rows: EN · price. Active row reveals CN, meta, description.
+ * No exclusive filters — browse first; scalable via sections (+ jumps later).
  */
 export function MenuPanel() {
-  const [filter, setFilter] = useState<FilterId>("classic");
+  const groups = useMemo(() => groupMenuItems(MENU_ITEMS), []);
+  const allItems = useMemo(
+    () => groups.flatMap((g) => g.items),
+    [groups]
+  );
   const [activeId, setActiveId] = useState(MENU_ITEMS[0]?.id ?? "pork");
 
-  const visible = useMemo(() => {
-    const items = filterMenuItems(filter);
-    if (filter !== "all") return items;
-    // Flat list ordered Classic → Seasonal → Plant, no group labels
-    return [...items].sort(
-      (a, b) =>
-        MENU_CATEGORY_ORDER.indexOf(a.category) -
-        MENU_CATEGORY_ORDER.indexOf(b.category)
-    );
-  }, [filter]);
-
   const active =
-    visible.find((i) => i.id === activeId) || visible[0] || MENU_ITEMS[0];
+    allItems.find((i) => i.id === activeId) || allItems[0] || MENU_ITEMS[0];
 
   const pos = active?.position || "center center";
 
@@ -67,39 +56,40 @@ export function MenuPanel() {
               </span>
             </h2>
           </div>
-          <div className="menu-filters" role="group" aria-label="Menu categories">
-            {MENU_FILTERS.map((f) => {
-              const on = filter === f.id;
-              return (
-                <button
-                  key={f.id}
-                  type="button"
-                  className={`filter-btn${on ? " is-active" : ""}`}
-                  aria-pressed={on}
-                  onClick={() => {
-                    setFilter(f.id);
-                    const next = filterMenuItems(f.id);
-                    if (next[0]) setActiveId(next[0].id);
-                  }}
-                >
-                  {f.label}
-                </button>
-              );
-            })}
-          </div>
         </header>
 
         <div className="menu-ledger">
-          <ul className="menu-list-view" role="listbox" aria-label="Dishes">
-            {visible.map((item) => (
-              <MenuRow
-                key={item.id}
-                item={item}
-                active={item.id === active?.id}
-                onSelect={() => setActiveId(item.id)}
-              />
-            ))}
-          </ul>
+          <div className="menu-list-view" role="region" aria-label="Dishes">
+            {groups.map((group) => {
+              const labelId = `menu-chapter-${group.category}`;
+              return (
+                <section
+                  key={group.category}
+                  className="menu-list-group"
+                  id={`menu-${group.category}`}
+                  aria-labelledby={labelId}
+                >
+                  <h3 className="menu-list-group-label" id={labelId}>
+                    {group.label}
+                  </h3>
+                  <ul
+                    className="menu-list-group-items"
+                    role="listbox"
+                    aria-labelledby={labelId}
+                  >
+                    {group.items.map((item) => (
+                      <MenuRow
+                        key={item.id}
+                        item={item}
+                        active={item.id === active?.id}
+                        onSelect={() => setActiveId(item.id)}
+                      />
+                    ))}
+                  </ul>
+                </section>
+              );
+            })}
+          </div>
           <p className="menu-note">
             <span className="en">
               Steamed or pan-seared · Share allergies · About eight per order

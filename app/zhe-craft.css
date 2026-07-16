@@ -1881,11 +1881,10 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-head {
   flex-shrink: 0;
-  display: grid;
-  grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
-  grid-template-areas: "title actions";
-  gap: 0.65rem 1.5rem;
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
   width: 100%;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--tone-line);
@@ -1897,7 +1896,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .menu-head-title {
-  grid-area: title;
   min-width: 0;
 }
 
@@ -2667,12 +2665,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-list-group {
   list-style: none;
-  margin: 0.65rem 0 0.15rem;
+  margin: 1.05rem 0 0.2rem;
   padding: 0;
 }
 
 .menu-list-group:first-child {
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
 }
 
 .menu-list-group.is-hidden,
@@ -2682,15 +2680,23 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 
 .menu-list-group-label {
   display: block;
+  margin: 0 0 0.2rem;
   font-family: var(--font-ui);
   font-size: var(--type-ui-sm);
   font-weight: 400;
   letter-spacing: var(--type-kicker-track);
   text-transform: uppercase;
   color: var(--tone-accent);
-  opacity: 0.88;
-  padding: 0.35rem 0.1rem 0.28rem;
-  border-bottom: 1px solid rgba(250, 246, 240, 0.1);
+  opacity: 0.82;
+  padding: 0.2rem 0.1rem 0.35rem;
+  border: none;
+  border-bottom: none;
+}
+
+.menu-list-group-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 /*
@@ -4747,9 +4753,12 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
    no hairline box-shadow between dishes.
    ═══════════════════════════════════════════ */
 .menu .menu-list-group-label {
+  border: none;
   border-bottom: none;
-  opacity: 0.75;
-  padding-bottom: 0.2rem;
+  opacity: 0.78;
+  padding-bottom: 0.25rem;
+  /* Quiet chapter mark — space, not a rule */
+  letter-spacing: 0.14em;
 }
 
 .menu .menu-list-item,
@@ -4796,14 +4805,17 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   display: none;
 }
 
-/* Filters: underline only on selected (already ::after) — no extra strip */
-.menu .menu-filters {
-  border-bottom: none;
-}
-
 @media (max-width: 900px) {
   .menu .menu-list-item {
     padding-top: 0.78rem;
     padding-bottom: 0.78rem;
+  }
+
+  .menu .menu-list-group {
+    margin-top: 0.95rem;
+  }
+
+  .menu .menu-list-group:first-child {
+    margin-top: 0.15rem;
   }
 }

@@ -27,11 +27,17 @@ export const MENU_CATEGORY_ORDER: MenuCategory[] = [
   "plant",
 ];
 
-export const MENU_FILTERS: { id: "all" | MenuCategory; label: string }[] = [
-  { id: "all", label: "All" },
+/** Chapter labels for sectioned full menu (browse first; no hide-by-filter). */
+export const MENU_CHAPTERS: { id: MenuCategory; label: string }[] = [
   { id: "classic", label: "Classic" },
   { id: "seasonal", label: "Seasonal" },
-  { id: "plant", label: "Plant" },
+  { id: "plant", label: "Plant-based" },
+];
+
+/** @deprecated Prefer MENU_CHAPTERS — kept for legacy menu-list links */
+export const MENU_FILTERS: { id: "all" | MenuCategory; label: string }[] = [
+  { id: "all", label: "All" },
+  ...MENU_CHAPTERS,
 ];
 
 export const MENU_ITEMS: MenuItem[] = [
@@ -114,7 +120,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "mushroom",
     category: "plant",
-    catLabel: "Plant",
+    catLabel: "Plant-based",
     en: "Mushroom & Greens",
     rail: "Mushroom & Greens",
     cn: "香菇青菜褶",
@@ -129,7 +135,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: "tofu",
     category: "plant",
-    catLabel: "Plant",
+    catLabel: "Plant-based",
     en: "Tofu & Daikon",
     rail: "Tofu & Daikon",
     cn: "豆腐萝卜褶",
@@ -162,9 +168,10 @@ export type MenuGroup = {
 export function groupMenuItems(items: MenuItem[] = MENU_ITEMS): MenuGroup[] {
   return MENU_CATEGORY_ORDER.map((category) => {
     const groupItems = items.filter((i) => i.category === category);
+    const chapter = MENU_CHAPTERS.find((c) => c.id === category);
     return {
       category,
-      label: groupItems[0]?.catLabel || category,
+      label: chapter?.label || groupItems[0]?.catLabel || category,
       items: groupItems,
     };
   }).filter((g) => g.items.length > 0);
