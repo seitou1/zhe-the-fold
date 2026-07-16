@@ -337,7 +337,7 @@ html.js-snap-off {
  * Shared content column — same max width + left edge for every panel’s copy.
  * Walls stay full-bleed; type lives in this band.
  */
-.hero-content,
+/* Hero caption owns its own width — see .hero-content */
 .story-head,
 .story-spotlight,
 .menu-head,
@@ -1172,19 +1172,31 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 /*
- * Hero caption — one quiet stack, bottom-left over the plate.
- * Rhythm: eyebrow → 褶 → name → hairline → line of belief.
+ * Hero caption — bottom-left stack over the plate.
+ * Rhythm (tight, even): kicker → 褶 → name → hairline → belief.
+ * Narrower than --content-col so it sits as a caption, not a text slab.
  */
 .hero-content {
   position: relative;
   z-index: 2;
+  /* Caption column — original craft width, not full content band */
+  width: min(26rem, 100%);
+  max-width: min(26rem, 100%);
   color: var(--tone-fg);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  /* Local contrast so type stays readable without a dark overlay */
-  text-shadow: var(--tone-shadow);
+  /* Soft local hold under the stack only (plate stays open to the right) */
+  padding: 0.2rem 1.5rem 0.45rem 0;
+  background: radial-gradient(
+    ellipse 120% 95% at 12% 70%,
+    rgba(6, 4, 3, 0.48) 0%,
+    rgba(8, 5, 4, 0.2) 38%,
+    rgba(8, 5, 4, 0.05) 62%,
+    transparent 78%
+  );
+  text-shadow: var(--type-halo-strong);
   transition: color 0.45s var(--ease-soft), text-shadow 0.45s var(--ease-soft);
 }
 
@@ -1196,11 +1208,11 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-style: normal;
   font-size: var(--type-kicker);
   font-weight: 400;
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.55rem;
   letter-spacing: var(--type-kicker-track);
   line-height: var(--type-lh-ui);
   color: var(--tone-fg);
-  opacity: 0.92;
+  opacity: 0.78;
   text-transform: uppercase;
 }
 
@@ -1213,7 +1225,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
 }
 
 .hero-title {
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .hero-title .title-cn {
@@ -1225,7 +1237,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   line-height: 0.88;
   letter-spacing: var(--type-cn-track);
   color: var(--tone-fg);
-  text-shadow: var(--tone-shadow-soft);
+  text-shadow: var(--type-halo-strong);
 }
 
 .hero-title .title-en {
@@ -1235,21 +1247,22 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   font-weight: 400;
   font-style: italic;
   letter-spacing: var(--type-title-track);
-  margin-top: 0.4rem;
+  line-height: var(--type-lh-tight);
+  margin-top: 0.28rem;
   color: var(--tone-fg);
   opacity: 1;
-  text-shadow: var(--tone-shadow-soft);
+  text-shadow: var(--type-halo-strong);
 }
 
-/* Quiet fold mark between name and belief line */
+/* Quiet fold mark — even air above belief line */
 .hero-title::after {
   content: "";
   display: block;
-  width: 1.65rem;
+  width: 1.5rem;
   height: 1px;
-  margin-top: 1rem;
+  margin: 0.7rem 0;
   background: currentColor;
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
 .hero-tagline {
@@ -1267,7 +1280,7 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   letter-spacing: var(--type-body-track);
   color: var(--tone-fg);
   opacity: 0.92;
-  text-shadow: var(--tone-shadow-soft);
+  text-shadow: var(--type-halo-strong);
 }
 
 /* Thin edge cue only — no floating arrow glyph */
@@ -3716,7 +3729,6 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
    * Shared mobile content band — force every section into the same
    * horizontal space (overrides older per-panel max-widths).
    */
-  .hero-content,
   .story-head,
   .story-spotlight,
   .menu-head,
@@ -3988,35 +4000,42 @@ body:has(.panel[data-tone="light"]:not(#hero)) .nav.is-past-hero .nav-links a.is
   /* ── Hero: caption block, photo first ── */
   .hero-stage {
     justify-content: flex-end;
-    align-items: stretch;
+    align-items: flex-start;
     height: 100%;
     min-height: 0;
-    padding-bottom: max(1.15rem, env(safe-area-inset-bottom, 0px) + 0.75rem);
+    padding-bottom: max(1.35rem, env(safe-area-inset-bottom, 0px) + 0.95rem);
   }
 
+  /* Caption, not full-bleed band — beat the shared 100% content override */
   .hero-content {
+    width: min(20.5rem, 100%) !important;
+    max-width: min(20.5rem, 100%) !important;
     align-items: flex-start;
+    padding: 0.25rem 1.1rem 0.55rem 0;
+    background: radial-gradient(
+      ellipse 130% 100% at 8% 75%,
+      rgba(6, 4, 3, 0.52) 0%,
+      rgba(8, 5, 4, 0.22) 40%,
+      rgba(8, 5, 4, 0.06) 64%,
+      transparent 80%
+    );
   }
 
   .hero-eyebrow {
-    margin-bottom: 0.7rem;
-  }
-
-  .hero-title {
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.45rem;
   }
 
   .hero-title .title-en {
-    margin-top: 0.3rem;
+    margin-top: 0.22rem;
   }
 
   .hero-title::after {
-    margin-top: 0.85rem;
-    width: 1.35rem;
+    margin: 0.55rem 0;
+    width: 1.25rem;
   }
 
   .hero-tagline {
-    max-width: 100%;
+    max-width: 18rem;
   }
 
   .hero-scroll {
