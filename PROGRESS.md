@@ -23,6 +23,7 @@
 
 ### Product / craft
 - [x] Four-panel Next craft site (Hero · Story · Menu · Visit) + footer  
+- [ ] **Restore craft stills (menu + story):** run `scripts/restore-craft-assets.sh`, SQL `fix_story_images_craft.sql`, ship — regen set archived under `public/assets/_archive-regen-2026-07/`  
 - [x] Hybrid journey copy (table + takeout)  
 - [x] Place-first Origins: House · Hands · Night  
 - [x] Dish stills + mobile wall crops; hero/visit 720p video  

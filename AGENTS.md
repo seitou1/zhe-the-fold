@@ -15,15 +15,16 @@ Process kit (read for freezes, honesty, QA): copy rules from static repo
 4. Ship: `git push origin main` → Vercel auto-deploy  
 5. Phone QA after gesture/shell changes  
 
-## Backend (Content CMS)
+## Backend (Content CMS) — live; paused 2026-07-16
 
 - `lib/supabase/{client,server}.ts` + `@supabase/supabase-js`  
 - `lib/data/{menu,story,site}.ts` — merge + static fallback  
-- **Split site tables:** `site_hours` · `site_contact` · `site_copy` (+ legacy `site_settings` fallback)  
-- Dishes `menu_items` · story `story_chapters`  
-- SQL `007_site_split` + `seed_site_split` — see `supabase/README.md` · `/api/cms-status`  
-- Env: URL **without** `/rest/v1`  
-- Not CMS yet: asset file paths, admin UI, Storage
+- **Edit in Table Editor:** `menu_items` · `story_chapters` · `site_hours` · `site_contact` · `site_copy`  
+- Legacy `site_settings` optional fallback only — prefer split tables  
+- Setup: `supabase/README.md` · health `/api/cms-status`  
+- Env: URL **without** `/rest/v1` (code strips it if present)  
+- Later: admin UI, Storage, real NAP → drop noindex  
+- Status dump: `PROGRESS.md`
 
 ## Non-negotiables
 
